@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ButtonComponent extends StatelessWidget {
+class ButtonOutlineComponent extends StatelessWidget {
   final String text;
   final Function onPressed;
   final String? svgIcon;
-  final Color? color;
-
-  const ButtonComponent({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-    this.svgIcon,
-    this.color,
-  }) : super(key: key);
+  final Color? textColor;
+  const ButtonOutlineComponent(
+      {Key? key,
+      required this.text,
+      required this.onPressed,
+      this.svgIcon,
+      this.textColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => onPressed(),
       style: ElevatedButton.styleFrom(
-        primary: color ?? const Color(0xff4079AC),
+        primary: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         minimumSize: const Size.fromHeight(50),
       ),
@@ -38,7 +37,11 @@ class ButtonComponent extends StatelessWidget {
           ),
           Text(
             text,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: textColor ?? Theme.of(context).primaryColor,
+            ),
           ),
         ],
       ),

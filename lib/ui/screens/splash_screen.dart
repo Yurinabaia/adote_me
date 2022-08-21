@@ -14,7 +14,6 @@ class SplashScreen extends StatelessWidget {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SvgPicture.asset(
                 'assets/images/logo.svg',
@@ -34,14 +33,14 @@ class SplashScreen extends StatelessWidget {
                   Text(
                     "Encontre",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     " seu animal de estimação",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 14,
                     ),
                   ),
                 ],

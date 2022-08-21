@@ -1,3 +1,4 @@
+import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
 import 'package:adoteme/ui/screens/first_access_screen.dart';
 import 'package:adoteme/ui/screens/splash_screen.dart';
@@ -16,12 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Adote-me',
-      theme: getThemeData(),
+      theme: getThemeData(context),
       builder: DevicePreview.appBuilder,
       locale: DevicePreview.locale(context),
       home: const SplashScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
+        Login.routeName: (context) => const Login(),
       },
     );
   }

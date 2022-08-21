@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-ThemeData getThemeData() {
+ThemeData getThemeData(context) {
   return ThemeData(
     scaffoldBackgroundColor: const Color(0xffF8FAFC),
+    primaryColor: const Color(0xff4079AC),
     appBarTheme: AppBarTheme(
       backgroundColor: const Color(0xffF8FAFC),
       titleTextStyle: TextStyle(
@@ -16,10 +18,8 @@ ThemeData getThemeData() {
       trackColor: MaterialStateProperty.all<Color>(Colors.grey.shade600),
       thumbColor: MaterialStateProperty.all<Color>(Colors.white),
     ),
-    textTheme: TextTheme(
-      bodyText2: TextStyle(
-        color: Colors.white.withOpacity(0.6),
-      ),
+    textTheme: GoogleFonts.poppinsTextTheme(
+      Theme.of(context).textTheme,
     ),
   );
 }
