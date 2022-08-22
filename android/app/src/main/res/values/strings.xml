@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">adote_me</string>
+    <string name="facebook_app_id">1212587816192563</string>
+    <string name="fb_login_protocol_scheme">5fc0178f1022c87121eceac7c2491901</string>
+    <string name="facebook_client_token">d3aa90dfeeb1cc8ed611097b6f79aa20</string>
+</resources>

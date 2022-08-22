@@ -47,43 +47,41 @@ class _FirstAccessScreenState extends State<FirstAccessScreen> {
                         )))
                     .toList(),
               ),
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: imgList.asMap().entries.map((entry) {
-                        return GestureDetector(
-                          onTap: () => _controller.animateToPage(entry.key),
-                          child: Container(
-                            width: 12.0,
-                            height: 12.0,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 4.0),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black)
-                                    .withOpacity(
-                                        _current == entry.key ? 0.9 : 0.4)),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    ButtonComponent(
-                      text: "Próximo",
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      },
-                    ),
-                  ],
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: imgList.asMap().entries.map((entry) {
+                      return GestureDetector(
+                        onTap: () => _controller.animateToPage(entry.key),
+                        child: Container(
+                          width: 12.0,
+                          height: 12.0,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 4.0),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black)
+                                  .withOpacity(
+                                      _current == entry.key ? 0.9 : 0.4)),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  ButtonComponent(
+                    text: "Próximo",
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                  ),
+                ],
               ),
             ],
           ),

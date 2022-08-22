@@ -1,13 +1,20 @@
-import 'package:adoteme/ui/components/button_component.dart';
-import 'package:adoteme/ui/components/detail_text_component.dart';
+import 'package:adoteme/data/service/login/firebase_service.dart';
 import 'package:adoteme/ui/components/button_outline_component.dart';
 import 'package:adoteme/ui/components/title_three_component.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   static const routeName = "/login";
   const Login({Key? key}) : super(key: key);
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  FirebaseService service = FirebaseService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +54,33 @@ class Login extends StatelessWidget {
                     ),
                     ButtonOutlineComponent(
                       text: "Entrar com gmail",
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await service.signInwithGoogle();
+                          print("deu tudo certo");
+                        } catch (e) {
+                          if (e is FirebaseAuthException) {
+                            print("deu tudo errado");
+                          }
+                        }
+                      },
                       svgIcon: "icon-google",
                       textColor: const Color(0xff334155),
                     ),
                     ButtonOutlineComponent(
                       text: "Entrar com facebook",
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await service.signInWithFacebook();
+                          FirebaseService serviceF = FirebaseService();
+                          var x = serviceF.idFirebase();
+                          print("teste $x");
+                        } catch (e) {
+                          if (e is FirebaseAuthException) {
+                            print("deu tudo errado");
+                          }
+                        }
+                      },
                       svgIcon: "icon-facebook",
                       textColor: const Color(0xff334155),
                     ),

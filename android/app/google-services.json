@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "176983134607",
+    "project_id": "adote-me-4a301",
+    "storage_bucket": "adote-me-4a301.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176983134607:android:11545059989f71e5b03bfa",
+        "android_client_info": {
+          "package_name": "com.adoteme.adoteme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176983134607-i8blee908honkt4dieptvm5tld06ouhf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adoteme.adoteme",
+            "certificate_hash": "96d74546cb7e6278e5c6d5b6cb366ab91c16d01f"
+          }
+        },
+        {
+          "client_id": "176983134607-1kagr8vjb6rv1v3l9hvc7jibh8din09b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARRt4Iuv8QAOG-4tT98eKKPB6t9qQShPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176983134607-1kagr8vjb6rv1v3l9hvc7jibh8din09b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
