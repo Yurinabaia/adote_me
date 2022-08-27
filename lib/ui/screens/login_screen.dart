@@ -57,11 +57,8 @@ class _LoginState extends State<Login> {
                       onPressed: () async {
                         try {
                           await service.signInwithGoogle();
-                          print("deu tudo certo");
                         } catch (e) {
-                          if (e is FirebaseAuthException) {
-                            print("deu tudo errado");
-                          }
+                          if (e is FirebaseAuthException) {}
                         }
                       },
                       svgIcon: "icon-google",
@@ -73,12 +70,9 @@ class _LoginState extends State<Login> {
                         try {
                           await service.signInWithFacebook();
                           FirebaseService serviceF = FirebaseService();
-                          var x = serviceF.idFirebase();
-                          print("teste $x");
+                          serviceF.idFirebase();
                         } catch (e) {
-                          if (e is FirebaseAuthException) {
-                            print("deu tudo errado");
-                          }
+                          if (e is FirebaseAuthException) {}
                         }
                       },
                       svgIcon: "icon-facebook",

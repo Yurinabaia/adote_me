@@ -22,8 +22,8 @@ class FirebaseService extends ChangeNotifier {
         idToken: googleSignInAuthentication.idToken,
       );
       await _auth.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      throw e;
+    } on FirebaseAuthException {
+      rethrow;
     }
     return null;
   }
@@ -35,11 +35,13 @@ class FirebaseService extends ChangeNotifier {
       final token = result.accessToken!.token;
       final graphResponse = await http.get(Uri.parse(
           'https://graph.facebook.com/'
-          'v2.12/me?fields=name,first_name,last_name,email&access_token=${token}'));
+          'v2.12/me?fields=name,first_name,last_name,email&access_token=$token'));
+      // ignore: unused_local_variable
       final profile = jsonDecode(graphResponse.body);
       try {
         final AuthCredential facebookCredential =
             FacebookAuthProvider.credential(result.accessToken!.token);
+        // ignore: unused_local_variable
         final userCredential = await FirebaseAuth.instance
             .signInWithCredential(facebookCredential);
       } catch (e) {
