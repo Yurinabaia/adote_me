@@ -1,4 +1,4 @@
-import 'package:adoteme/data/service/login/firebase_service.dart';
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/button_outline_component.dart';
 import 'package:adoteme/ui/components/title_three_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
