@@ -1,4 +1,4 @@
-import 'package:adoteme/data/service/login/firebase_service.dart';
+import 'package:adoteme/data/service/login/firebase_login_service.dart';
 import 'package:adoteme/ui/components/button_outline_component.dart';
 import 'package:adoteme/ui/components/title_three_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  FirebaseService service = FirebaseService();
+  FirebaseLoginService loginService = FirebaseLoginService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
                       text: "Entrar com gmail",
                       onPressed: () async {
                         try {
-                          await service.signInwithGoogle();
+                          await loginService.signInwithGoogle();
                           print("deu tudo certo");
                         } catch (e) {
                           if (e is FirebaseAuthException) {
@@ -71,9 +71,8 @@ class _LoginState extends State<Login> {
                       text: "Entrar com facebook",
                       onPressed: () async {
                         try {
-                          await service.signInWithFacebook();
-                          FirebaseService serviceF = FirebaseService();
-                          var x = serviceF.idFirebase();
+                          await loginService.signInWithFacebook();
+                          var x = loginService.idFirebase();
                           print("teste $x");
                         } catch (e) {
                           if (e is FirebaseAuthException) {
