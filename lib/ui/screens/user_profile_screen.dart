@@ -10,6 +10,8 @@ import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbar_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
+import 'package:adoteme/ui/components/circle_avatar_component.dart';
+import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
@@ -114,7 +116,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     formKeyProvider.set(_formKey);
     return Scaffold(
       appBar: const AppBarComponent(titulo: 'Perfil'),
-      drawer: const Drawer(),
+      drawer: DrawerComponent(
+        selectIndex: 4,
+      ),
       body: SafeArea(
         child: ListView(
           children: <Widget>[
@@ -131,7 +135,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       },
                       child: Stack(
                         children: <Widget>[
-                          findCircleAvatar(),
+                          CircleAvatarComponent.findCircleAvatar(
+                              imgFirebase: _imgFirebase, file: _file),
                           Positioned(
                             bottom: 0,
                             right: 0,
@@ -360,23 +365,5 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
       Navigator.of(context, rootNavigator: true).pop();
     }
-  }
-
-  CircleAvatar findCircleAvatar() {
-    var backgroundImage = Image.asset('assets/images/user_profile.png').image;
-    if (_imgFirebase != null) {
-      backgroundImage = Image.memory(
-        _imgFirebase!,
-        fit: BoxFit.cover,
-      ).image;
-    } else if (_file != null) {
-      backgroundImage = FileImage(File(_file!.path!));
-    }
-
-    return CircleAvatar(
-      radius: 75,
-      backgroundColor: Colors.grey[300],
-      backgroundImage: backgroundImage,
-    );
   }
 }

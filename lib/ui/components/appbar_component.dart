@@ -7,28 +7,41 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
     required this.titulo,
   }) : super(key: key);
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(56);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AppBar(
-          title: Center(
-            child: Text(
-              titulo,
-              style: const TextStyle(
-                color: Color(0xff334155),
-                fontSize: 20,
-              ),
+    return Align(
+      alignment: Alignment.center,
+      child: AppBar(
+        leading: Builder(builder: (BuildContext context) {
+          return IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: const Icon(
+              Icons.menu,
+              color: Color(0xff334155),
+              size: 40,
+            ),
+          );
+        }),
+        title: Center(
+          child: Text(
+            titulo,
+            style: const TextStyle(
+              color: Color(0xff334155),
+              fontSize: 20,
             ),
           ),
-          actions: const [
-            Icon(Icons.filter_alt_outlined, color: Color(0xff334155), size: 40),
-          ],
-          backgroundColor: Colors.white,
         ),
-      ],
+        actions: <Widget>[
+          IconButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            onPressed: () {},
+            icon: const Icon(Icons.filter_alt_outlined,
+                color: Color(0xff334155), size: 40),
+          ),
+        ],
+        backgroundColor: Colors.blue,
+      ),
     );
   }
 }
