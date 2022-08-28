@@ -1,3 +1,4 @@
+import 'package:adoteme/utils/text_mask.dart';
 import 'package:flutter/material.dart';
 
 class InputComponent extends StatelessWidget {
@@ -5,10 +6,14 @@ class InputComponent extends StatelessWidget {
   final TextEditingController controller;
   final String labelTextValue;
   final bool isActive;
+  final TextMask textMask;
+  final bool isRequired;
   const InputComponent({
     Key? key,
     required this.controller,
     required this.keyboardType,
+    required this.textMask,
+    this.isRequired = true,
     required this.labelTextValue,
     this.isActive = true,
   }) : super(key: key);
@@ -39,6 +44,13 @@ class InputComponent extends StatelessWidget {
         fillColor: isActive ? Colors.white : Colors.grey[100],
       ),
       keyboardType: keyboardType,
+      inputFormatters: textMask.maskTexFormated(),
+      validator: (value) {
+        if ((value == null || value.isEmpty) && isRequired) {
+          return 'Campo obrigatório';
+        }
+        return null;
+      },
     );
   }
 }

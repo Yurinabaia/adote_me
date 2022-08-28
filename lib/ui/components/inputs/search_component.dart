@@ -1,12 +1,17 @@
+import 'package:adoteme/utils/text_mask.dart';
 import 'package:flutter/material.dart';
 
 class SeachComponent extends StatelessWidget {
   final TextInputType keyboardType;
   final String? initTextValue;
   final String labelTextValue;
+  final Function? onChanged;
+  final TextMask textMask;
   const SeachComponent({
     Key? key,
     this.initTextValue,
+    this.onChanged,
+    required this.textMask,
     required this.keyboardType,
     required this.labelTextValue,
   }) : super(key: key);
@@ -36,7 +41,14 @@ class SeachComponent extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
       ),
-      keyboardType: TextInputType.text,
+      keyboardType: keyboardType,
+      onChanged: (value) => {
+        if (onChanged != null)
+          {
+            onChanged!(value),
+          }
+      },
+      inputFormatters: textMask.maskTexFormated(),
     );
   }
 }

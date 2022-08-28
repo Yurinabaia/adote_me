@@ -14,7 +14,6 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         AppBar(
-          leading: const Icon(Icons.menu, color: Color(0xff334155), size: 40),
           title: Center(
             child: Text(
               titulo,

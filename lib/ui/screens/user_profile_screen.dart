@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:adoteme/data/controller/address/via_cep_controller.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbar_component.dart';
@@ -12,8 +13,10 @@ import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/title_three_component.dart';
+import 'package:adoteme/utils/text_mask.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -40,17 +43,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _complementController = TextEditingController();
 
-  var test;
   //Providers
   final ValueNotifier<String> _idUser = ValueNotifier('');
   final ValueNotifier<String> _emailUser = ValueNotifier('');
   //img
   PlatformFile? _file;
   Uint8List? _imgFirebase;
-  var decodedBytes = <int>[];
   //Service
   UserProfileFirebaseService userProfileFirebaseService =
       UserProfileFirebaseService();
+  //Form
+  final _formKey = GlobalKey<FormState>();
+  //Controlle
+  final ViaCepController _viaCepController = Get.put(ViaCepController());
   Future selectFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -106,6 +111,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarComponent(titulo: 'Perfil'),
+      drawer: const Drawer(),
       body: SafeArea(
         child: ListView(
           children: <Widget>[
@@ -145,78 +151,107 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                   const SizedBox(height: 32),
                   Form(
-                    key: null,
+                    key: _formKey,
                     child: Wrap(
                       runSpacing: 24,
                       children: <Widget>[
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _nameController,
                           labelTextValue: 'Nome',
                           keyboardType: TextInputType.text,
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _emailController,
                           labelTextValue: 'Email',
                           keyboardType: TextInputType.emailAddress,
                           isActive: false,
                         ),
                         InputComponent(
+                          textMask: TextMask('Tel'),
                           controller: _mainCellController,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular Principal',
                         ),
                         InputComponent(
+                          textMask: TextMask('Tel'),
                           controller: _optionalCellController,
+                          isRequired: false,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
                         ),
                         InputComponent(
+                          textMask: TextMask('Tel'),
                           controller: _optionalCell2Controller,
+                          isRequired: false,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
                         ),
                         const Center(
                           child: TextThreeComponent(text: 'Endereço'),
                         ),
-                        const SeachComponent(
+                        SeachComponent(
+                          textMask: TextMask('CEP'),
                           keyboardType: TextInputType.number,
+                          onChanged: (String value) async {
+                            if (value.length == 8) {
+                              var dataCep =
+                                  await _viaCepController.fetchViaCep(value);
+                              _zipCodeController.text = dataCep.cep ?? '';
+                              _streetController.text = dataCep.logradouro ?? '';
+                              _numberController.text =
+                                  dataCep.complemento ?? '';
+                              _districtController.text = dataCep.bairro ?? '';
+                              _cityController.text = dataCep.localidade ?? '';
+                              _stateController.text = dataCep.uf ?? '';
+                            }
+                          },
                           labelTextValue: 'Pesquisar CEP',
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _streetController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
                           isActive: false,
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _numberController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Número',
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _complementController,
+                          isRequired: false,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Complemento',
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _districtController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
                           isActive: false,
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _cityController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
                           isActive: false,
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _stateController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
                           isActive: false,
                         ),
                         InputComponent(
+                          textMask: TextMask(''),
                           controller: _zipCodeController,
                           keyboardType: TextInputType.number,
                           labelTextValue: 'CEP',
@@ -267,43 +302,45 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   void saveData() async {
-    String? img64;
-    if (_file != null) {
-      final bytes = File(_file!.path.toString()).readAsBytesSync();
-      img64 = base64Encode(bytes);
-    } else if (_imgFirebase != null) {
-      img64 = base64Encode(_imgFirebase!);
-    }
-    Map<String, dynamic> data = {
-      'name': _nameController.text,
-      'email': _emailController.text,
-      'mainCell': _mainCellController.text,
-      'optionalCell': _optionalCellController.text,
-      'optionalCell2': _optionalCell2Controller.text,
-      'street': _streetController.text,
-      'number': _numberController.text,
-      'complement': _complementController.text,
-      'district': _districtController.text,
-      'city': _cityController.text,
-      'state': _stateController.text,
-      'zipCode': _zipCodeController.text,
-      'image': img64,
-    };
-    LoadingModalComponent loadingModalComponent = LoadingModalComponent();
-    loadingModalComponent.showModal(context);
-    var result =
-        await userProfileFirebaseService.saveUserProfile(_idUser.value, data);
+    if (_formKey.currentState!.validate()) {
+      String? img64;
+      if (_file != null) {
+        final bytes = File(_file!.path.toString()).readAsBytesSync();
+        img64 = base64Encode(bytes);
+      } else if (_imgFirebase != null) {
+        img64 = base64Encode(_imgFirebase!);
+      }
+      Map<String, dynamic> data = {
+        'name': _nameController.text,
+        'email': _emailController.text,
+        'mainCell': _mainCellController.text,
+        'optionalCell': _optionalCellController.text,
+        'optionalCell2': _optionalCell2Controller.text,
+        'street': _streetController.text,
+        'number': _numberController.text,
+        'complement': _complementController.text,
+        'district': _districtController.text,
+        'city': _cityController.text,
+        'state': _stateController.text,
+        'zipCode': _zipCodeController.text,
+        'image': img64,
+      };
+      LoadingModalComponent loadingModalComponent = LoadingModalComponent();
+      loadingModalComponent.showModal(context);
+      var result =
+          await userProfileFirebaseService.saveUserProfile(_idUser.value, data);
 
-    if (!result) {
-      const snack = SnackBar(
-        behavior: SnackBarBehavior.floating,
-        content: Text('Erro ao gravar dados'),
-        backgroundColor: Colors.red,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snack);
-      Navigator.of(context, rootNavigator: true).pop();
-    } else {
-      Navigator.of(context, rootNavigator: true).pop();
+      if (!result) {
+        const snack = SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Erro ao gravar dados'),
+          backgroundColor: Colors.red,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snack);
+        Navigator.of(context, rootNavigator: true).pop();
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
     }
   }
 
