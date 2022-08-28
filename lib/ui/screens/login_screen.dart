@@ -1,6 +1,6 @@
 import 'package:adoteme/data/service/login_firebase_service.dart';
-import 'package:adoteme/ui/components/button_outline_component.dart';
-import 'package:adoteme/ui/components/title_three_component.dart';
+import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

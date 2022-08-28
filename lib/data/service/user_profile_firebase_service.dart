@@ -1,10 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
-class UserProfileFirebaseService {
+class UserProfileFirebaseService extends ChangeNotifier {
+  bool isExecute;
+  UserProfileFirebaseService({this.isExecute = false});
+
   Future<bool> saveUserProfile(String userId, Map<String, dynamic> user) async {
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     try {
       await docUser.set(user);
+      isExecute = true;
+      notifyListeners();
     } catch (e) {
       return false;
     }

@@ -8,11 +8,11 @@ import 'package:adoteme/data/controller/address/via_cep_controller.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbar_component.dart';
-import 'package:adoteme/ui/components/button_component.dart';
+import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
-import 'package:adoteme/ui/components/title_three_component.dart';
+import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/utils/text_mask.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,6 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  //Controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _mainCellController = TextEditingController();
@@ -43,19 +42,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _complementController = TextEditingController();
 
-  //Providers
   final ValueNotifier<String> _idUser = ValueNotifier('');
   final ValueNotifier<String> _emailUser = ValueNotifier('');
-  //img
+
   PlatformFile? _file;
   Uint8List? _imgFirebase;
-  //Service
+
   UserProfileFirebaseService userProfileFirebaseService =
       UserProfileFirebaseService();
-  //Form
+
   final _formKey = GlobalKey<FormState>();
-  //Controlle
+
   final ViaCepController _viaCepController = Get.put(ViaCepController());
+  bool _isNotAddress = false;
   Future selectFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -169,20 +168,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isActive: false,
                         ),
                         InputComponent(
-                          textMask: TextMask('Tel'),
+                          textMask: TextMask('CELL'),
                           controller: _mainCellController,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular Principal',
                         ),
                         InputComponent(
-                          textMask: TextMask('Tel'),
+                          textMask: TextMask('CELL'),
                           controller: _optionalCellController,
                           isRequired: false,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
                         ),
                         InputComponent(
-                          textMask: TextMask('Tel'),
+                          textMask: TextMask('CELL'),
                           controller: _optionalCell2Controller,
                           isRequired: false,
                           keyboardType: TextInputType.phone,
@@ -194,10 +193,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         SeachComponent(
                           textMask: TextMask('CEP'),
                           keyboardType: TextInputType.number,
+                          isError: _isNotAddress,
+                          errorMessage: 'CEP inválido',
                           onChanged: (String value) async {
                             if (value.length == 8) {
                               var dataCep =
                                   await _viaCepController.fetchViaCep(value);
+                              if (dataCep.cep == null) {
+                                setState(() {
+                                  _isNotAddress = true;
+                                });
+                              } else {
+                                setState(() {
+                                  _isNotAddress = false;
+                                });
+                              }
                               _zipCodeController.text = dataCep.cep ?? '';
                               _streetController.text = dataCep.logradouro ?? '';
                               _numberController.text =
@@ -211,6 +221,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         InputComponent(
                           textMask: TextMask(''),
+                          iconErro: _isNotAddress,
                           controller: _streetController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
@@ -231,6 +242,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         InputComponent(
                           textMask: TextMask(''),
+                          iconErro: _isNotAddress,
                           controller: _districtController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
@@ -238,6 +250,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         InputComponent(
                           textMask: TextMask(''),
+                          iconErro: _isNotAddress,
                           controller: _cityController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
@@ -245,6 +258,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         InputComponent(
                           textMask: TextMask(''),
+                          iconErro: _isNotAddress,
                           controller: _stateController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
@@ -252,6 +266,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         InputComponent(
                           textMask: TextMask(''),
+                          iconErro: _isNotAddress,
                           controller: _zipCodeController,
                           keyboardType: TextInputType.number,
                           labelTextValue: 'CEP',
@@ -327,20 +342,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       };
       LoadingModalComponent loadingModalComponent = LoadingModalComponent();
       loadingModalComponent.showModal(context);
-      var result =
+
+      bool result =
           await userProfileFirebaseService.saveUserProfile(_idUser.value, data);
 
-      if (!result) {
+      if (userProfileFirebaseService.isExecute && !result) {
         const snack = SnackBar(
           behavior: SnackBarBehavior.floating,
           content: Text('Erro ao gravar dados'),
           backgroundColor: Colors.red,
         );
         ScaffoldMessenger.of(context).showSnackBar(snack);
-        Navigator.of(context, rootNavigator: true).pop();
-      } else {
-        Navigator.of(context, rootNavigator: true).pop();
       }
+      Navigator.of(context, rootNavigator: true).pop();
     }
   }
 

@@ -1,4 +1,4 @@
-import 'package:adoteme/ui/components/button_component.dart';
+import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

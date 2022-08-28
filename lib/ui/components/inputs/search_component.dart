@@ -7,14 +7,18 @@ class SeachComponent extends StatelessWidget {
   final String labelTextValue;
   final Function? onChanged;
   final TextMask textMask;
-  const SeachComponent({
-    Key? key,
-    this.initTextValue,
-    this.onChanged,
-    required this.textMask,
-    required this.keyboardType,
-    required this.labelTextValue,
-  }) : super(key: key);
+  final bool isError;
+  final String errorMessage;
+  const SeachComponent(
+      {Key? key,
+      this.initTextValue,
+      this.onChanged,
+      required this.textMask,
+      required this.keyboardType,
+      required this.labelTextValue,
+      this.isError = false,
+      this.errorMessage = ''})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +38,10 @@ class SeachComponent extends StatelessWidget {
               BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        suffixIcon: const Icon(
+        suffixIcon: Icon(
           Icons.search,
           size: 30,
+          color: isError ? Colors.red : Colors.grey[700],
         ),
         filled: true,
         fillColor: Colors.white,
@@ -49,6 +54,9 @@ class SeachComponent extends StatelessWidget {
           }
       },
       inputFormatters: textMask.maskTexFormated(),
+      validator: (value) {
+        return isError ? errorMessage : null;
+      },
     );
   }
 }

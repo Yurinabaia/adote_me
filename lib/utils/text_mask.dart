@@ -11,18 +11,19 @@ class TextMask {
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
-  final maskTel = MaskTextInputFormatter(
+  final maskCell = MaskTextInputFormatter(
       mask: '(##) #####-####',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
   List<TextInputFormatter>? maskTexFormated() {
-    if (typeDataMask == 'CEP') {
-      return [maskCEP];
+    switch (typeDataMask) {
+      case 'CEP':
+        return [maskCEP];
+      case 'CELL':
+        return [maskCell];
+      default:
+        return null;
     }
-    if (typeDataMask == 'Tel') {
-      return [maskTel];
-    }
-    return null;
   }
 }
