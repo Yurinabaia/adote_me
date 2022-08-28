@@ -31,7 +31,7 @@ class _InputComponentState extends State<InputComponent> {
     return TextFormField(
       controller: widget.controller,
       decoration: InputDecoration(
-        labelText: labelTextValue,
+        labelText: widget.labelTextValue,
         labelStyle: const TextStyle(
           color: Color(0xff334155),
         ),
@@ -60,7 +60,7 @@ class _InputComponentState extends State<InputComponent> {
             : null,
         enabled: widget.isActive,
         filled: true,
-        fillColor: isActive ? Colors.white : Colors.grey[100],
+        fillColor: widget.isActive ? Colors.white : Colors.grey[100],
       ),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.textMask.maskTexFormated(),
