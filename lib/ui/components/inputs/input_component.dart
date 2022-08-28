@@ -1,5 +1,7 @@
+import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/utils/text_mask.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class InputComponent extends StatefulWidget {
@@ -10,6 +12,8 @@ class InputComponent extends StatefulWidget {
   final TextMask textMask;
   final bool isRequired;
   bool iconErro;
+  ValueNotifier<GlobalKey<FormState>> formKey =
+      ValueNotifier(GlobalKey<FormState>());
   InputComponent({
     Key? key,
     required this.controller,
@@ -64,22 +68,21 @@ class _InputComponentState extends State<InputComponent> {
       ),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.textMask.maskTexFormated(),
-      onChanged: (value) => {
-        if (widget.isRequired)
-          {
-            if (value.isEmpty)
-              {
-                setState(() {
-                  widget.iconErro = true;
-                }),
-              }
-            else
-              {
-                setState(() {
-                  widget.iconErro = false;
-                }),
-              }
+      onChanged: (value) {
+        if (widget.isRequired) {
+          if (value.isEmpty) {
+            setState(() {
+              widget.iconErro = true;
+            });
+          } else {
+            final formKeyProvider = context.read<FormKeyProvider>();
+            widget.formKey.value = formKeyProvider.get();
+            widget.formKey.value.currentState!.validate();
+            setState(() {
+              widget.iconErro = false;
+            });
           }
+        }
       },
       validator: (value) {
         if ((value == null || value.isEmpty) && widget.isRequired) {

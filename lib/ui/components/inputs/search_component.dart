@@ -40,7 +40,7 @@ class SeachComponent extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        suffixIcon: Icon(
+        suffixIcon: const Icon(
           Icons.search,
           size: 30,
         ),

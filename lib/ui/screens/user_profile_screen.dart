@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:adoteme/data/controller/address/via_cep_controller.dart';
+import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbar_component.dart';
@@ -102,12 +103,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _emailUser.value = auth.emailFirebase();
     }
     _emailController.text = _emailUser.value;
+
     startData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final formKeyProvider = context.watch<FormKeyProvider>();
+    formKeyProvider.set(_formKey);
     return Scaffold(
       appBar: const AppBarComponent(titulo: 'Perfil'),
       drawer: const Drawer(),

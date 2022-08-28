@@ -1,5 +1,7 @@
+import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -9,5 +11,8 @@ final providers = <SingleChildWidget>[
   ),
   ChangeNotifierProvider<UserProfileFirebaseService>(
     create: (context) => UserProfileFirebaseService(),
+  ),
+  ChangeNotifierProvider<FormKeyProvider>(
+    create: (context) => FormKeyProvider(GlobalKey<FormState>()),
   ),
 ];
