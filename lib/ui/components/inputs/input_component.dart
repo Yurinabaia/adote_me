@@ -31,7 +31,7 @@ class _InputComponentState extends State<InputComponent> {
     return TextFormField(
       controller: widget.controller,
       decoration: InputDecoration(
-        labelText: widget.labelTextValue,
+        labelText: labelTextValue,
         labelStyle: const TextStyle(
           color: Color(0xff334155),
         ),
@@ -39,9 +39,17 @@ class _InputComponentState extends State<InputComponent> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         focusedBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+          ),
           borderRadius: BorderRadius.circular(10.0),
         ),
         suffixIcon: widget.iconErro
@@ -52,7 +60,7 @@ class _InputComponentState extends State<InputComponent> {
             : null,
         enabled: widget.isActive,
         filled: true,
-        fillColor: widget.isActive ? Colors.white : Colors.grey[100],
+        fillColor: isActive ? Colors.white : Colors.grey[100],
       ),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.textMask.maskTexFormated(),
