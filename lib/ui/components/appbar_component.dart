@@ -18,13 +18,13 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
           title: Center(
             child: Text(
               titulo,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Color(0xff334155),
                 fontSize: 20,
               ),
             ),
           ),
-          actions: [
+          actions: const [
             Icon(Icons.filter_alt_outlined, color: Color(0xff334155), size: 40),
           ],
           backgroundColor: Colors.white,

@@ -1,4 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
@@ -6,6 +10,7 @@ import 'package:adoteme/ui/components/appbar_component.dart';
 import 'package:adoteme/ui/components/button_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
+import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/title_three_component.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -35,19 +40,53 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _complementController = TextEditingController();
 
+  var test;
   //Providers
   final ValueNotifier<String> _idUser = ValueNotifier('');
   final ValueNotifier<String> _emailUser = ValueNotifier('');
+  //img
   PlatformFile? _file;
+  Uint8List? _imgFirebase;
+  var decodedBytes = <int>[];
+  //Service
+  UserProfileFirebaseService userProfileFirebaseService =
+      UserProfileFirebaseService();
   Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png'],
-    );
-    if (result != null) {
-      setState(() {
-        _file = result.files.first;
-      });
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+      if (result != null) {
+        setState(() {
+          _file = result.files.first;
+        });
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void startData() async {
+    var dataUser =
+        await userProfileFirebaseService.getUserProfile(_idUser.value);
+    if (dataUser.data() != null) {
+      _nameController.text = dataUser.data()!['name'];
+      _mainCellController.text = dataUser.data()!['mainCell'];
+      _optionalCellController.text = dataUser.data()!['optionalCell'];
+      _optionalCell2Controller.text = dataUser.data()!['optionalCell2'];
+      _zipCodeController.text = dataUser.data()!['zipCode'];
+      _streetController.text = dataUser.data()!['street'];
+      _numberController.text = dataUser.data()!['number'];
+      _districtController.text = dataUser.data()!['district'];
+      _cityController.text = dataUser.data()!['city'];
+      _stateController.text = dataUser.data()!['state'];
+      _complementController.text = dataUser.data()!['complement'];
+      if (dataUser.data()!['image'] != null) {
+        setState(() {
+          _imgFirebase = base64Decode(dataUser.data()!['image']);
+        });
+      }
     }
   }
 
@@ -59,19 +98,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _emailUser.value = auth.emailFirebase();
     }
     _emailController.text = _emailUser.value;
+    startData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    _zipCodeController.text = '13.068-000';
-    _streetController.text = 'Rua dos Bobos';
-    _numberController.text = '123';
-    _districtController.text = 'Bairro do Bobo';
-    _cityController.text = 'Cidade do Bobo';
-    _stateController.text = 'Estado do Bobo';
-    _complementController.text = 'Complemento do Bobo';
-
     return Scaffold(
       appBar: const AppBarComponent(titulo: 'Perfil'),
       body: SafeArea(
@@ -84,20 +116,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   Center(
                     child: GestureDetector(
                       onTapUp: (TapUpDetails details) {
-                        _file != null
+                        _file != null || _imgFirebase != null
                             ? _showPopupMenu(details.globalPosition)
                             : selectFile();
                       },
                       child: Stack(
                         children: <Widget>[
-                          CircleAvatar(
-                            radius: 75,
-                            backgroundColor: Colors.grey[300],
-                            backgroundImage: _file != null
-                                ? FileImage(File(_file!.path!))
-                                : Image.asset('assets/images/user_profile.png')
-                                    .image,
-                          ),
+                          findCircleAvatar(),
                           Positioned(
                             bottom: 0,
                             right: 0,
@@ -231,6 +256,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           onTap: () {
             setState(() {
               _file = null;
+              _imgFirebase = null;
             });
           },
           child: const Text("Remove"),
@@ -240,7 +266,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  void saveData() {
+  void saveData() async {
+    String? img64;
+    if (_file != null) {
+      final bytes = File(_file!.path.toString()).readAsBytesSync();
+      img64 = base64Encode(bytes);
+    } else if (_imgFirebase != null) {
+      img64 = base64Encode(_imgFirebase!);
+    }
     Map<String, dynamic> data = {
       'name': _nameController.text,
       'email': _emailController.text,
@@ -254,10 +287,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       'city': _cityController.text,
       'state': _stateController.text,
       'zipCode': _zipCodeController.text,
+      'image': img64,
     };
+    LoadingModalComponent loadingModalComponent = LoadingModalComponent();
+    loadingModalComponent.showModal(context);
+    var result =
+        await userProfileFirebaseService.saveUserProfile(_idUser.value, data);
 
-    UserProfileFirebaseService userProfileFirebaseService =
-        UserProfileFirebaseService();
-    userProfileFirebaseService.createUserProfile(_idUser.value, data);
+    if (!result) {
+      const snack = SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text('Erro ao gravar dados'),
+        backgroundColor: Colors.red,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snack);
+      Navigator.of(context, rootNavigator: true).pop();
+    } else {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+
+  CircleAvatar findCircleAvatar() {
+    var backgroundImage = Image.asset('assets/images/user_profile.png').image;
+    if (_imgFirebase != null) {
+      backgroundImage = Image.memory(
+        _imgFirebase!,
+        fit: BoxFit.cover,
+      ).image;
+    } else if (_file != null) {
+      backgroundImage = FileImage(File(_file!.path!));
+    }
+
+    return CircleAvatar(
+      radius: 75,
+      backgroundColor: Colors.grey[300],
+      backgroundImage: backgroundImage,
+    );
   }
 }
