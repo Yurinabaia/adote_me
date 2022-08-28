@@ -19,16 +19,25 @@ class InputComponent extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: labelTextValue,
-        labelStyle: const TextStyle(
-          color: Color(0xff334155),
+        labelStyle: TextStyle(
+          color: isActive ? Theme.of(context).primaryColor : Colors.black,
         ),
         //errorText: 'Error message',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         focusedBorder: OutlineInputBorder(
           borderSide:
-              BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+              BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2.0,
+          ),
           borderRadius: BorderRadius.circular(10.0),
         ),
         // suffixIcon: Icon(
@@ -36,7 +45,7 @@ class InputComponent extends StatelessWidget {
         // ),
         enabled: isActive,
         filled: true,
-        fillColor: isActive ? Colors.white : Colors.grey[100],
+        fillColor: isActive ? Colors.white : const Color(0xffdfe5ec),
       ),
       keyboardType: keyboardType,
     );
