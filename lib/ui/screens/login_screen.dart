@@ -13,8 +13,9 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+final FirebaseService service = FirebaseService();
+
 class _LoginState extends State<Login> {
-  FirebaseService service = FirebaseService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +50,11 @@ class _LoginState extends State<Login> {
                   children: <Widget>[
                     ButtonOutlineComponent(
                       text: "Continuar sem login",
-                      onPressed: () {},
+                      onPressed: () {
+                        service.clearAuth();
+                        Navigator.pushReplacementNamed(
+                            context, '/user_profile');
+                      },
                       textColor: const Color(0xff334155),
                     ),
                     ButtonOutlineComponent(
@@ -57,6 +62,11 @@ class _LoginState extends State<Login> {
                       onPressed: () async {
                         try {
                           await service.signInwithGoogle();
+                          if (service.idFirebase().isNotEmpty) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacementNamed(
+                                context, '/user_profile');
+                          }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}
                         }
@@ -69,8 +79,11 @@ class _LoginState extends State<Login> {
                       onPressed: () async {
                         try {
                           await service.signInWithFacebook();
-                          FirebaseService serviceF = FirebaseService();
-                          serviceF.idFirebase();
+                          if (service.idFirebase().isNotEmpty) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacementNamed(
+                                context, '/user_profile');
+                          }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}
                         }

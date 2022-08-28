@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SeachComponent extends StatelessWidget {
+  final TextInputType keyboardType;
   final String? initTextValue;
   final String labelTextValue;
   const SeachComponent({
     Key? key,
     this.initTextValue,
+    required this.keyboardType,
     required this.labelTextValue,
   }) : super(key: key);
 
@@ -34,6 +36,7 @@ class SeachComponent extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
       ),
+      keyboardType: TextInputType.text,
     );
   }
 }

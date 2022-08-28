@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:adoteme/data/service/login_firebase_service.dart';
+import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbar_component.dart';
+import 'package:adoteme/ui/components/button_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/title_three_component.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static const routeName = "/user_profile";
@@ -16,6 +20,24 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
+  //Controllers
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _mainCellController = TextEditingController();
+  final TextEditingController _optionalCellController = TextEditingController();
+  final TextEditingController _optionalCell2Controller =
+      TextEditingController();
+  final TextEditingController _zipCodeController = TextEditingController();
+  final TextEditingController _streetController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _districtController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _complementController = TextEditingController();
+
+  //Providers
+  final ValueNotifier<String> _idUser = ValueNotifier('');
+  final ValueNotifier<String> _emailUser = ValueNotifier('');
   PlatformFile? _file;
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles(
@@ -30,7 +52,26 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   @override
+  void initState() {
+    final auth = context.read<FirebaseService>();
+    _idUser.value = auth.idFirebase();
+    if (_idUser.value.isNotEmpty) {
+      _emailUser.value = auth.emailFirebase();
+    }
+    _emailController.text = _emailUser.value;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _zipCodeController.text = '13.068-000';
+    _streetController.text = 'Rua dos Bobos';
+    _numberController.text = '123';
+    _districtController.text = 'Bairro do Bobo';
+    _cityController.text = 'Cidade do Bobo';
+    _stateController.text = 'Estado do Bobo';
+    _complementController.text = 'Complemento do Bobo';
+
     return Scaffold(
       appBar: const AppBarComponent(titulo: 'Perfil'),
       body: SafeArea(
@@ -84,64 +125,86 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       runSpacing: 24,
                       children: <Widget>[
                         InputComponent(
+                          controller: _nameController,
                           labelTextValue: 'Nome',
+                          keyboardType: TextInputType.text,
                         ),
                         InputComponent(
+                          controller: _emailController,
                           labelTextValue: 'Email',
+                          keyboardType: TextInputType.emailAddress,
                           isActive: false,
-                          initTextValue: 'teste@teste',
                         ),
                         InputComponent(
+                          controller: _mainCellController,
+                          keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular Principal',
                         ),
                         InputComponent(
+                          controller: _optionalCellController,
+                          keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
                         ),
                         InputComponent(
+                          controller: _optionalCell2Controller,
+                          keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
                         ),
-                        Center(child: TextThreeComponent(text: 'Endereço')),
-                        SeachComponent(
+                        const Center(
+                          child: TextThreeComponent(text: 'Endereço'),
+                        ),
+                        const SeachComponent(
+                          keyboardType: TextInputType.number,
                           labelTextValue: 'Pesquisar CEP',
                         ),
                         InputComponent(
+                          controller: _streetController,
+                          keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
                           isActive: false,
-                          initTextValue: 'Rua teste',
                         ),
                         InputComponent(
+                          controller: _numberController,
+                          keyboardType: TextInputType.text,
                           labelTextValue: 'Número',
-                          isActive: false,
-                          initTextValue: '123',
                         ),
                         InputComponent(
+                          controller: _complementController,
+                          keyboardType: TextInputType.text,
                           labelTextValue: 'Complemento',
-                          isActive: false,
-                          initTextValue: 'Apto 123',
                         ),
                         InputComponent(
+                          controller: _districtController,
+                          keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
                           isActive: false,
-                          initTextValue: 'Bairro teste',
                         ),
                         InputComponent(
+                          controller: _cityController,
+                          keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
                           isActive: false,
-                          initTextValue: 'Cidade teste',
                         ),
                         InputComponent(
+                          controller: _stateController,
+                          keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
                           isActive: false,
-                          initTextValue: 'Estado teste',
                         ),
                         InputComponent(
+                          controller: _zipCodeController,
+                          keyboardType: TextInputType.number,
                           labelTextValue: 'CEP',
                           isActive: false,
-                          initTextValue: '12345-678',
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 32),
+                  ButtonComponent(
+                    text: 'Salvar',
+                    onPressed: saveData,
+                  ),
                 ],
               ),
             ),
@@ -174,8 +237,27 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ],
       elevation: 8.0,
-    ).then((value) {
-      if (value != null) print(value);
-    });
+    );
+  }
+
+  void saveData() {
+    Map<String, dynamic> data = {
+      'name': _nameController.text,
+      'email': _emailController.text,
+      'mainCell': _mainCellController.text,
+      'optionalCell': _optionalCellController.text,
+      'optionalCell2': _optionalCell2Controller.text,
+      'street': _streetController.text,
+      'number': _numberController.text,
+      'complement': _complementController.text,
+      'district': _districtController.text,
+      'city': _cityController.text,
+      'state': _stateController.text,
+      'zipCode': _zipCodeController.text,
+    };
+
+    UserProfileFirebaseService userProfileFirebaseService =
+        UserProfileFirebaseService();
+    userProfileFirebaseService.createUserProfile(_idUser.value, data);
   }
 }

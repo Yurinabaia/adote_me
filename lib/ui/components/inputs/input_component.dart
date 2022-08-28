@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class InputComponent extends StatelessWidget {
-  final String? initTextValue;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
   final String labelTextValue;
   final bool isActive;
   const InputComponent({
     Key? key,
-    this.initTextValue,
+    required this.controller,
+    required this.keyboardType,
     required this.labelTextValue,
     this.isActive = true,
   }) : super(key: key);
@@ -14,7 +16,7 @@ class InputComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initTextValue,
+      controller: controller,
       decoration: InputDecoration(
         labelText: labelTextValue,
         labelStyle: const TextStyle(
@@ -36,6 +38,7 @@ class InputComponent extends StatelessWidget {
         filled: true,
         fillColor: isActive ? Colors.white : Colors.grey[100],
       ),
+      keyboardType: keyboardType,
     );
   }
 }

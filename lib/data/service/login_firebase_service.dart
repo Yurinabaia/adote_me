@@ -74,8 +74,8 @@ class FirebaseService extends ChangeNotifier {
     return user == null ? '' : user.uid;
   }
 
-  String? emailFirebase() {
+  String emailFirebase() {
     final User? user = _auth.currentUser;
-    return user!.email;
+    return user == null ? '' : user.email!;
   }
 }
