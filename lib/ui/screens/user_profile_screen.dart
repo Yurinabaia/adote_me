@@ -67,6 +67,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       if (result != null) {
         setState(() {
           _file = result.files.first;
+          _imgFirebase = null;
         });
       }
     } catch (e) {
