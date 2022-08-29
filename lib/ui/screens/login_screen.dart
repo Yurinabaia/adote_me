@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
                     runSpacing: 16,
                     alignment: WrapAlignment.center,
                     children: const <Widget>[
-                      TextThreeComponent(text: "Seja bem-vindo(a)"),
+                      TitleThreeComponent(text: "Seja bem-vindo(a)"),
                       Text(
                         "Com nosso aplicativo voçê fará a vida de nossos amigos peludos mais felizes.",
                         textAlign: TextAlign.center,
@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                           if (service.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/user_profile');
+                                context, '/steps_create_publication');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
                           if (service.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/user_profile');
+                                context, '/steps_create_publication');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

@@ -8,7 +8,7 @@ import 'package:adoteme/data/controller/address/via_cep_controller.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
-import 'package:adoteme/ui/components/appbar_component.dart';
+import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/circle_avatar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
@@ -198,7 +198,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           labelTextValue: 'Celular (Opcional)',
                         ),
                         const Center(
-                          child: TextThreeComponent(text: 'Endereço'),
+                          child: TitleThreeComponent(text: 'Endereço'),
                         ),
                         SeachComponent(
                           textMask: TextMask('CEP'),

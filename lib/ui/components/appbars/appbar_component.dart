@@ -34,13 +34,12 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
         ),
         actions: <Widget>[
           IconButton(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
             onPressed: () {},
             icon: const Icon(Icons.filter_alt_outlined,
                 color: Color(0xff334155), size: 40),
           ),
         ],
-        backgroundColor: Colors.blue,
+        centerTitle: true,
       ),
     );
   }

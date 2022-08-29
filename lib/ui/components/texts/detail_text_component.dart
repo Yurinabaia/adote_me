@@ -9,9 +9,10 @@ class DetailTextComponent extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(
-        fontSize: 18,
-        color: Color(0xff334155),
+        fontSize: 16,
+        color: Color(0xff64748b),
       ),
+      textAlign: TextAlign.justify,
     );
   }
 }

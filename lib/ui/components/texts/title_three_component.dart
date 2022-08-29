@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class TextThreeComponent extends StatelessWidget {
+class TitleThreeComponent extends StatelessWidget {
   final String text;
 
-  const TextThreeComponent({Key? key, required this.text}) : super(key: key);
+  const TitleThreeComponent({Key? key, required this.text}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -13,6 +13,7 @@ class TextThreeComponent extends StatelessWidget {
         fontWeight: FontWeight.w900,
         color: Color(0xff334155),
       ),
+      textAlign: TextAlign.center,
     );
   }
 }
