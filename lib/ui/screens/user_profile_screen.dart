@@ -181,7 +181,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           textMask: TextMask('CELL'),
                           controller: _mainCellController,
                           keyboardType: TextInputType.phone,
-                          labelTextValue: 'Celular Principal',
+                          labelTextValue: 'Whatsapp',
                         ),
                         InputComponent(
                           textMask: TextMask('CELL'),

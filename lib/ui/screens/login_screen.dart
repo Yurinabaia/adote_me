@@ -3,6 +3,7 @@ import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Login extends StatefulWidget {
@@ -16,6 +17,17 @@ class Login extends StatefulWidget {
 final FirebaseService service = FirebaseService();
 
 class _LoginState extends State<Login> {
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
