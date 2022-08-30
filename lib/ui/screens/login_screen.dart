@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                         Navigator.pushReplacementNamed(
                             context, '/user_profile');
                       },
-                      textColor: const Color(0xff334155),
+                      islogin: true,
                     ),
                     ButtonOutlineComponent(
                       text: "Entrar com gmail",
@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
                         }
                       },
                       svgIcon: "icon-google",
-                      textColor: const Color(0xff334155),
+                      islogin: true,
                     ),
                     ButtonOutlineComponent(
                       text: "Entrar com facebook",
@@ -101,7 +101,7 @@ class _LoginState extends State<Login> {
                         }
                       },
                       svgIcon: "icon-facebook",
-                      textColor: const Color(0xff334155),
+                      islogin: true,
                     ),
                   ],
                 ),

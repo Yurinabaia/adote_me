@@ -30,6 +30,12 @@ class SeachComponent extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
         //errorText: 'Error message',
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -40,9 +46,10 @@ class SeachComponent extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        suffixIcon: const Icon(
+        suffixIcon: Icon(
           Icons.search,
           size: 30,
+          color: Theme.of(context).primaryColor,
         ),
         filled: true,
         fillColor: Colors.white,

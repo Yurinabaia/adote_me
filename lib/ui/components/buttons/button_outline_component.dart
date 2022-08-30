@@ -5,23 +5,29 @@ class ButtonOutlineComponent extends StatelessWidget {
   final String text;
   final Function onPressed;
   final String? svgIcon;
-  final Color? textColor;
-  const ButtonOutlineComponent(
-      {Key? key,
-      required this.text,
-      required this.onPressed,
-      this.svgIcon,
-      this.textColor})
-      : super(key: key);
+  final bool islogin;
+
+  const ButtonOutlineComponent({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    this.svgIcon,
+    this.islogin = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return OutlinedButton(
       onPressed: () => onPressed(),
       style: ElevatedButton.styleFrom(
         primary: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         minimumSize: const Size.fromHeight(50),
+        shape: const StadiumBorder(),
+        side: BorderSide(
+          color: Theme.of(context).primaryColor,
+          width: islogin ? 0 : 2,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -38,9 +44,9 @@ class ButtonOutlineComponent extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: textColor ?? Theme.of(context).primaryColor,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ],

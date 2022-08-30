@@ -21,8 +21,9 @@ class ButtonComponent extends StatelessWidget {
       onPressed: () => onPressed(),
       style: ElevatedButton.styleFrom(
         primary: color ?? const Color(0xff4079AC),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         minimumSize: const Size.fromHeight(50),
+        shape: const StadiumBorder(),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +40,7 @@ class ButtonComponent extends StatelessWidget {
           ],
           Text(
             text,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ],
       ),
