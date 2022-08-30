@@ -49,7 +49,7 @@ class _LoginState extends State<Login> {
                     children: const <Widget>[
                       TitleThreeComponent(text: "Seja bem-vindo(a)"),
                       Text(
-                        "Com nosso aplicativo voçê fará a vida de nossos amigos peludos mais felizes.",
+                    "Com nosso aplicativo você fará a vida de nossos amigos peludos mais feliz.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/user_profile');
+                                context, '/select_publication');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}
