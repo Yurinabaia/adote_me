@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   static const routeName = "/login";
@@ -13,8 +14,6 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() => _LoginState();
 }
-
-final FirebaseService service = FirebaseService();
 
 class _LoginState extends State<Login> {
   @override
@@ -30,6 +29,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.read<LoginFirebaseService>();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -63,7 +63,7 @@ class _LoginState extends State<Login> {
                     ButtonOutlineComponent(
                       text: "Continuar sem login",
                       onPressed: () {
-                        service.clearAuth();
+                        auth.clearAuth();
                         Navigator.pushReplacementNamed(
                             context, '/user_profile');
                       },
@@ -73,11 +73,11 @@ class _LoginState extends State<Login> {
                       text: "Entrar com gmail",
                       onPressed: () async {
                         try {
-                          await service.signInwithGoogle();
-                          if (service.idFirebase().isNotEmpty) {
+                          await auth.signInWithGoogle();
+                          if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/steps_create_publication');
+                                context, '/user_profile');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}
@@ -90,11 +90,11 @@ class _LoginState extends State<Login> {
                       text: "Entrar com facebook",
                       onPressed: () async {
                         try {
-                          await service.signInWithFacebook();
-                          if (service.idFirebase().isNotEmpty) {
+                          await auth.signInWithFacebook();
+                          if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/steps_create_publication');
+                                context, '/user_profile');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

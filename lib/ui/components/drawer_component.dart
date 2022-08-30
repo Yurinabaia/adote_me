@@ -1,7 +1,11 @@
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/circle_avatar_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/label_text_component.dart';
+import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DrawerComponent extends StatefulWidget {
@@ -39,14 +43,10 @@ class _DrawerComponentState extends State<DrawerComponent> {
       'icon': Icons.account_circle_outlined,
       'route': '/user_profile',
     },
-    {
-      'name': 'Desconectar-se',
-      'icon': Icons.logout,
-      'route': '/user_profile',
-    },
   ];
   @override
   Widget build(BuildContext context) {
+    final auth = context.read<LoginFirebaseService>();
     return Drawer(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -93,6 +93,22 @@ class _DrawerComponentState extends State<DrawerComponent> {
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: Color(0xff334155),
+                size: 28,
+              ),
+              title: const BodyTextComponent(
+                text: 'Desconectar-se',
+              ),
+              onTap: () {
+                auth.signOut();
+                Navigator.pushReplacementNamed(context, Login.routeName);
+              },
+              selectedTileColor: Theme.of(context).primaryColor,
+            ),
+            // TODO : implementar o sobre-nós
             // const AboutListTile(
             //   icon: Icon(
             //     Icons.info,

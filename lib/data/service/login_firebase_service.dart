@@ -7,11 +7,11 @@ import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 
-class FirebaseService extends ChangeNotifier {
+class LoginFirebaseService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<String?> signInwithGoogle() async {
+  Future<String?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
           await _googleSignIn.signIn();
@@ -52,13 +52,12 @@ class FirebaseService extends ChangeNotifier {
     }
   }
 
-  static Future<void> signOut() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-
+  Future<void> signOut() async {
     if (!kIsWeb) {
-      await googleSignIn.signOut();
+      await _googleSignIn.signOut();
     }
-    await FirebaseAuth.instance.signOut();
+    await _auth.signOut();
+    await FacebookAuth.instance.logOut();
   }
 
   Future<void> excluirConta() async {

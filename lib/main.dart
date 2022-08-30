@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const StepsCreatePublicationScreen(),
+      home: const SplashScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         Login.routeName: (context) => const Login(),

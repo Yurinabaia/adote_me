@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 final providers = <SingleChildWidget>[
-  ChangeNotifierProvider<FirebaseService>(
-    create: (context) => FirebaseService(),
+  ChangeNotifierProvider<LoginFirebaseService>(
+    create: (context) => LoginFirebaseService(),
   ),
   ChangeNotifierProvider<UserProfileFirebaseService>(
     create: (context) => UserProfileFirebaseService(),

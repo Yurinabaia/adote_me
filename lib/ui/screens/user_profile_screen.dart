@@ -100,7 +100,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   void initState() {
-    final auth = context.read<FirebaseService>();
+    final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
     if (_idUser.value.isNotEmpty) {
       _emailUser.value = auth.emailFirebase();
