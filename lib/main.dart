@@ -1,4 +1,5 @@
 import 'package:adoteme/providers.dart';
+import 'package:adoteme/ui/screens/create_publication/animal_adoption/animal_photos_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/basic_animal_data_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/details_animal_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/steps_create_publication_screen.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         BasicAnimalDataScreen.routeName: (context) => 
             const BasicAnimalDataScreen(),
         DetailsAnimalScreen.routeName: (context) => const DetailsAnimalScreen(),
+        AnimalPhotosScreen.routeName: (context) => const AnimalPhotosScreen(),
       },
     );
   }
