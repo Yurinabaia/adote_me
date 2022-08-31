@@ -3,6 +3,7 @@ import 'package:adoteme/ui/screens/create_publication/basic_animal_data_screen.d
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/steps_create_publication.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
+import 'package:adoteme/ui/screens/my_publications_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
 import 'package:adoteme/ui/screens/first_access_screen.dart';

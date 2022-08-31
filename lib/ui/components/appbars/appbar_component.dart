@@ -28,7 +28,8 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
             titulo,
             style: const TextStyle(
               color: Color(0xff334155),
-              fontSize: 20,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
