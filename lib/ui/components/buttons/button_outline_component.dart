@@ -32,15 +32,16 @@ class ButtonOutlineComponent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          if (svgIcon != null)
+          if (svgIcon != null) ...[
             SvgPicture.asset(
               'assets/images/$svgIcon.svg',
               height: 24,
               width: 24,
             ),
-          const SizedBox(
-            width: 20,
-          ),
+            const SizedBox(
+              width: 20,
+            ),
+          ],
           Text(
             text,
             style: TextStyle(
