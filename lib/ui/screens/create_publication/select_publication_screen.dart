@@ -31,14 +31,14 @@ class SelectPublicationScreen extends StatelessWidget {
               title: 'Animal perdido',
               image: 'dog',
               color: Color(0xffA82525),
-              // TODO: Implementar ação para publicação de animal perdido
+              // TODO: Implementar rota para a interface publicação de animal perdido
               route: '',
             ),
             PublicationCardComponent(
               title: 'Informativo',
               image: 'info',
               color: Color(0xff2789E3),
-              // TODO: Implementar rota para tela de criação de publicação de informativo
+              // TODO: Implementar rota para a interface de criação de publicação de informativo
               route: '',
             ),
           ],

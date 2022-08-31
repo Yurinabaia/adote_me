@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/select_publication');
+                                context, '/user_profile');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

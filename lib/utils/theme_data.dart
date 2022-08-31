@@ -12,7 +12,7 @@ ThemeData getThemeData(context) {
       ),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Colors.teal.shade500,
+      backgroundColor: Theme.of(context).primaryColor,
     ),
     switchTheme: SwitchThemeData(
       trackColor: MaterialStateProperty.all<Color>(Colors.grey.shade600),

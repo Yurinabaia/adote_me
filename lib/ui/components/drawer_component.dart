@@ -30,7 +30,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
     {
       'name': 'Minhas publicações',
       'icon': Icons.newspaper,
-      'route': '/user_profile',
+      'route': '/my_publications',
     },
     {
       'name': 'Caso de sucesso',

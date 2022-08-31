@@ -6,14 +6,14 @@ class SeachComponent extends StatelessWidget {
   final String? initTextValue;
   final String labelTextValue;
   final Function? onChanged;
-  final TextMask textMask;
+  final TextMask? textMask;
   final bool isError;
   final String errorMessage;
   const SeachComponent(
       {Key? key,
       this.initTextValue,
       this.onChanged,
-      required this.textMask,
+      this.textMask,
       required this.keyboardType,
       required this.labelTextValue,
       this.isError = false,
@@ -61,7 +61,7 @@ class SeachComponent extends StatelessWidget {
             onChanged!(value),
           }
       },
-      inputFormatters: textMask.maskTexFormated(),
+      inputFormatters: textMask?.maskTexFormated(),
       validator: (value) {
         return isError ? errorMessage : null;
       },
