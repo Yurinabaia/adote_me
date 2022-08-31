@@ -105,10 +105,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _idUser.value = auth.idFirebase();
     if (_idUser.value.isNotEmpty) {
       _emailUser.value = auth.emailFirebase();
+      startData();
     }
     _emailController.text = _emailUser.value;
-
-    startData();
     super.initState();
   }
 
