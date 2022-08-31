@@ -1,5 +1,5 @@
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
-import 'package:adoteme/ui/screens/create_publication/components/publication_card_component.dart';
+import 'package:adoteme/ui/screens/create_publication/component/publication_card_component.dart';
 import 'package:flutter/material.dart';
 
 class SelectPublicationScreen extends StatelessWidget {

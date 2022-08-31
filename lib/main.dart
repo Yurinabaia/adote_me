@@ -1,4 +1,5 @@
 import 'package:adoteme/providers.dart';
+import 'package:adoteme/ui/screens/create_publication/basic_animal_data_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/steps_create_publication.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
@@ -35,13 +36,15 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const SplashScreen(),
+      home: const BasicAnimalDataScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         Login.routeName: (context) => const Login(),
         UserProfileScreen.routeName: (context) => const UserProfileScreen(),
-        StepsCreatePublicationScreen.routeName: (context) => const StepsCreatePublicationScreen(),
-        SelectPublicationScreen.routeName: (context) => const SelectPublicationScreen(),
+        StepsCreatePublicationScreen.routeName: (context) =>
+            const StepsCreatePublicationScreen(),
+        SelectPublicationScreen.routeName: (context) =>
+            const SelectPublicationScreen(),
       },
     );
   }

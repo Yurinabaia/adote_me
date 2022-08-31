@@ -9,7 +9,7 @@ class InputComponent extends StatefulWidget {
   final TextEditingController controller;
   final String labelTextValue;
   final bool isActive;
-  final TextMask textMask;
+  final TextMask? textMask;
   final bool isRequired;
   bool iconErro;
   ValueNotifier<GlobalKey<FormState>> formKey =
@@ -18,7 +18,7 @@ class InputComponent extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.keyboardType,
-    required this.textMask,
+    this.textMask,
     this.isRequired = true,
     this.iconErro = false,
     required this.labelTextValue,
@@ -35,6 +35,12 @@ class _InputComponentState extends State<InputComponent> {
     return TextFormField(
       controller: widget.controller,
       decoration: InputDecoration(
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.red[700]!,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         labelText: widget.labelTextValue,
         labelStyle: const TextStyle(
           color: Color(0xff334155),
@@ -67,7 +73,7 @@ class _InputComponentState extends State<InputComponent> {
         fillColor: widget.isActive ? Colors.white : Colors.grey[100],
       ),
       keyboardType: widget.keyboardType,
-      inputFormatters: widget.textMask.maskTexFormated(),
+      inputFormatters: widget.textMask?.maskTexFormated(),
       onChanged: (value) {
         if (widget.isRequired) {
           if (value.isEmpty) {

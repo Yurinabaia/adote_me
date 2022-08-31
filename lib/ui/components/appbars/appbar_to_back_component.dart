@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 class AppBarToBackComponent extends StatelessWidget
     implements PreferredSizeWidget {
-  const AppBarToBackComponent({Key? key}) : super(key: key);
+  final String title;
+  const AppBarToBackComponent({Key? key, this.title = "Criar publicação"})
+      : super(key: key);
   @override
   Size get preferredSize => const Size.fromHeight(56);
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text(
-        "Criar publicação",
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
           color: Color(0xff334155),
           fontSize: 18,
           fontWeight: FontWeight.w600,

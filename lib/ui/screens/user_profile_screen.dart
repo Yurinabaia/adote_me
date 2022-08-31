@@ -166,13 +166,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       runSpacing: 24,
                       children: <Widget>[
                         InputComponent(
-                          textMask: TextMask(''),
                           controller: _nameController,
                           labelTextValue: 'Nome',
                           keyboardType: TextInputType.text,
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           controller: _emailController,
                           labelTextValue: 'Email',
                           keyboardType: TextInputType.emailAddress,
@@ -231,7 +229,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           labelTextValue: 'Pesquisar CEP',
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           iconErro: _isNotAddress,
                           controller: _streetController,
                           keyboardType: TextInputType.text,
@@ -239,20 +236,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isActive: false,
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           controller: _numberController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Número',
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           controller: _complementController,
                           isRequired: false,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Complemento',
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           iconErro: _isNotAddress,
                           controller: _districtController,
                           keyboardType: TextInputType.text,
@@ -260,7 +254,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isActive: false,
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           iconErro: _isNotAddress,
                           controller: _cityController,
                           keyboardType: TextInputType.text,
@@ -268,7 +261,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isActive: false,
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           iconErro: _isNotAddress,
                           controller: _stateController,
                           keyboardType: TextInputType.text,
@@ -276,7 +268,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isActive: false,
                         ),
                         InputComponent(
-                          textMask: TextMask(''),
                           iconErro: _isNotAddress,
                           controller: _zipCodeController,
                           keyboardType: TextInputType.number,
