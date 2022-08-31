@@ -5,6 +5,7 @@ import 'package:adoteme/ui/screens/create_publication/animal_adoption/steps_crea
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/ui/screens/my_publications_screen.dart';
+import 'package:adoteme/ui/screens/splash_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
 import 'package:adoteme/ui/screens/first_access_screen.dart';
@@ -37,10 +38,10 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const SelectPublicationScreen(),
+      home: const SplashScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
-        Login.routeName: (context) => const Login(),
+        LoginScren.routeName: (context) => const LoginScren(),
         UserProfileScreen.routeName: (context) => const UserProfileScreen(),
         MyPublicationsScreen.routeName: (context) =>
             const MyPublicationsScreen(),

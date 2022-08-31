@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 class DetailsAnimalScreen extends StatefulWidget {
   static const routeName = "/create-publication/details_animal";
   const DetailsAnimalScreen({Key? key}) : super(key: key);
-
   @override
   State<DetailsAnimalScreen> createState() => _DetailsAnimalScreenState();
 }

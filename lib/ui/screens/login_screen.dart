@@ -7,15 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class Login extends StatefulWidget {
+class LoginScren extends StatefulWidget {
   static const routeName = "/login";
-  const Login({Key? key}) : super(key: key);
+  const LoginScren({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginScren> createState() => _LoginScrenState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginScrenState extends State<LoginScren> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([
@@ -29,7 +29,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.read<LoginFirebaseService>();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -49,7 +48,7 @@ class _LoginState extends State<Login> {
                     children: const <Widget>[
                       TitleThreeComponent(text: "Seja bem-vindo(a)"),
                       Text(
-                    "Com nosso aplicativo você fará a vida de nossos amigos peludos mais feliz.",
+                        "Com nosso aplicativo você fará a vida de nossos amigos peludos mais feliz.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 18,
@@ -63,7 +62,6 @@ class _LoginState extends State<Login> {
                     ButtonOutlineComponent(
                       text: "Continuar sem login",
                       onPressed: () {
-                        auth.clearAuth();
                         Navigator.pushReplacementNamed(
                             context, '/user_profile');
                       },
@@ -73,6 +71,7 @@ class _LoginState extends State<Login> {
                       text: "Entrar com gmail",
                       onPressed: () async {
                         try {
+                          final auth = context.read<LoginFirebaseService>();
                           await auth.signInWithGoogle();
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
@@ -90,6 +89,7 @@ class _LoginState extends State<Login> {
                       text: "Entrar com facebook",
                       onPressed: () async {
                         try {
+                          final auth = context.read<LoginFirebaseService>();
                           await auth.signInWithFacebook();
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously

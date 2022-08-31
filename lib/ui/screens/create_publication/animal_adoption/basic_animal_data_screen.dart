@@ -5,6 +5,7 @@ import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
 import 'package:adoteme/ui/components/inputs/dropdown_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
+import 'package:adoteme/utils/text_mask.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       labelTextValue: 'Tipo Animal'),
                   InputComponent(
                       controller: _ageController,
+                      textMask: TextMask('IDADE'),
                       isRequired: false,
                       keyboardType: TextInputType.number,
                       labelTextValue: 'Idade'),
