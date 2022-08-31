@@ -78,10 +78,11 @@ class StepsCreatePublicationScreen extends StatelessWidget {
               height: 40,
             ),
             ButtonComponent(
-                text: 'Continuar',
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/steps_create_publication');
-                })
+              text: 'Continuar',
+              onPressed: () {
+                Navigator.of(context).pushNamed('/create-publication/basic_animal_data');
+              },
+            ),
           ],
         ),
       ),
