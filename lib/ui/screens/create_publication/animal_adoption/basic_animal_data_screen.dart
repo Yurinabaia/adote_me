@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BasicAnimalDataScreen extends StatefulWidget {
+  static const routeName = "/create-publication/basic_animal_data";
   const BasicAnimalDataScreen({Key? key}) : super(key: key);
 
   @override
@@ -106,16 +107,20 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
             const SizedBox(height: 64),
             ButtonComponent(
               text: 'Continuar',
-              //TODO: implementar o proxima tela de descricao
               onPressed: () {
-                if (_formKey.currentState!.validate()) {}
+                if (_formKey.currentState!.validate()) {
+                  Navigator.pushNamed(
+                      context, '/create-publication/details_animal');
+                }
               },
             ),
             const SizedBox(height: 16),
             ButtonOutlineComponent(
               text: 'Cancelar',
-              //TODO: Implementar ação de voltar para a Página Inicial
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, '/select_publication');
+              },
             ),
           ],
         ),
