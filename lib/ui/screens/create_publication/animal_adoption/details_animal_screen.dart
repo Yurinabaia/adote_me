@@ -49,19 +49,18 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
               const SizedBox(height: 64),
               ButtonComponent(
                 text: 'Continuar',
-                //TODO: implementar o proxima tela de descricao
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-
+                    Navigator.pushNamed(context, '/animal_photos');
                   }
                 },
               ),
               const SizedBox(height: 16),
               ButtonOutlineComponent(
                 text: 'Cancelar',
+                // TODO: Implementar a navegação para cancelar a criação da publicação
                 onPressed: () {
-                  Navigator.pushNamed(
-                    context, '/select_publication');
+                  
                 },
               ),
             ],

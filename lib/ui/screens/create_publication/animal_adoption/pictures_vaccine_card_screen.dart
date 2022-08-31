@@ -5,18 +5,17 @@ import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/components/photo_animal_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class AnimalPhotosScreen extends StatefulWidget {
-  static const routeName = "/animal_photos";
+class PicturesVaccineCardScreen extends StatefulWidget {
+  static const routeName = "/pictures_vaccine_Card";
 
-  const AnimalPhotosScreen({Key? key}) : super(key: key);
+  const PicturesVaccineCardScreen({Key? key}) : super(key: key);
 
   @override
-  State<AnimalPhotosScreen> createState() => _AnimalPhotosScreenState();
+  State<PicturesVaccineCardScreen> createState() => _PicturesVaccineCardScreen();
 }
 
-class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
+class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,10 +25,10 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
         child: ListView(
           children: <Widget>[
             const Center(
-              child: TitleThreeComponent(text: '3. Fotos do animal'),
+              child: TitleThreeComponent(text: '4. Fotos do cartão de vacina'),
             ),
             const Center(
-              child: DetailTextComponent(text: 'Envie pelo menos uma foto do animal'),
+              child: DetailTextComponent(text: 'As fotos do cartão de vacina são opcionais.'),
             ),
             const SizedBox(
               height: 32,
@@ -42,7 +41,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 6,
+              itemCount: 4,
               itemBuilder: (BuildContext context, int index) {
                 return const PhotoAnimalComponent();
               },
@@ -51,18 +50,16 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
               height: 64,
             ),
             ButtonComponent(
-              text: 'Continuar',
-              // TODO: Implementar o bloqueio do botão caso não tenha foto
-              onPressed: () {
-                Navigator.pushNamed(context, '/pictures_vaccine_Card');
-              },
+              text: 'Publicar',
+              // TODO: Implementar a ação para salvar a publicação
+              onPressed: () {},
             ),
             const SizedBox(
               height: 16,
             ),
             ButtonOutlineComponent(
               text: 'Cancelar',
-              // TODO: implementar ação de cancelar publicação
+              // TODO: implementar ação de cancelar a criação da publicação
               onPressed: () {},
             ),
           ],
