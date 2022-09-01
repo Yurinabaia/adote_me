@@ -41,8 +41,8 @@ class SelectPublicationScreen extends StatelessWidget {
               image: 'info',
               color: Color(0xff2789E3),
               // TODO: Implementar rota para a interface de criação de publicação de informativo
-              route: '',
               typePublication: 'informative',
+              route: '/informative_publication',
             ),
           ],
         ),
