@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/components/photo_animal_component.dart';
@@ -86,18 +88,26 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
             ),
             ButtonComponent(
               text: 'Continuar',
-              onPressed: () {
+              onPressed: () async {
+                LoadingModalComponent loadingModalComponent = LoadingModalComponent();
+                loadingModalComponent.showModal(context);
                 List<String> animalPhotos = [];
                 final animalModel = context.read<AnimalModel>();
-
-                for (var element in file) {
-                  if (element != null) {
-                    final bytes =
-                        File(element.path.toString()).readAsBytesSync();
-                    animalPhotos.add(base64Encode(bytes));
-                  }
+                 for (var photo in file) {
+                    if (photo != null) {
+                      var resultImg = await UploadFileFirebaseService.uploadImage(
+                          File(photo.path!), 'publications/animal_photos/${photo.name}');
+                          
+                      if (resultImg) {
+                        var result = await UploadFileFirebaseService.getImage('publications/animal_photos/${photo.name}');
+                        animalPhotos.add(result);
+                      }
+                    }
                 }
                 animalModel.setAnimalPhotos(animalPhotos);
+                // ignore: use_build_context_synchronously
+                Navigator.of(context, rootNavigator: true).pop();
+                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(context, '/pictures_vaccine_Card');
               },
             ),

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/service/create_publication.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
+import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
@@ -119,13 +120,21 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   savePublication() async {
     LoadingModalComponent loadingModalComponent = LoadingModalComponent();
     loadingModalComponent.showModal(context);
+    CreatePublicationService createPublicationService =
+        CreatePublicationService();
+
     List<String> vaccineseAnimal = [];
     final animalModel = context.read<AnimalModel>();
 
-    for (var element in file) {
-      if (element != null) {
-        final bytes = File(element.path.toString()).readAsBytesSync();
-        vaccineseAnimal.add(base64Encode(bytes));
+    for (var photo in file) {
+      if (photo != null) {
+        var resultImg = await UploadFileFirebaseService.uploadImage(
+            File(photo.path!), 'publications/vaccine_photos/${photo.name}');
+            
+        if (resultImg) {
+          var result = await UploadFileFirebaseService.getImage('publications/vaccine_photos/${photo.name}');
+          vaccineseAnimal.add(result);
+        }
       }
     }
     animalModel.setPicturesVaccineCard(vaccineseAnimal);
@@ -133,21 +142,21 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
     animalModel.setIdUser(_idUser.value);
     animalModel.setStatus('in_progress');
-    CreatePublicationService createPublicationService =
-        CreatePublicationService();
+
     var resultFirebase =
         await createPublicationService.createPublication(animalModel.toJson());
+
     if (resultFirebase) {
       //TODO INFORMANDO QUE DEU CERTO
-    } else {
       const snack = SnackBar(
         behavior: SnackBarBehavior.floating,
-        content:
-            Text('Erro ao gravar dados, carregue novamente outras imagens'),
+        content: Text('Erro ao gravar dados, carregue novamente outras imagens'),
         backgroundColor: Colors.red,
       );
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snack);
     }
+    // ignore: use_build_context_synchronously
     Navigator.of(context, rootNavigator: true).pop();
   }
 }
