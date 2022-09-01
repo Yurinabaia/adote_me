@@ -1,14 +1,13 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class CircleAvatarComponent {
   static CircleAvatar findCircleAvatar(
-      {Uint8List? imgFirebase, PlatformFile? file}) {
+      {String? imgFirebase, PlatformFile? file}) {
     var backgroundImage = Image.asset('assets/images/user_profile.png').image;
     if (imgFirebase != null) {
-      backgroundImage = Image.memory(
+      backgroundImage = Image.network(
         imgFirebase,
         fit: BoxFit.cover,
       ).image;

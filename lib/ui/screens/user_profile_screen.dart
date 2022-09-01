@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:adoteme/data/controller/address/via_cep_controller.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
+import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -23,6 +24,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class UserProfileScreen extends StatefulWidget {
   static const routeName = "/user_profile";
@@ -51,7 +53,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final ValueNotifier<String> _emailUser = ValueNotifier('');
 
   PlatformFile? _file;
-  Uint8List? _imgFirebase;
+  String? _imgFirebase;
 
   UserProfileFirebaseService userProfileFirebaseService =
       UserProfileFirebaseService();
@@ -94,7 +96,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _complementController.text = dataUser.data()!['complement'];
       if (dataUser.data()!['image'] != null) {
         setState(() {
-          _imgFirebase = base64Decode(dataUser.data()!['image']);
+          _imgFirebase = dataUser.data()!['image'];
         });
       }
     }
@@ -332,13 +334,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   void saveData() async {
     if (_formKey.currentState!.validate()) {
-      String? img64;
+      String image = '';
+      Uuid uuid = const Uuid();
       if (_file != null) {
-        final bytes = File(_file!.path.toString()).readAsBytesSync();
-        img64 = base64Encode(bytes);
-      } else if (_imgFirebase != null) {
-        img64 = base64Encode(_imgFirebase!);
+        var uid = uuid.v4();
+        var resultImg = await UploadFileFirebaseService.uploadImage(
+            File(_file!.path!), '${_idUser.value}/$uid');
+        if (resultImg) {
+          var result =
+              await UploadFileFirebaseService.getImage('${_idUser.value}/$uid');
+          image = result;
+        }
       }
+
       Map<String, dynamic> data = {
         'name': _nameController.text,
         'email': _emailController.text,
@@ -352,7 +360,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         'city': _cityController.text,
         'state': _stateController.text,
         'zipCode': _zipCodeController.text,
-        'image': img64,
+        'image': image,
       };
       LoadingModalComponent loadingModalComponent = LoadingModalComponent();
       loadingModalComponent.showModal(context);
