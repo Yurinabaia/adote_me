@@ -4,6 +4,7 @@ import 'package:adoteme/ui/screens/create_publication/animal_adoption/basic_anim
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/details_animal_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/pictures_vaccine_card_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/steps_create_publication_screen.dart';
+import 'package:adoteme/ui/screens/create_publication/informative_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/ui/screens/my_publications_screen.dart';
@@ -45,18 +46,14 @@ class MyApp extends StatelessWidget {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         LoginScren.routeName: (context) => const LoginScren(),
         UserProfileScreen.routeName: (context) => const UserProfileScreen(),
-        MyPublicationsScreen.routeName: (context) =>
-            const MyPublicationsScreen(),
-        StepsCreatePublicationScreen.routeName: (context) =>
-            const StepsCreatePublicationScreen(),
-        SelectPublicationScreen.routeName: (context) =>
-            const SelectPublicationScreen(),
-        BasicAnimalDataScreen.routeName: (context) =>
-            const BasicAnimalDataScreen(),
         DetailsAnimalScreen.routeName: (context) => const DetailsAnimalScreen(),
         AnimalPhotosScreen.routeName: (context) => const AnimalPhotosScreen(),
-        PicturesVaccineCardScreen.routeName: (context) =>
-            const PicturesVaccineCardScreen(),
+        MyPublicationsScreen.routeName: (context) => const MyPublicationsScreen(),
+        StepsCreatePublicationScreen.routeName: (context) => const StepsCreatePublicationScreen(),
+        SelectPublicationScreen.routeName: (context) => const SelectPublicationScreen(),
+        BasicAnimalDataScreen.routeName: (context) => const BasicAnimalDataScreen(),
+        PicturesVaccineCardScreen.routeName: (context) => const PicturesVaccineCardScreen(),
+        InformativePublicationScreen.routeName: (context) => const InformativePublicationScreen(),
       },
     );
   }
