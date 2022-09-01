@@ -51,11 +51,12 @@ class MyApp extends StatelessWidget {
             const StepsCreatePublicationScreen(),
         SelectPublicationScreen.routeName: (context) =>
             const SelectPublicationScreen(),
-        BasicAnimalDataScreen.routeName: (context) => 
+        BasicAnimalDataScreen.routeName: (context) =>
             const BasicAnimalDataScreen(),
         DetailsAnimalScreen.routeName: (context) => const DetailsAnimalScreen(),
         AnimalPhotosScreen.routeName: (context) => const AnimalPhotosScreen(),
-        PicturesVaccineCardScreen.routeName: (context) => const PicturesVaccineCardScreen(),
+        PicturesVaccineCardScreen.routeName: (context) =>
+            const PicturesVaccineCardScreen(),
       },
     );
   }

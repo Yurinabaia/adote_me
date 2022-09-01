@@ -1,3 +1,4 @@
+import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
@@ -5,6 +6,7 @@ import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/textarea_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DetailsAnimalScreen extends StatefulWidget {
   static const routeName = "/create-publication/details_animal";
@@ -51,6 +53,8 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                 text: 'Continuar',
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    final animalModel = context.read<AnimalModel>();
+                    animalModel.setDescription(_descriptionController.text);
                     Navigator.pushNamed(context, '/animal_photos');
                   }
                 },
@@ -59,9 +63,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
               ButtonOutlineComponent(
                 text: 'Cancelar',
                 // TODO: Implementar a navegação para cancelar a criação da publicação
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -58,10 +59,10 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       labelTextValue: 'Tipo Animal'),
                   InputComponent(
                       controller: _ageController,
-                      textMask: TextMask('IDADE'),
+                      textMask: TextMask('IDADE_ANIMAL'),
                       isRequired: false,
                       keyboardType: TextInputType.number,
-                      labelTextValue: 'Idade'),
+                      labelTextValue: 'Idade (meses)'),
                   DropDownComponent(
                     labelText: 'Tamanho',
                     items: const [
@@ -101,6 +102,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       'Sim',
                       'Não',
                     ],
+                    isRequired: false,
                     controller: _castratedController,
                   ),
                 ],
@@ -111,6 +113,20 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
               text: 'Continuar',
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
+                  final animalModel = context.read<AnimalModel>();
+                  animalModel.setName(_nomeController.text);
+                  animalModel.setAnimal(_animalController.text);
+
+                  animalModel.setAge(int.parse(
+                      _ageController.text != '' ? _ageController.text : '0'));
+
+                  animalModel.setSize(_sizeController.text);
+                  animalModel.setSex(_sexController.text);
+                  animalModel.setTemperament(_temperamentController.text);
+                  animalModel.setBreed(_breedController.text);
+                  animalModel.setColor(_colorAnimalController.text);
+                  animalModel.setCastrated(_castratedController.text);
+
                   Navigator.pushNamed(
                       context, '/create-publication/details_animal');
                 }
@@ -120,8 +136,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
             ButtonOutlineComponent(
               text: 'Cancelar',
               onPressed: () {
-                Navigator.pushNamed(
-                    context, '/select_publication');
+                Navigator.pushNamed(context, '/select_publication');
               },
             ),
           ],

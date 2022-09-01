@@ -1,11 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/components/photo_animal_component.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:typed_data';
+
+import 'package:provider/provider.dart';
 
 class AnimalPhotosScreen extends StatefulWidget {
   static const routeName = "/animal_photos";
@@ -17,6 +24,25 @@ class AnimalPhotosScreen extends StatefulWidget {
 }
 
 class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
+  List<PlatformFile?> file = List<PlatformFile?>.filled(6, null);
+  Uint8List? _imgFirebase;
+  Future selectFile(int index) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png'],
+      );
+      if (result != null) {
+        setState(() {
+          file[index] = result.files.first;
+          //_imgFirebase = null;
+        });
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +55,8 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
               child: TitleThreeComponent(text: '3. Fotos do animal'),
             ),
             const Center(
-              child: DetailTextComponent(text: 'Envie pelo menos uma foto do animal'),
+              child: DetailTextComponent(
+                  text: 'Envie pelo menos uma foto do animal'),
             ),
             const SizedBox(
               height: 32,
@@ -44,7 +71,14 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: 6,
               itemBuilder: (BuildContext context, int index) {
-                return const PhotoAnimalComponent();
+                return GestureDetector(
+                  onTap: () {
+                    selectFile(index);
+                  },
+                  child: PhotoAnimalComponent(
+                    file: file[index],
+                  ),
+                );
               },
             ),
             const SizedBox(
@@ -52,8 +86,18 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
             ),
             ButtonComponent(
               text: 'Continuar',
-              // TODO: Implementar o bloqueio do botão caso não tenha foto
               onPressed: () {
+                List<String> animalPhotos = [];
+                final animalModel = context.read<AnimalModel>();
+
+                for (var element in file) {
+                  if (element != null) {
+                    final bytes =
+                        File(element.path.toString()).readAsBytesSync();
+                    animalPhotos.add(base64Encode(bytes));
+                  }
+                }
+                animalModel.setAnimalPhotos(animalPhotos);
                 Navigator.pushNamed(context, '/pictures_vaccine_Card');
               },
             ),

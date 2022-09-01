@@ -26,6 +26,7 @@ class SelectPublicationScreen extends StatelessWidget {
               image: 'cat',
               color: Color(0xffE0CE2C),
               route: '/steps_create_publication',
+              typePublication: 'animal_adoption',
             ),
             PublicationCardComponent(
               title: 'Animal perdido',
@@ -33,6 +34,7 @@ class SelectPublicationScreen extends StatelessWidget {
               color: Color(0xffA82525),
               // TODO: Implementar rota para a interface publicação de animal perdido
               route: '',
+              typePublication: 'animal_lost',
             ),
             PublicationCardComponent(
               title: 'Informativo',
@@ -40,6 +42,7 @@ class SelectPublicationScreen extends StatelessWidget {
               color: Color(0xff2789E3),
               // TODO: Implementar rota para a interface de criação de publicação de informativo
               route: '',
+              typePublication: 'informative',
             ),
           ],
         ),

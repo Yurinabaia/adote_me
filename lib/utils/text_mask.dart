@@ -11,8 +11,8 @@ class TextMask {
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
-  final maskIdade = MaskTextInputFormatter(
-      mask: '##',
+  final maskIdadeAnimal = MaskTextInputFormatter(
+      mask: '###',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
@@ -27,8 +27,8 @@ class TextMask {
         return [maskCEP];
       case 'CELL':
         return [maskCell];
-      case 'IDADE':
-        return [maskIdade];
+      case 'IDADE_ANIMAL':
+        return [maskIdadeAnimal];
       default:
         return null;
     }
