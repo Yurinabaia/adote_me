@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class UploadFileFirebaseService {
   static Future<bool> uploadImage(File fileImage, String path) async {
-    
     // Upload the file to the path 'images/mountains.jpg'
     final storageRef = FirebaseStorage.instance.ref().child(path);
 
@@ -18,8 +17,13 @@ class UploadFileFirebaseService {
   }
 
   static Future<String> getImage(String path) async {
-    final storageRef = FirebaseStorage.instance.ref().child(path);
-    final url = await storageRef.getDownloadURL();
+    String url = '';
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child(path);
+      url = await storageRef.getDownloadURL();
+    } catch (e) {
+      return '';
+    }
     return url;
   }
 }

@@ -89,25 +89,14 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
             ButtonComponent(
               text: 'Continuar',
               onPressed: () async {
-                LoadingModalComponent loadingModalComponent = LoadingModalComponent();
-                loadingModalComponent.showModal(context);
                 List<String> animalPhotos = [];
                 final animalModel = context.read<AnimalModel>();
-                 for (var photo in file) {
-                    if (photo != null) {
-                      var resultImg = await UploadFileFirebaseService.uploadImage(
-                          File(photo.path!), 'publications/animal_photos/${photo.name}');
-                          
-                      if (resultImg) {
-                        var result = await UploadFileFirebaseService.getImage('publications/animal_photos/${photo.name}');
-                        animalPhotos.add(result);
-                      }
-                    }
+                for (var photo in file) {
+                  if (photo != null) {
+                    animalPhotos.add(photo.path!);
+                  }
                 }
                 animalModel.setAnimalPhotos(animalPhotos);
-                // ignore: use_build_context_synchronously
-                Navigator.of(context, rootNavigator: true).pop();
-                // ignore: use_build_context_synchronously
                 Navigator.pushNamed(context, '/pictures_vaccine_Card');
               },
             ),

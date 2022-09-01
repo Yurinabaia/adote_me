@@ -16,7 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
-
+import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
 class PicturesVaccineCardScreen extends StatefulWidget {
@@ -118,21 +118,39 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   }
 
   savePublication() async {
+    var uuid = const Uuid();
     LoadingModalComponent loadingModalComponent = LoadingModalComponent();
     loadingModalComponent.showModal(context);
     CreatePublicationService createPublicationService =
         CreatePublicationService();
 
     List<String> vaccineseAnimal = [];
+    List<String> photosAnimal = [];
     final animalModel = context.read<AnimalModel>();
 
+    if (animalModel.animalPhotos != null) {
+      for (var photo in animalModel.animalPhotos!) {
+        var uid = uuid.v4();
+        var resultImg = await UploadFileFirebaseService.uploadImage(
+            File(photo), '${_idUser.value}/photos_animal/$uid');
+
+        if (resultImg) {
+          var result = await UploadFileFirebaseService.getImage(
+              '${_idUser.value}/photos_animal/$uid');
+          photosAnimal.add(result);
+        }
+      }
+    }
+    animalModel.setAnimalPhotos(photosAnimal);
     for (var photo in file) {
       if (photo != null) {
+        var uid = uuid.v4();
         var resultImg = await UploadFileFirebaseService.uploadImage(
-            File(photo.path!), 'publications/vaccine_photos/${photo.name}');
-            
+            File(photo.path!), '${_idUser.value}/vaccine_photos/$uid');
+
         if (resultImg) {
-          var result = await UploadFileFirebaseService.getImage('publications/vaccine_photos/${photo.name}');
+          var result = await UploadFileFirebaseService.getImage(
+              '${_idUser.value}/vaccine_photos/$uid');
           vaccineseAnimal.add(result);
         }
       }
@@ -146,11 +164,11 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     var resultFirebase =
         await createPublicationService.createPublication(animalModel.toJson());
 
-    if (resultFirebase) {
-      //TODO INFORMANDO QUE DEU CERTO
+    if (!resultFirebase) {
       const snack = SnackBar(
         behavior: SnackBarBehavior.floating,
-        content: Text('Erro ao gravar dados, carregue novamente outras imagens'),
+        content:
+            Text('Erro ao gravar dados, carregue novamente outras imagens'),
         backgroundColor: Colors.red,
       );
       // ignore: use_build_context_synchronously
