@@ -22,15 +22,8 @@ class _DropDownComponentState extends State<DropDownComponent> {
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
 
-  teste() {
-    if (widget.controller.text != '') {
-      print('aaaaaaaaaa');
-    }
-  }
-
   @override
   void initState() {
-    teste();
     super.initState();
   }
 

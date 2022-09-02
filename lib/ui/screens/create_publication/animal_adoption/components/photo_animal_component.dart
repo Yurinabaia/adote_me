@@ -29,9 +29,14 @@ class PhotoAnimalComponent extends StatelessWidget {
       width: 60,
     );
     if (imgFirebase != null) {
-      image = Image.network(
-        imgFirebase!,
-        fit: BoxFit.cover,
+      image = ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Image.network(
+          imgFirebase!,
+          fit: BoxFit.cover,
+          width: 400,
+          height: 400,
+        ),
       );
     } else if (file != null) {
       image = ClipRRect(

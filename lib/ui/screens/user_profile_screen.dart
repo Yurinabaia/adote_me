@@ -1,9 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:adoteme/data/controller/address/via_cep_controller.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';

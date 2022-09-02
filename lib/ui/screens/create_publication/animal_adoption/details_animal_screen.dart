@@ -60,6 +60,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                       controller: _descriptionController,
                       hint: 'Descreva o animal',
                       maxLength: 255,
+                      isRequired: false,
                     ),
                   ],
                 ),
