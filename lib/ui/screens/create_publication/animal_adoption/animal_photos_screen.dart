@@ -1,18 +1,13 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:adoteme/data/models/animal_model.dart';
-import 'package:adoteme/data/service/upload_file_firebase_service.dart';
+import 'package:adoteme/data/service/create_publication.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
-import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/create_publication/animal_adoption/components/photo_animal_component.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
 
 import 'package:provider/provider.dart';
 
@@ -27,7 +22,23 @@ class AnimalPhotosScreen extends StatefulWidget {
 
 class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   List<PlatformFile?> file = List<PlatformFile?>.filled(6, null);
-  Uint8List? _imgFirebase;
+  List<String?> imagesFirebase = List<String?>.filled(6, null);
+  void startData() async {
+    var dataPublication =
+        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
+    if (dataPublication.data() != null) {
+      var list = dataPublication.data()!['animalPhotos'];
+      if (list != null) {
+        for (var i = 0; i < list.length; i++) {
+          imagesFirebase[i] = list[i];
+        }
+        setState(() {
+          imagesFirebase = imagesFirebase;
+        });
+      }
+    }
+  }
+
   Future selectFile(int index) async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -37,12 +48,18 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
       if (result != null) {
         setState(() {
           file[index] = result.files.first;
-          //_imgFirebase = null;
+          imagesFirebase[index] = null;
         });
       }
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  void initState() {
+    startData();
+    super.initState();
   }
 
   @override
@@ -79,6 +96,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
                   },
                   child: PhotoAnimalComponent(
                     file: file[index],
+                    imgFirebase: imagesFirebase[index],
                   ),
                 );
               },
@@ -105,8 +123,9 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
             ),
             ButtonOutlineComponent(
               text: 'Cancelar',
-              // TODO: implementar ação de cancelar publicação
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/my_publications');
+              },
             ),
           ],
         ),

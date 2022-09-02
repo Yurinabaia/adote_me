@@ -1,4 +1,5 @@
 import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/service/create_publication.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
@@ -18,6 +19,21 @@ class DetailsAnimalScreen extends StatefulWidget {
 class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
+
+  void startData() async {
+    var dataPublication =
+        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
+    if (dataPublication.data() != null) {
+      _descriptionController.text = dataPublication.data()!['description'];
+    }
+  }
+
+  @override
+  void initState() {
+    startData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,8 +78,9 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
               const SizedBox(height: 16),
               ButtonOutlineComponent(
                 text: 'Cancelar',
-                // TODO: Implementar a navegação para cancelar a criação da publicação
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/my_publications');
+                },
               ),
             ],
           ),

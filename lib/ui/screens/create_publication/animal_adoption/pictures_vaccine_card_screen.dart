@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:adoteme/data/models/animal_model.dart';
@@ -15,7 +14,6 @@ import 'package:adoteme/ui/screens/create_publication/animal_adoption/components
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
@@ -30,8 +28,24 @@ class PicturesVaccineCardScreen extends StatefulWidget {
 }
 
 class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
-  List<PlatformFile?> file = List<PlatformFile?>.filled(6, null);
-  Uint8List? _imgFirebase;
+  List<PlatformFile?> file = List<PlatformFile?>.filled(4, null);
+  List<String?> imagesFirebase = List<String?>.filled(4, null);
+  void startData() async {
+    var dataPublication =
+        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
+    if (dataPublication.data() != null) {
+      var list = dataPublication.data()!['picturesVaccineCard'];
+      if (list != null) {
+        for (var i = 0; i < list.length; i++) {
+          imagesFirebase[i] = list[i];
+        }
+        setState(() {
+          imagesFirebase = imagesFirebase;
+        });
+      }
+    }
+  }
+
   Future selectFile(int index) async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -41,7 +55,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
       if (result != null) {
         setState(() {
           file[index] = result.files.first;
-          //_imgFirebase = null;
+          imagesFirebase[index] = null;
         });
       }
     } catch (e) {
@@ -54,6 +68,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   void initState() {
     final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
+    startData();
     super.initState();
   }
 
@@ -91,6 +106,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
                   },
                   child: PhotoAnimalComponent(
                     file: file[index],
+                    imgFirebase: imagesFirebase[index],
                   ),
                 );
               },
@@ -108,8 +124,9 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
             ),
             ButtonOutlineComponent(
               text: 'Cancelar',
-              // TODO: implementar ação de cancelar a criação da publicação
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/my_publications');
+              },
             ),
           ],
         ),
@@ -118,15 +135,46 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   }
 
   savePublication() async {
-    var uuid = const Uuid();
     LoadingModalComponent loadingModalComponent = LoadingModalComponent();
     loadingModalComponent.showModal(context);
-    CreatePublicationService createPublicationService =
-        CreatePublicationService();
 
+    final animalModel = context.read<AnimalModel>();
+    await uploadsImages(animalModel);
+    await initPublication(animalModel);
+    bool resultFirebase = false;
+
+    //TODO implementar o seguinte método abaixo quando estiver criado idPublicação
+    // if (_idPublication != null) {
+    //   resultFirebase = await CreatePublicationService.updatePublication(
+    //       _idPublication!, animalModel);
+    // } else {
+    //   resultFirebase = await CreatePublicationService.createPublication(
+    //       animalModel.toJson());
+    // }
+
+    resultFirebase = await CreatePublicationService.updatePublication(
+        'OMV59MpLx31zpIBMhDf2', animalModel.toJson());
+
+    if (resultFirebase) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushReplacementNamed(context, '/my_publications');
+      return;
+    }
+    const snack = SnackBar(
+      behavior: SnackBarBehavior.floating,
+      content: Text('Erro ao gravar dados, carregue novamente outras imagens'),
+      backgroundColor: Colors.red,
+    );
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(snack);
+    // ignore: use_build_context_synchronously
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future<void> uploadsImages(animalModel) async {
+    var uuid = const Uuid();
     List<String> vaccineseAnimal = [];
     List<String> photosAnimal = [];
-    final animalModel = context.read<AnimalModel>();
 
     if (animalModel.animalPhotos != null) {
       for (var photo in animalModel.animalPhotos!) {
@@ -156,25 +204,18 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
       }
     }
     animalModel.setPicturesVaccineCard(vaccineseAnimal);
+  }
+
+  Future<void> initPublication(animalModel) async {
     final DateTime currentPhoneDate = DateTime.now();
-    animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+    //TODO: implementar quando obtiver o id da publicação
+    // if (_idPublication != null) {
+    //   await animalModel.setUpdateDate(currentPhoneDate);
+    // }else {
+    //   await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+    // }
+    await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
     animalModel.setIdUser(_idUser.value);
     animalModel.setStatus('in_progress');
-
-    var resultFirebase =
-        await createPublicationService.createPublication(animalModel.toJson());
-
-    if (!resultFirebase) {
-      const snack = SnackBar(
-        behavior: SnackBarBehavior.floating,
-        content:
-            Text('Erro ao gravar dados, carregue novamente outras imagens'),
-        backgroundColor: Colors.red,
-      );
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(snack);
-    }
-    // ignore: use_build_context_synchronously
-    Navigator.of(context, rootNavigator: true).pop();
   }
 }

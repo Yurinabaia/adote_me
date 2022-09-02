@@ -21,9 +21,23 @@ class DropDownComponent extends StatefulWidget {
 class _DropDownComponentState extends State<DropDownComponent> {
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
+
+  teste() {
+    if (widget.controller.text != '') {
+      print('aaaaaaaaaa');
+    }
+  }
+
+  @override
+  void initState() {
+    teste();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
+      value: widget.controller.text == '' ? null : widget.controller.text,
       decoration: InputDecoration(
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(

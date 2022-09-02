@@ -1,9 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreatePublicationService {
-  Future<bool> createPublication(Map<String, dynamic> publication) async {
+  static Future<bool> createPublication(
+      Map<String, dynamic> publication) async {
     final docPublication =
         FirebaseFirestore.instance.collection('animal_publication').doc();
+    try {
+      await docPublication.set(publication);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  static Future<bool> updatePublication(
+      String idPublication, Map<String, dynamic> publication) async {
+    final docPublication = FirebaseFirestore.instance
+        .collection('animal_publication')
+        .doc(idPublication);
     try {
       await docPublication.set(publication);
     } catch (e) {
@@ -22,7 +36,7 @@ class CreatePublicationService {
   }
 
   //TODO: implementar o método de criação de publicação
-  Future<DocumentSnapshot<Map<String, dynamic>>> getPublication(
+  static Future<DocumentSnapshot<Map<String, dynamic>>> getPublication(
       String idPublication) async {
     final docPublication = FirebaseFirestore.instance
         .collection('animal_publication')

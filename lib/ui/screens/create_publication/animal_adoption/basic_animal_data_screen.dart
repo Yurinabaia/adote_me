@@ -1,5 +1,6 @@
 import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
+import 'package:adoteme/data/service/create_publication.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
@@ -19,7 +20,7 @@ class BasicAnimalDataScreen extends StatefulWidget {
 }
 
 class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
-  final TextEditingController _nomeController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _animalController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
@@ -29,6 +30,30 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   final TextEditingController _colorAnimalController = TextEditingController();
   final TextEditingController _castratedController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  void startData() async {
+    var dataPublication =
+        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
+    if (dataPublication.data() != null) {
+      _nameController.text = dataPublication.data()!['name'];
+      _animalController.text = dataPublication.data()!['animal'];
+      _ageController.text = dataPublication.data()!['age'].toString();
+      _sizeController.text = dataPublication.data()!['size'];
+      _sexController.text = dataPublication.data()!['sex'];
+      _temperamentController.text = dataPublication.data()!['temperament'];
+      _breedController.text = dataPublication.data()!['breed'];
+      _colorAnimalController.text = dataPublication.data()!['color'];
+      _castratedController.text = dataPublication.data()!['castrated'];
+
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    startData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +75,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                 runSpacing: 24,
                 children: <Widget>[
                   InputComponent(
-                      controller: _nomeController,
+                      controller: _nameController,
                       keyboardType: TextInputType.text,
                       labelTextValue: 'Nome'),
                   InputComponent(
@@ -114,7 +139,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   final animalModel = context.read<AnimalModel>();
-                  animalModel.setName(_nomeController.text);
+                  animalModel.setName(_nameController.text);
                   animalModel.setAnimal(_animalController.text);
 
                   animalModel.setAge(int.parse(
@@ -136,7 +161,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
             ButtonOutlineComponent(
               text: 'Cancelar',
               onPressed: () {
-                Navigator.pushNamed(context, '/select_publication');
+                Navigator.pushReplacementNamed(context, '/my_publications');
               },
             ),
           ],

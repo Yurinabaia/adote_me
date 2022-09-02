@@ -18,17 +18,19 @@ class InformativePublicationScreen extends StatefulWidget {
   const InformativePublicationScreen({Key? key}) : super(key: key);
 
   @override
-  State<InformativePublicationScreen> createState() => _InformativePublicationScreenState();
+  State<InformativePublicationScreen> createState() =>
+      _InformativePublicationScreenState();
 }
 
-class _InformativePublicationScreenState extends State<InformativePublicationScreen> {
+class _InformativePublicationScreenState
+    extends State<InformativePublicationScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _urlController = TextEditingController();
 
   PlatformFile? _file;
-  Uint8List? _imgFirebase;
+  String? _imgFirebase;
   List<PlatformFile?> listImages = List<PlatformFile?>.filled(6, null);
 
   @override
@@ -94,7 +96,8 @@ class _InformativePublicationScreenState extends State<InformativePublicationScr
                       ),
                       const SizedBox(height: 16),
                       GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
