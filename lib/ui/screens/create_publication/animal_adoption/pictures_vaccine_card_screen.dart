@@ -178,7 +178,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
 
     if (animalModel.animalPhotos != null) {
       for (var photo in animalModel.animalPhotos!) {
-        if (photo.contains('https://firebasestorage')) {
+        if (photo.contains('http')) {
           photosAnimal.add(photo);
         } else {
           var uid = uuid.v4();

@@ -1,4 +1,5 @@
 import 'package:adoteme/data/service/login_firebase_service.dart';
+import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/circle_avatar_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/label_text_component.dart';
@@ -16,6 +17,11 @@ class DrawerComponent extends StatefulWidget {
 }
 
 class _DrawerComponentState extends State<DrawerComponent> {
+  String? _imgFirebase;
+  final ValueNotifier<String> _emailUser = ValueNotifier('');
+  final ValueNotifier<String> _idUser = ValueNotifier('');
+  UserProfileFirebaseService userProfileFirebaseService =
+      UserProfileFirebaseService();
   List<Map<String, dynamic>> itemsMenu = [
     {
       'name': 'Página inicial',
@@ -43,6 +49,28 @@ class _DrawerComponentState extends State<DrawerComponent> {
       'route': '/user_profile',
     },
   ];
+
+  void startData() async {
+    var dataUser =
+        await userProfileFirebaseService.getUserProfile(_idUser.value);
+    if (dataUser.data() != null && dataUser.data()!['image'] != null) {
+      setState(() {
+        _imgFirebase = dataUser['image'];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    var auth = context.read<LoginFirebaseService>();
+    _emailUser.value = auth.emailFirebase();
+    _idUser.value = auth.idFirebase();
+    if (_idUser.value != '') {
+      startData();
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = context.read<LoginFirebaseService>();
@@ -57,10 +85,14 @@ class _DrawerComponentState extends State<DrawerComponent> {
                   SizedBox(
                     height: 75,
                     width: 75,
-                    child: CircleAvatarComponent.findCircleAvatar(),
+                    child: CircleAvatarComponent.findCircleAvatar(
+                        imgFirebase: _imgFirebase),
                   ),
                   const SizedBox(height: 16),
-                  const LabelTextComponent(text: 'teste@teste.com')
+                  LabelTextComponent(
+                      text: _emailUser.value != ''
+                          ? _emailUser.value
+                          : 'Usuário não logado'),
                 ],
               ),
             ),
