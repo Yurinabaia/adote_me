@@ -114,6 +114,11 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
                     animalPhotos.add(photo.path!);
                   }
                 }
+                for (var photo in imagesFirebase) {
+                  if (photo != null) {
+                    animalPhotos.add(photo);
+                  }
+                }
                 animalModel.setAnimalPhotos(animalPhotos);
                 Navigator.pushNamed(context, '/pictures_vaccine_Card');
               },

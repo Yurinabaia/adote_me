@@ -178,14 +178,18 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
 
     if (animalModel.animalPhotos != null) {
       for (var photo in animalModel.animalPhotos!) {
-        var uid = uuid.v4();
-        var resultImg = await UploadFileFirebaseService.uploadImage(
-            File(photo), '${_idUser.value}/photos_animal/$uid');
+        if (photo.contains('https://firebasestorage')) {
+          photosAnimal.add(photo);
+        } else {
+          var uid = uuid.v4();
+          var resultImg = await UploadFileFirebaseService.uploadImage(
+              File(photo), '${_idUser.value}/photos_animal/$uid');
 
-        if (resultImg) {
-          var result = await UploadFileFirebaseService.getImage(
-              '${_idUser.value}/photos_animal/$uid');
-          photosAnimal.add(result);
+          if (resultImg) {
+            var result = await UploadFileFirebaseService.getImage(
+                '${_idUser.value}/photos_animal/$uid');
+            photosAnimal.add(result);
+          }
         }
       }
     }
@@ -201,6 +205,11 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
               '${_idUser.value}/vaccine_photos/$uid');
           vaccineseAnimal.add(result);
         }
+      }
+    }
+    for (var photo in imagesFirebase) {
+      if (photo != null) {
+        vaccineseAnimal.add(photo);
       }
     }
     animalModel.setPicturesVaccineCard(vaccineseAnimal);
