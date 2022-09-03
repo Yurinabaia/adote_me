@@ -106,6 +106,8 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
             ),
             ButtonComponent(
               text: 'Continuar',
+              isDisabled: file.every((element) => element == null) &&
+                  imagesFirebase.every((element) => element == null),
               onPressed: () async {
                 List<String> animalPhotos = [];
                 final animalModel = context.read<AnimalModel>();

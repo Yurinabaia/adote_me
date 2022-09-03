@@ -6,11 +6,13 @@ class ButtonComponent extends StatelessWidget {
   final Function onPressed;
   final String? svgIcon;
   final Color? color;
+  final bool isDisabled;
 
   const ButtonComponent({
     Key? key,
     required this.text,
     required this.onPressed,
+    this.isDisabled = false,
     this.svgIcon,
     this.color,
   }) : super(key: key);
@@ -18,7 +20,7 @@ class ButtonComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => onPressed(),
+      onPressed: isDisabled ? null : () => onPressed(),
       style: ElevatedButton.styleFrom(
         primary: color ?? const Color(0xff4079AC),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
