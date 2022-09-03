@@ -110,7 +110,7 @@ class AnimalModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJsonAdoption() => {
         "name": name,
         "animal": animal,
         "age": age,
@@ -123,6 +123,23 @@ class AnimalModel extends ChangeNotifier {
         "description": description,
         "animalPhotos": animalPhotos,
         "picturesVaccineCard": picturesVaccineCard,
+        "typePublication": typePublication,
+        "feedBack": feedBack,
+        "status": status,
+        "createDate": createDate,
+        "updateDate": updateDate,
+        "idUsuario": idUser,
+      };
+
+  Map<String, dynamic> toJsonLost() => {
+        "name": name,
+        "animal": animal,
+        "size": size,
+        "sex": sex,
+        "breed": breed,
+        "color": color,
+        "description": description,
+        "animalPhotos": animalPhotos,
         "typePublication": typePublication,
         "feedBack": feedBack,
         "status": status,

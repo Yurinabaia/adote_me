@@ -30,11 +30,12 @@ class PicturesVaccineCardScreen extends StatefulWidget {
 class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   List<PlatformFile?> file = List<PlatformFile?>.filled(4, null);
   List<String?> imagesFirebase = List<String?>.filled(4, null);
+  String nameCollection = '';
   void startData() async {
-    var dataPublication =
-        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
-    if (dataPublication.data() != null) {
-      var list = dataPublication.data()!['picturesVaccineCard'];
+    var dataPublication = await CreatePublicationService.getPublication(
+        'OMV59MpLx31zpIBMhDf2', nameCollection);
+    if (dataPublication?.data() != null) {
+      var list = dataPublication?.data()!['picturesVaccineCard'];
       if (list != null) {
         for (var i = 0; i < list.length; i++) {
           imagesFirebase[i] = list[i];
@@ -68,7 +69,13 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   void initState() {
     final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
-    startData();
+    final animalModel = context.read<AnimalModel>();
+    nameCollection = animalModel.typePublication!;
+    //TODO IMPEMENTAR O IF ABAIXO
+    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
+    if (_idUser.value.isNotEmpty) {
+      startData();
+    }
     super.initState();
   }
 
@@ -153,7 +160,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     // }
 
     resultFirebase = await CreatePublicationService.updatePublication(
-        'OMV59MpLx31zpIBMhDf2', animalModel.toJson());
+        'OMV59MpLx31zpIBMhDf2', animalModel.toJsonAdoption(), nameCollection);
 
     if (resultFirebase) {
       // ignore: use_build_context_synchronously

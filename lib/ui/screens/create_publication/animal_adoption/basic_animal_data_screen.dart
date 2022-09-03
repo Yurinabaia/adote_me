@@ -1,6 +1,7 @@
 import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/create_publication.dart';
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
@@ -30,28 +31,39 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   final TextEditingController _colorAnimalController = TextEditingController();
   final TextEditingController _castratedController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  String nameCollection = '';
   void startData() async {
-    var dataPublication =
-        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
-    if (dataPublication.data() != null) {
-      _nameController.text = dataPublication.data()!['name'];
-      _animalController.text = dataPublication.data()!['animal'];
-      _ageController.text = dataPublication.data()!['age'].toString();
-      _sizeController.text = dataPublication.data()!['size'];
-      _sexController.text = dataPublication.data()!['sex'];
-      _temperamentController.text = dataPublication.data()!['temperament'];
-      _breedController.text = dataPublication.data()!['breed'];
-      _colorAnimalController.text = dataPublication.data()!['color'];
-      _castratedController.text = dataPublication.data()!['castrated'];
+    var dataPublication = await CreatePublicationService.getPublication(
+        'D4BgUd4AwzANV0Tlcyg3', nameCollection);
+    if (dataPublication?.data() != null) {
+      if (nameCollection == 'animal_adoption') {
+        _ageController.text = dataPublication!.data()!['age'].toString();
+        _temperamentController.text = dataPublication.data()!['temperament'];
+        _castratedController.text = dataPublication.data()!['castrated'];
+      }
+      _nameController.text = dataPublication?.data()!['name'];
+      _animalController.text = dataPublication?.data()!['animal'];
+      _sizeController.text = dataPublication?.data()!['size'];
+      _sexController.text = dataPublication?.data()!['sex'];
+      _breedController.text = dataPublication?.data()!['breed'];
+      _colorAnimalController.text = dataPublication?.data()!['color'];
 
       setState(() {});
     }
   }
 
+  final ValueNotifier<String> _idUser = ValueNotifier<String>('');
   @override
   void initState() {
-    startData();
+    final auth = context.read<LoginFirebaseService>();
+    _idUser.value = auth.idFirebase();
+    final animalModel = context.read<AnimalModel>();
+    nameCollection = animalModel.typePublication!;
+    //TODO IMPEMENTAR O IF ABAIXO
+    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
+    if (_idUser.value.isNotEmpty) {
+      startData();
+    }
     super.initState();
   }
 
@@ -59,6 +71,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   Widget build(BuildContext context) {
     final formKeyProvider = context.watch<FormKeyProvider>();
     formKeyProvider.set(_formKey);
+    final animalModel = context.read<AnimalModel>();
     return Scaffold(
       appBar: const AppBarToBackComponent(),
       body: Padding(
@@ -82,12 +95,14 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       controller: _animalController,
                       keyboardType: TextInputType.text,
                       labelTextValue: 'Tipo Animal'),
-                  InputComponent(
-                      controller: _ageController,
-                      textMask: TextMask('IDADE_ANIMAL'),
-                      isRequired: false,
-                      keyboardType: TextInputType.number,
-                      labelTextValue: 'Idade (meses)'),
+                  if (animalModel.typePublication == 'animal_adoption') ...[
+                    InputComponent(
+                        controller: _ageController,
+                        textMask: TextMask('IDADE_ANIMAL'),
+                        isRequired: false,
+                        keyboardType: TextInputType.number,
+                        labelTextValue: 'Idade (meses)'),
+                  ],
                   DropDownComponent(
                     labelText: 'Tamanho',
                     items: const [
@@ -107,11 +122,13 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                     ],
                     controller: _sexController,
                   ),
-                  InputComponent(
-                      controller: _temperamentController,
-                      isRequired: false,
-                      keyboardType: TextInputType.text,
-                      labelTextValue: 'Temperamento'),
+                  if (animalModel.typePublication == 'animal_adoption') ...[
+                    InputComponent(
+                        controller: _temperamentController,
+                        isRequired: false,
+                        keyboardType: TextInputType.text,
+                        labelTextValue: 'Temperamento'),
+                  ],
                   InputComponent(
                       controller: _breedController,
                       isRequired: false,
@@ -121,15 +138,17 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       controller: _colorAnimalController,
                       keyboardType: TextInputType.text,
                       labelTextValue: 'Cor'),
-                  DropDownComponent(
-                    labelText: 'Castrado',
-                    items: const [
-                      'Sim',
-                      'Não',
-                    ],
-                    isRequired: false,
-                    controller: _castratedController,
-                  ),
+                  if (animalModel.typePublication == 'animal_adoption') ...[
+                    DropDownComponent(
+                      labelText: 'Castrado',
+                      items: const [
+                        'Sim',
+                        'Não',
+                      ],
+                      isRequired: false,
+                      controller: _castratedController,
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -138,7 +157,6 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
               text: 'Continuar',
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  final animalModel = context.read<AnimalModel>();
                   animalModel.setName(_nameController.text);
                   animalModel.setAnimal(_animalController.text);
 

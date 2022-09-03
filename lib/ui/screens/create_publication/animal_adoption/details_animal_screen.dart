@@ -1,5 +1,6 @@
 import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/service/create_publication.dart';
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
@@ -19,18 +20,27 @@ class DetailsAnimalScreen extends StatefulWidget {
 class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
-
+  String nameCollection = '';
   void startData() async {
-    var dataPublication =
-        await CreatePublicationService.getPublication('OMV59MpLx31zpIBMhDf2');
-    if (dataPublication.data() != null) {
-      _descriptionController.text = dataPublication.data()!['description'];
+    var dataPublication = await CreatePublicationService.getPublication(
+        'D4BgUd4AwzANV0Tlcyg3', nameCollection);
+    if (dataPublication?.data() != null) {
+      _descriptionController.text = dataPublication?.data()!['description'];
     }
   }
 
+  final ValueNotifier<String> _idUser = ValueNotifier<String>('');
   @override
   void initState() {
-    startData();
+    final auth = context.read<LoginFirebaseService>();
+    _idUser.value = auth.idFirebase();
+    final animalModel = context.read<AnimalModel>();
+    nameCollection = animalModel.typePublication!;
+    //TODO IMPEMENTAR O IF ABAIXO
+    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
+    if (_idUser.value.isNotEmpty) {
+      startData();
+    }
     super.initState();
   }
 
