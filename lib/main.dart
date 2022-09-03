@@ -8,6 +8,7 @@ import 'package:adoteme/ui/screens/create_publication/informative_publication_sc
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/ui/screens/my_publications_screen.dart';
+import 'package:adoteme/ui/screens/publication_details_screen.dart';
 import 'package:adoteme/ui/screens/splash_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const SplashScreen(),
+      home: const PublicationDetailsScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         LoginScren.routeName: (context) => const LoginScren(),
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         BasicAnimalDataScreen.routeName: (context) => const BasicAnimalDataScreen(),
         PicturesVaccineCardScreen.routeName: (context) => const PicturesVaccineCardScreen(),
         InformativePublicationScreen.routeName: (context) => const InformativePublicationScreen(),
+        PublicationDetailsScreen.routeName: (context) => const PublicationDetailsScreen(),
       },
     );
   }
