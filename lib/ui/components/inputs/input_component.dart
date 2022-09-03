@@ -77,7 +77,7 @@ class _InputComponentState extends State<InputComponent> {
       keyboardType: widget.keyboardType,
       inputFormatters: widget.textMask?.maskTexFormated(),
       onChanged: (value) {
-        if (widget.isRequired) {
+        if (widget.isRequired || widget.isUrl) {
           if (value.isEmpty) {
             setState(() {
               widget.iconErro = true;
