@@ -133,6 +133,7 @@ class _InformativePublicationScreenState
                   InputComponent(
                     controller: _urlController,
                     labelTextValue: 'URL (opcional)',
+                    isUrl: true,
                     isRequired: false,
                     keyboardType: TextInputType.text,
                   ),

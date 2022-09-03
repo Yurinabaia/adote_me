@@ -11,6 +11,7 @@ class InputComponent extends StatefulWidget {
   final bool isActive;
   final TextMask? textMask;
   final bool isRequired;
+  final bool isUrl;
   bool iconErro;
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
@@ -21,6 +22,7 @@ class InputComponent extends StatefulWidget {
     this.textMask,
     this.isRequired = true,
     this.iconErro = false,
+    this.isUrl = false,
     required this.labelTextValue,
     this.isActive = true,
   }) : super(key: key);
@@ -96,6 +98,9 @@ class _InputComponentState extends State<InputComponent> {
             widget.iconErro = true;
           });
           return 'Campo obrigatório';
+        }
+        if (widget.isUrl) {
+          if (!Uri.parse(value!).isAbsolute) return 'Url inválida';
         }
         setState(() {
           widget.iconErro = false;
