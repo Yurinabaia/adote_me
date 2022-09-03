@@ -21,6 +21,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _descriptionController = TextEditingController();
   String nameCollection = '';
+  String nameAppBar = '';
   void startData() async {
     var dataPublication = await CreatePublicationService.getPublication(
         'D4BgUd4AwzANV0Tlcyg3', nameCollection);
@@ -36,6 +37,9 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
     _idUser.value = auth.idFirebase();
     final animalModel = context.read<AnimalModel>();
     nameCollection = animalModel.typePublication!;
+    nameAppBar = animalModel.typePublication == 'animal_adoption'
+        ? 'Criar publicação de adoção'
+        : 'Criar publicação de animal perdido';
     //TODO IMPEMENTAR O IF ABAIXO
     // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
     if (_idUser.value.isNotEmpty) {
@@ -47,7 +51,9 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const AppBarToBackComponent(),
+        appBar: AppBarToBackComponent(
+          title: nameAppBar,
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView(

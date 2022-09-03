@@ -32,6 +32,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   final TextEditingController _castratedController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String nameCollection = '';
+  String nameAppBar = '';
   void startData() async {
     var dataPublication = await CreatePublicationService.getPublication(
         'D4BgUd4AwzANV0Tlcyg3', nameCollection);
@@ -59,6 +60,9 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
     _idUser.value = auth.idFirebase();
     final animalModel = context.read<AnimalModel>();
     nameCollection = animalModel.typePublication!;
+    nameAppBar = animalModel.typePublication == 'animal_adoption'
+        ? 'Criar publicação de adoção'
+        : 'Criar publicação de animal perdido';
     //TODO IMPEMENTAR O IF ABAIXO
     // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
     if (_idUser.value.isNotEmpty) {
@@ -73,7 +77,9 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
     formKeyProvider.set(_formKey);
     final animalModel = context.read<AnimalModel>();
     return Scaffold(
-      appBar: const AppBarToBackComponent(),
+      appBar: AppBarToBackComponent(
+        title: nameAppBar,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

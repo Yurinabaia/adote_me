@@ -82,7 +82,9 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarToBackComponent(),
+      appBar: const AppBarToBackComponent(
+        title: 'Criar publicação de adoção',
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

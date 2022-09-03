@@ -81,7 +81,9 @@ class _InformativePublicationScreenState
     final formKeyProvider = context.watch<FormKeyProvider>();
     formKeyProvider.set(_formKey);
     return Scaffold(
-      appBar: const AppBarToBackComponent(),
+      appBar: const AppBarToBackComponent(
+        title: 'Criar publicacão informativa',
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

@@ -31,6 +31,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   List<PlatformFile?> file = List<PlatformFile?>.filled(6, null);
   List<String?> imagesFirebase = List<String?>.filled(6, null);
   String nameCollection = '';
+  String nameAppBar = ' ';
   void startData() async {
     var dataPublication = await CreatePublicationService.getPublication(
         'D4BgUd4AwzANV0Tlcyg3', nameCollection);
@@ -71,6 +72,9 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
     _idUser.value = auth.idFirebase();
     final animalModel = context.read<AnimalModel>();
     nameCollection = animalModel.typePublication!;
+    nameAppBar = animalModel.typePublication == 'animal_adoption'
+        ? 'Criar publicação de adoção'
+        : 'Criar publicação de animal perdido';
     //TODO IMPEMENTAR O IF ABAIXO
     // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
     if (_idUser.value.isNotEmpty) {
@@ -83,7 +87,9 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   Widget build(BuildContext context) {
     final animalModel = context.read<AnimalModel>();
     return Scaffold(
-      appBar: const AppBarToBackComponent(),
+      appBar: AppBarToBackComponent(
+        title: nameAppBar,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
