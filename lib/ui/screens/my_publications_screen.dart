@@ -21,6 +21,7 @@ class MyPublicationsScreen extends StatelessWidget {
         height: 70,
         width: 70,
         child: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () => Navigator.of(context).pushNamed('/select_publication'),
           child: const Icon(
             Icons.add,
