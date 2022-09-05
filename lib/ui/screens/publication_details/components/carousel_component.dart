@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class CarouselComponent extends StatefulWidget {
-  final List<String> listImages;
+  final List<String?> listImages;
 
   const CarouselComponent({
     Key? key,
@@ -38,9 +38,9 @@ class _CarouselComponentState extends State<CarouselComponent> {
               ),
               items: widget.listImages
                   .map((item) => Image.network(
-                        item,
+                        item!,
                         fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery.of(context).size.width
                       ))
                   .toList(),
             );

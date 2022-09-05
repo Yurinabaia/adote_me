@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const PublicationDetailsScreen(),
+      home: const LoginScren(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         LoginScren.routeName: (context) => const LoginScren(),

@@ -50,6 +50,7 @@ dependencies:
   get: ^4.6.5
   mask_text_input_formatter: ^2.4.0
   uuid: ^3.0.6
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

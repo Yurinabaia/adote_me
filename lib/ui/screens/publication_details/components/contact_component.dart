@@ -2,7 +2,16 @@ import 'package:adoteme/ui/components/texts/label_text_component.dart';
 import 'package:flutter/material.dart';
 
 class ContactComponent extends StatelessWidget {
-  const ContactComponent({Key? key}) : super(key: key);
+  final String? userName;
+  final String? userPhone;
+  final String? userPhoto;
+
+  const ContactComponent({
+    Key? key,
+    required this.userName,
+    required this.userPhone,
+    required this.userPhoto,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +28,12 @@ class ContactComponent extends StatelessWidget {
           height: 100,
           width: 50,
           child: CircleAvatar(
-            backgroundImage: Image.network(
-              'https://picsum.photos/300',
+            backgroundImage: userPhoto != null
+                ? Image.network(
+                    '$userPhoto',
+                  ).image
+                : Image.asset(
+                    'assets/images/user_profile.png',
             ).image,
           ),
         ),
@@ -28,15 +41,15 @@ class ContactComponent extends StatelessWidget {
           Icons.arrow_forward_ios,
           color: Color(0xff6D8DAD),
         ),
-        title: const Text(
-          'Michael Jackson',
-          style: TextStyle(
+        title: Text(
+          '$userName',
+          style: const TextStyle(
             color: Color(0xff334155),
             fontSize: 18,
           ),
         ),
-        subtitle: const LabelTextComponent(
-          text: '(31) 99999-9999',
+        subtitle: LabelTextComponent(
+          text: '$userPhone',
         ),
         // TODO: Implementar ação de contato
         onTap: () {},
