@@ -165,16 +165,13 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                 if (_formKey.currentState!.validate()) {
                   animalModel.setName(_nameController.text);
                   animalModel.setAnimal(_animalController.text);
-
-                  animalModel.setAge(int.parse(
-                      _ageController.text != '' ? _ageController.text : '0'));
-
+                  animalModel.setAge(_ageController.text != '' ? int.parse(_ageController.text) : null);
                   animalModel.setSize(_sizeController.text);
                   animalModel.setSex(_sexController.text);
-                  animalModel.setTemperament(_temperamentController.text);
-                  animalModel.setBreed(_breedController.text);
+                  animalModel.setTemperament(_temperamentController.text != '' ? _temperamentController.text : null);
+                  animalModel.setBreed(_breedController.text != '' ? _breedController.text : null);
                   animalModel.setColor(_colorAnimalController.text);
-                  animalModel.setCastrated(_castratedController.text);
+                  animalModel.setCastrated(_castratedController.text != '' ? _castratedController.text : null);
 
                   Navigator.pushNamed(
                       context, '/create-publication/details_animal');

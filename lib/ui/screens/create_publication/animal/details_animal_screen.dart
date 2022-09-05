@@ -88,7 +88,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                   if (_formKey.currentState!.validate()) {
                     final animalModel = context.read<AnimalModel>();
                     animalModel.setDescription(_descriptionController.text);
-                    Navigator.pushNamed(context, '/animal_photos');
+                    Navigator.pushNamed(context, '/create-publication/animal_photos');
                   }
                 },
               ),

@@ -181,6 +181,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           keyboardType: TextInputType.emailAddress,
                           isActive: false,
                         ),
+                        // TODO: criar validação de 8 digitos
                         InputComponent(
                           textMask: TextMask('CELL'),
                           controller: _mainCellController,
@@ -348,16 +349,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         'name': _nameController.text,
         'email': _emailController.text,
         'mainCell': _mainCellController.text,
-        'optionalCell': _optionalCellController.text,
-        'optionalCell2': _optionalCell2Controller.text,
+        'optionalCell': _optionalCellController.text != '' ? _optionalCellController.text : null,
+        'optionalCell2': _optionalCell2Controller.text != '' ? _optionalCell2Controller.text : null,
         'street': _streetController.text,
         'number': _numberController.text,
-        'complement': _complementController.text,
+        'complement': _complementController.text != '' ? _complementController.text : null,
         'district': _districtController.text,
         'city': _cityController.text,
         'state': _stateController.text,
         'zipCode': _zipCodeController.text,
-        'image': image,
+        'image': image != '' ? image : null,
       };
       LoadingModalComponent loadingModalComponent = LoadingModalComponent();
       loadingModalComponent.showModal(context);

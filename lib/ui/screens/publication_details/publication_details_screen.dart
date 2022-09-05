@@ -29,7 +29,7 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
   String? name;
   String? description;
   String? animal;
-  int? age;
+  dynamic age;
   String? size;
   String? sex;
   String? temperament;
@@ -112,7 +112,9 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => Navigator.of(context).pushNamed('/create-publication/basic_animal_data'),
+          // TODO: falta implementar o card em 'Minhas publicações para editar'
+          // Navigator.of(context).pushNamed('/create-publication/basic_animal_data')
+          onPressed: () => {},
           child: const Icon(
             Icons.edit,
             size: 40,
@@ -260,15 +262,13 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
                                 userPhoto: userPhoto,
                                 userPhone: userPhone1,
                               ),
-                              // TODO: substituir por null
-                              if (userPhone2 != "")
+                              if (userPhone2 != null)
                                 ContactComponent(
                                   userName: userName,
                                   userPhoto: userPhoto,
                                   userPhone: userPhone2,
                                 ),
-                              // TODO: substituir por null
-                              if (userPhone3 != "")
+                              if (userPhone3 != null)
                                 ContactComponent(
                                   userName: userName,
                                   userPhoto: userPhoto,
@@ -279,14 +279,14 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
                           const SizedBox(height: 64),
                           ButtonComponent(
                             text: 'Finalizar publicação',
-                            color: Color(0xff21725E),
+                            color: const Color(0xff21725E),
                             // TODO: Implementar ação do finalizar publicação
                             onPressed: () {},
                           ),
                           const SizedBox(height: 16),
                           ButtonComponent(
                             text: 'Excluir permanentemente',
-                            color: Color(0xffA82525),
+                            color: const Color(0xffA82525),
                             // TODO: Implementar ação do excluir publicação
                             onPressed: () {},
                           ),
