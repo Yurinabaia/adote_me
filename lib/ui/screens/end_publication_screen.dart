@@ -1,3 +1,4 @@
+import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
@@ -53,8 +54,14 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
             ButtonComponent(
               text: 'Enviar feedback',
               color: const Color(0xff21725E),
-              // TODO: Implementar ação do botão
-              onPressed: () {},
+              onPressed: () {
+                AlertDialogComponent(
+                  statusType: 'success',
+                  title: 'Finalizar publicação',
+                  message:
+                      'Após a finalização, a publicação e o feedback não poderão ser alterados. Deseja finalizar ?',
+                ).showAlert(context);
+              },
             ),
           ],
         ),

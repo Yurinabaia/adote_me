@@ -1,5 +1,6 @@
 import 'package:adoteme/data/service/animal_publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
+import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
@@ -280,17 +281,21 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
                           ButtonComponent(
                             text: 'Finalizar publicação',
                             color: const Color(0xff21725E),
-                            // TODO: Implementar ação do finalizar publicação
                             onPressed: () {
                               Navigator.pushNamed(context, '/end_publication');
                             },
                           ),
                           const SizedBox(height: 16),
                           ButtonComponent(
-                            text: 'Excluir permanentemente',
+                            text: 'Excluir publicação',
                             color: const Color(0xffA82525),
-                            // TODO: Implementar ação do excluir publicação
-                            onPressed: () {},
+                            onPressed: () {
+                              AlertDialogComponent(
+                                statusType: 'error',
+                                title: 'Excluir publicação',
+                                message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                              ).showAlert(context);
+                            },
                           ),
                         ],
                       ),
