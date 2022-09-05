@@ -43,21 +43,29 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const LoginScren(),
+      home: const SplashScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         LoginScren.routeName: (context) => const LoginScren(),
         UserProfileScreen.routeName: (context) => const UserProfileScreen(),
         DetailsAnimalScreen.routeName: (context) => const DetailsAnimalScreen(),
         AnimalPhotosScreen.routeName: (context) => const AnimalPhotosScreen(),
-        MyPublicationsScreen.routeName: (context) => const MyPublicationsScreen(),
-        StepsCreatePublicationScreen.routeName: (context) => const StepsCreatePublicationScreen(),
-        SelectPublicationScreen.routeName: (context) => const SelectPublicationScreen(),
-        BasicAnimalDataScreen.routeName: (context) => const BasicAnimalDataScreen(),
-        PicturesVaccineCardScreen.routeName: (context) => const PicturesVaccineCardScreen(),
-        InformativePublicationScreen.routeName: (context) => const InformativePublicationScreen(),
-        PublicationDetailsScreen.routeName: (context) => const PublicationDetailsScreen(),
-        EndPublicationScreen.routeName: (context) => const EndPublicationScreen(),
+        MyPublicationsScreen.routeName: (context) =>
+            const MyPublicationsScreen(),
+        StepsCreatePublicationScreen.routeName: (context) =>
+            const StepsCreatePublicationScreen(),
+        SelectPublicationScreen.routeName: (context) =>
+            const SelectPublicationScreen(),
+        BasicAnimalDataScreen.routeName: (context) =>
+            const BasicAnimalDataScreen(),
+        PicturesVaccineCardScreen.routeName: (context) =>
+            const PicturesVaccineCardScreen(),
+        InformativePublicationScreen.routeName: (context) =>
+            const InformativePublicationScreen(),
+        PublicationDetailsScreen.routeName: (context) =>
+            const PublicationDetailsScreen(),
+        EndPublicationScreen.routeName: (context) =>
+            const EndPublicationScreen(),
       },
     );
   }

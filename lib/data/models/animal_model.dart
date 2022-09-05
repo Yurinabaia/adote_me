@@ -128,7 +128,7 @@ class AnimalModel extends ChangeNotifier {
         "status": status,
         "createDate": createDate,
         "updateDate": updateDate,
-        "idUsuario": idUser,
+        "idUser": idUser,
       };
 
   Map<String, dynamic> toJsonLost() => {
@@ -145,6 +145,6 @@ class AnimalModel extends ChangeNotifier {
         "status": status,
         "createDate": createDate,
         "updateDate": updateDate,
-        "idUsuario": idUser,
+        "idUser": idUser,
       };
 }

@@ -61,7 +61,10 @@ class _LoginScrenState extends State<LoginScren> {
                   children: <Widget>[
                     ButtonOutlineComponent(
                       text: "Continuar sem login",
-                      onPressed: () {
+                      onPressed: () async {
+                        final auth = context.read<LoginFirebaseService>();
+                        await auth.signOut();
+                        // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(
                             context, '/user_profile');
                       },

@@ -20,7 +20,7 @@ class ButtonOutlineComponent extends StatelessWidget {
     return OutlinedButton(
       onPressed: () => onPressed(),
       style: ElevatedButton.styleFrom(
-        primary: Colors.white,
+        backgroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         minimumSize: const Size.fromHeight(50),
         shape: const StadiumBorder(),

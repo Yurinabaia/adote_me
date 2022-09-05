@@ -58,7 +58,7 @@ class AlertDialogComponent {
         actions: <Widget>[
           TextButton(
             style: TextButton.styleFrom(
-              primary: status[statusType]['color'],
+              foregroundColor: status[statusType]['color'],
               side: BorderSide(
                 color: status[statusType]['color'],
               ),
@@ -70,7 +70,7 @@ class AlertDialogComponent {
           ),
           TextButton(
             style: TextButton.styleFrom(
-              primary: Colors.white,
+              foregroundColor: Colors.white,
               backgroundColor: status[statusType]['color'],
             ),
             // TODO: Implementar ação do botão

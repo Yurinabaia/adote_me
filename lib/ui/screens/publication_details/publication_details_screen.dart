@@ -19,10 +19,12 @@ class PublicationDetailsScreen extends StatefulWidget {
   const PublicationDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<PublicationDetailsScreen> createState() => _PublicationDetailsScreenState();
+  State<PublicationDetailsScreen> createState() =>
+      _PublicationDetailsScreenState();
 }
 
-class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> with SingleTickerProviderStateMixin {
+class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController controllerTab;
 
   List<String?> listImages = List.filled(6, null);
@@ -51,7 +53,8 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
 
   getAdvertiser(String idUser) async {
     UserProfileFirebaseService userService = UserProfileFirebaseService();
-    DocumentSnapshot<Map<String, dynamic>> address = await userService.getUserProfile(idUser);
+    DocumentSnapshot<Map<String, dynamic>> address =
+        await userService.getUserProfile(idUser);
     setState(() {
       userName = address.data()?["name"];
       userPhoto = address.data()?["image"];
@@ -69,14 +72,16 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
     initializeDateFormatting('pt-br');
     // TODO: implementar passagem de dados dinâmicos
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
-        await AnimalPublicationService.getPublication('OMV59MpLx31zpIBMhDf2', 'animal_adoption');
+        await AnimalPublicationService.getPublication(
+            'D4BgUd4AwzANV0Tlcyg3', 'animal_lost');
 
     if (dataPublication?.data() != null) {
       // TODO: corrigir chave para idUser
-      getAdvertiser((dataPublication?.data()?['idUsuario']));
+      getAdvertiser((dataPublication?.data()?['idUser']));
 
       setState(() {
-        listImages = List<String>.from(dataPublication!.data()!['animalPhotos']);
+        listImages =
+            List<String>.from(dataPublication!.data()!['animalPhotos']);
         name = dataPublication.data()?['name'];
         description = dataPublication.data()?['description'] ?? 'Não informado';
         animal = dataPublication.data()?['animal'];
@@ -87,10 +92,13 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
         breed = dataPublication.data()?['breed'] ?? 'Não informado';
         color = dataPublication.data()?['color'];
         castrated = dataPublication.data()?['castrated'] ?? 'Não informado';
-        
-        var timestamp = dataPublication.data()?['updateDate'] ?? dataPublication.data()?['createDate'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
-        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+
+        var timestamp = dataPublication.data()?['updateDate'] ??
+            dataPublication.data()?['createDate'];
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
+            timestamp!.microsecondsSinceEpoch);
+        date =
+            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -249,6 +257,7 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
                             term: "Cor",
                             description: "$color",
                           ),
+                          //TODO: esconder campo quando obtiver tipo de publicação
                           TermDescriptionComponent(
                             term: "Castrado",
                             description: "$castrated",
@@ -293,7 +302,8 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
                               AlertDialogComponent(
                                 statusType: 'error',
                                 title: 'Excluir publicação',
-                                message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                                message:
+                                    'A publicação será excluída permanentemente. Deseja prosseguir ?',
                               ).showAlert(context);
                             },
                           ),

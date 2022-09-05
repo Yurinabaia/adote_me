@@ -22,7 +22,7 @@ class ButtonComponent extends StatelessWidget {
     return ElevatedButton(
       onPressed: isDisabled ? null : () => onPressed(),
       style: ElevatedButton.styleFrom(
-        primary: color ?? const Color(0xff4079AC),
+        backgroundColor: color ?? const Color(0xff4079AC),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         minimumSize: const Size.fromHeight(50),
         shape: const StadiumBorder(),
