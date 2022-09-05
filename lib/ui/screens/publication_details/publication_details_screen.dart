@@ -281,7 +281,9 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen> wit
                             text: 'Finalizar publicação',
                             color: const Color(0xff21725E),
                             // TODO: Implementar ação do finalizar publicação
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/end_publication');
+                            },
                           ),
                           const SizedBox(height: 16),
                           ButtonComponent(
