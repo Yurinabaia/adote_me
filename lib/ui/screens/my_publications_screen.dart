@@ -22,7 +22,7 @@ class MyPublicationsScreen extends StatelessWidget {
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => Navigator.of(context).pushNamed('/select_publication'),
+          onPressed: () => Navigator.of(context).pushNamed('/create-publication/select_publication'),
           child: const Icon(
             Icons.add,
             size: 40,

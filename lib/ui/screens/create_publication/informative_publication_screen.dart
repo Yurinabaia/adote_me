@@ -13,7 +13,7 @@ import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/textarea_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
-import 'package:adoteme/ui/screens/create_publication/animal_adoption/components/photo_animal_component.dart';
+import 'package:adoteme/ui/screens/create_publication/animal/components/photo_animal_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class InformativePublicationScreen extends StatefulWidget {
-  static const routeName = "/informative_publication";
+  static const routeName = "/create-publication/informative_publication";
 
   const InformativePublicationScreen({Key? key}) : super(key: key);
 
@@ -176,7 +176,6 @@ class _InformativePublicationScreenState
                       ButtonComponent(
                         text: 'Publicar',
                         onPressed: () async {
-                          // TODO: implementar ação do botão
                           if (_formKey.currentState!.validate()) {
                             LoadingModalComponent loadingModalComponent =
                                 LoadingModalComponent();
@@ -190,8 +189,8 @@ class _InformativePublicationScreenState
                             String imgCover = await loadingImageCover();
 
                             DateTime currentPhoneDate = DateTime.now();
-                            Timestamp? dataCreated = null;
-                            Timestamp? dateUpdate = null;
+                            Timestamp? dataCreated;
+                            Timestamp? dateUpdate;
                             //TODO Incluir código abaixo quando obtiver id da publicacao
                             // if (_idPublicated.value != null) {
                             //    dateUpdate =

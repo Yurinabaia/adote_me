@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class SelectPublicationScreen extends StatelessWidget {
   const SelectPublicationScreen({Key? key}) : super(key: key);
 
-  static const routeName = "/select_publication";
+  static const routeName = "/create-publication/select_publication";
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +25,22 @@ class SelectPublicationScreen extends StatelessWidget {
               title: 'Animal para Adoção',
               image: 'cat',
               color: Color(0xffE0CE2C),
-              route: '/steps_create_publication',
+              route: '/create-publication/steps_create_publication',
               typePublication: 'animal_adoption',
             ),
             PublicationCardComponent(
               title: 'Animal perdido',
               image: 'dog',
               color: Color(0xffA82525),
-              route: '/steps_create_publication',
+              route: '/create-publication/steps_create_publication',
               typePublication: 'animal_lost',
             ),
             PublicationCardComponent(
               title: 'Informativo',
               image: 'info',
               color: Color(0xff2789E3),
-              // TODO: Implementar rota para a interface de criação de publicação de informativo
               typePublication: 'informative',
-              route: '/informative_publication',
+              route: '/create-publication/informative_publication',
             ),
           ],
         ),

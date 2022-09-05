@@ -76,6 +76,7 @@ class _InputComponentState extends State<InputComponent> {
       ),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.textMask?.maskTexFormated(),
+      // TODO: Definir onchanges e validadors personalizados
       onChanged: (value) {
         if (widget.isRequired || widget.isUrl) {
           if (value.isEmpty) {
