@@ -4,6 +4,7 @@ import 'package:adoteme/ui/screens/create_publication/animal/basic_animal_data_s
 import 'package:adoteme/ui/screens/create_publication/animal/details_animal_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/pictures_vaccine_card_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/steps_create_publication_screen.dart';
+import 'package:adoteme/ui/screens/end_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/informative_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         PicturesVaccineCardScreen.routeName: (context) => const PicturesVaccineCardScreen(),
         InformativePublicationScreen.routeName: (context) => const InformativePublicationScreen(),
         PublicationDetailsScreen.routeName: (context) => const PublicationDetailsScreen(),
+        EndPublicationScreen.routeName: (context) => const EndPublicationScreen(),
       },
     );
   }
