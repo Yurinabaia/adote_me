@@ -35,11 +35,13 @@ class _GalleryComponentState extends State<GalleryComponent> {
                   scrollPhysics: const BouncingScrollPhysics(),
                   builder: (BuildContext context, int index) {
                     return PhotoViewGalleryPageOptions(
-                      imageProvider: NetworkImage(widget.galleryItems[index]!),
+                      imageProvider:
+                          NetworkImage(widget.galleryItems[currentIndex]!),
                       initialScale: PhotoViewComputedScale.contained,
                       minScale: PhotoViewComputedScale.contained,
                       maxScale: PhotoViewComputedScale.contained * 10,
-                      heroAttributes: PhotoViewHeroAttributes(tag: index),
+                      heroAttributes:
+                          PhotoViewHeroAttributes(tag: currentIndex),
                     );
                   },
                   itemCount: widget.galleryItems.length,

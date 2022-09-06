@@ -53,7 +53,6 @@ class ContactComponent extends StatelessWidget {
         subtitle: LabelTextComponent(
           text: '$userPhone',
         ),
-        // TODO: Implementar ação de contato
         onTap: () {
           String phone = userPhone!.replaceAll(RegExp(r'[^0-9]'), '');
           if (typePhone == "WhatsApp") {

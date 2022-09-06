@@ -2,8 +2,10 @@ import 'package:adoteme/data/service/animal_publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
+import 'package:adoteme/ui/components/gallery_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
+import 'package:adoteme/ui/components/upload_photo_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/carousel_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/contact_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/term_description_component.dart';
@@ -28,7 +30,8 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController controllerTab;
 
-  List<String?> listImages = List.filled(6, null);
+  List<String?> _listImagesCarousel = List.filled(6, null);
+  List<String> _listImagesVaccine = [];
 
   String? name;
   String? description;
@@ -74,13 +77,16 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
     // TODO: implementar passagem de dados dinâmicos
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
         await AnimalPublicationService.getPublication(
-            'BeYH4tLvRDydoJYh3MOH', 'animal_lost');
+            'OMV59MpLx31zpIBMhDf2', 'animal_adoption');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
-        listImages =
-            List<String>.from(dataPublication!.data()!['animalPhotos']);
+        _listImagesCarousel =
+            List<String>.from(dataPublication!.data()?['animalPhotos']);
+        _listImagesVaccine =
+            List<String>.from(dataPublication.data()?['picturesVaccineCard']);
+
         name = dataPublication.data()?['name'];
         description = dataPublication.data()?['description'] ?? 'Não informado';
         animal = dataPublication.data()?['animal'];
@@ -156,9 +162,10 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (listImages.every((element) => element != null))
+                      if (_listImagesCarousel
+                          .every((element) => element != null))
                         CarouselComponent(
-                          listImages: listImages,
+                          listImages: _listImagesCarousel,
                         ),
                     ],
                   ),
@@ -324,9 +331,43 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                     ],
                   ),
                 ),
-                Container(
-                  color: Colors.green,
-                    ),
+                GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _listImagesVaccine.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _listImagesVaccine.isNotEmpty
+                        ? GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GalleryComponent(
+                                    initialIndex: index,
+                                    galleryItems: _listImagesVaccine,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ClipRect(
+                              child: Image.network(
+                                _listImagesVaccine[index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : const Center(
+                            child: DetailTextComponent(
+                              text: 'Nenhuma imagem encontrada',
+                            ),
+                          );
+                  },
+                ),
               ],
             );
           },
