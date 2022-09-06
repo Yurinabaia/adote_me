@@ -1,3 +1,4 @@
+import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/service/animal_publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
@@ -78,7 +79,6 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
     if (dataPublication?.data() != null) {
       // TODO: corrigir chave para idUser
       getAdvertiser((dataPublication?.data()?['idUser']));
-
       setState(() {
         listImages =
             List<String>.from(dataPublication!.data()!['animalPhotos']);
@@ -298,13 +298,24 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                           ButtonComponent(
                             text: 'Excluir publicação',
                             color: const Color(0xffA82525),
-                            onPressed: () {
-                              AlertDialogComponent(
-                                statusType: 'error',
-                                title: 'Excluir publicação',
-                                message:
-                                    'A publicação será excluída permanentemente. Deseja prosseguir ?',
-                              ).showAlert(context);
+                            onPressed: () async {
+                              await showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const AlertDialogComponent(
+                                  statusType: 'error',
+                                  title: 'Excluir publicação',
+                                  message:
+                                      'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                                ),
+                              ).then((value) {
+                                if (value) {
+                                  AnimalPublicationService.deletePublication(
+                                      "D4BgUd4AwzANV0Tlcyg3", "animal_lost");
+                                  Navigator.pushReplacementNamed(
+                                      context, '/my_publications');
+                                }
+                              });
                             },
                           ),
                         ],

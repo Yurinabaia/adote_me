@@ -82,16 +82,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if (dataUser.data() != null) {
       _nameController.text = dataUser.data()!['name'];
       _mainCellController.text = dataUser.data()!['mainCell'];
-      _optionalCellController.text = dataUser.data()!['optionalCell'];
-      _optionalCell2Controller.text = dataUser.data()!['optionalCell2'];
+      _optionalCellController.text = dataUser.data()?['optionalCell'] ?? '';
+      _optionalCell2Controller.text = dataUser.data()?['optionalCell2'] ?? '';
       _zipCodeController.text = dataUser.data()!['zipCode'];
       _streetController.text = dataUser.data()!['street'];
       _numberController.text = dataUser.data()!['number'];
       _districtController.text = dataUser.data()!['district'];
       _cityController.text = dataUser.data()!['city'];
       _stateController.text = dataUser.data()!['state'];
-      _complementController.text = dataUser.data()!['complement'];
-      if (dataUser.data()!['image'] != null) {
+      _complementController.text = dataUser.data()?['complement'] ?? '';
+      if (dataUser.data()?['image'] != null) {
         setState(() {
           _imgFirebase = dataUser.data()!['image'];
         });
@@ -349,11 +349,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         'name': _nameController.text,
         'email': _emailController.text,
         'mainCell': _mainCellController.text,
-        'optionalCell': _optionalCellController.text != '' ? _optionalCellController.text : null,
-        'optionalCell2': _optionalCell2Controller.text != '' ? _optionalCell2Controller.text : null,
+        'optionalCell': _optionalCellController.text != ''
+            ? _optionalCellController.text
+            : null,
+        'optionalCell2': _optionalCell2Controller.text != ''
+            ? _optionalCell2Controller.text
+            : null,
         'street': _streetController.text,
         'number': _numberController.text,
-        'complement': _complementController.text != '' ? _complementController.text : null,
+        'complement': _complementController.text != ''
+            ? _complementController.text
+            : null,
         'district': _districtController.text,
         'city': _cityController.text,
         'state': _stateController.text,

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class AlertDialogComponent {
+class AlertDialogComponent extends StatefulWidget {
   final String statusType;
   final String title;
   final String message;
+  const AlertDialogComponent(
+      {super.key,
+      required this.statusType,
+      required this.title,
+      required this.message});
 
-  AlertDialogComponent({
-    required this.statusType,
-    required this.title,
-    required this.message,
-  });
+  @override
+  State<AlertDialogComponent> createState() => _AlertDialogComponentState();
+}
 
+class _AlertDialogComponentState extends State<AlertDialogComponent> {
   Map status = {
     'success': {
       'icon': 'assets/images/check.svg',
@@ -30,55 +34,67 @@ class AlertDialogComponent {
     //   'color': const Color(0xff2789E3),
     // },
   };
-
-  showAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Row(
-          children: <Widget>[
-            SvgPicture.asset(
-              status[statusType]['icon'],
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                color: status[statusType]['color'],
-              ),
-            ),
-          ],
-        ),
-        content: Text(
-          message,
-          style: const TextStyle(
-            color: Color(0xff334155),
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Row(
+        children: <Widget>[
+          SvgPicture.asset(
+            status[widget.statusType]['icon'],
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: status[statusType]['color'],
-              side: BorderSide(
-                color: status[statusType]['color'],
-              ),
+          const SizedBox(width: 8),
+          Text(
+            widget.title,
+            style: TextStyle(
+              color: status[widget.statusType]['color'],
             ),
-            onPressed: () => {
-              Navigator.of(context).pop(),
-            },
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: status[statusType]['color'],
-            ),
-            // TODO: Implementar ação do botão
-            onPressed: () => {},
-            child: const Text('Confirmar'),
           ),
         ],
       ),
+      content: Text(
+        widget.message,
+        style: const TextStyle(
+          color: Color(0xff334155),
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: status[widget.statusType]['color'],
+            side: BorderSide(
+              color: status[widget.statusType]['color'],
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: status[widget.statusType]['color'],
+          ),
+          // TODO: Implementar ação do botão
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+          child: const Text('Confirmar'),
+        ),
+      ],
     );
   }
 }
+
+// class AlertDialogComponents {
+
+
+    
+
+//   bool showAlert(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) => 
+//     return result;
+//   }
+// }

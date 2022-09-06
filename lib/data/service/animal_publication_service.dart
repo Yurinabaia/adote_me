@@ -18,14 +18,14 @@ class AnimalPublicationService {
     final docPublication =
         FirebaseFirestore.instance.collection(collection).doc(idPublication);
     try {
-      await docPublication.set(publication);
+      await docPublication.update(publication);
     } catch (e) {
       return false;
     }
     return true;
   }
 
-  void deletePublication(String idPublication, String collection) {
+  static void deletePublication(String idPublication, String collection) {
     final docPublication =
         FirebaseFirestore.instance.collection(collection).doc(idPublication);
     docPublication.delete();
