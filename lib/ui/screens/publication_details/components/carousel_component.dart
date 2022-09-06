@@ -1,4 +1,4 @@
-import 'package:adoteme/ui/screens/gallery_component.dart';
+import 'package:adoteme/ui/components/gallery_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
