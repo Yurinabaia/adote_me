@@ -52,6 +52,7 @@ dependencies:
   uuid: ^3.0.6
   intl: ^0.17.0
   url_launcher: ^6.1.5
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:

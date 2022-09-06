@@ -1,3 +1,4 @@
+import 'package:adoteme/ui/components/gallery_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -37,11 +38,24 @@ class _CarouselComponentState extends State<CarouselComponent> {
                 },
               ),
               items: widget.listImages
-                  .map((item) => Image.network(
-                        item!,
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width
-                      ))
+                  .map((item) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GalleryComponent(
+                            initialIndex: current,
+                            galleryItems: widget.listImages,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Image.network(
+                          item!,
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width
+                        ),
+                  ))
                   .toList(),
             );
           },
