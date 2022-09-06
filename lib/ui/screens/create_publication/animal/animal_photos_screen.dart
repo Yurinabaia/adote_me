@@ -10,7 +10,7 @@ import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
-import 'package:adoteme/ui/screens/create_publication/animal/components/photo_animal_component.dart';
+import 'package:adoteme/ui/components/upload_photo_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +118,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
                   onTap: () {
                     selectFile(index);
                   },
-                  child: PhotoAnimalComponent(
+                  child: UploadPhotoComponent(
                     file: file[index],
                     imgFirebase: imagesFirebase[index],
                   ),

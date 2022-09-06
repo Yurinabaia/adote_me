@@ -325,7 +325,7 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                   ),
                 ),
                 Container(
-                    // color: Colors.green,
+                  color: Colors.green,
                     ),
               ],
             );

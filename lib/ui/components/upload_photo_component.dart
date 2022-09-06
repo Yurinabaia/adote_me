@@ -4,11 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PhotoAnimalComponent extends StatelessWidget {
+class UploadPhotoComponent extends StatelessWidget {
   final PlatformFile? file;
   final String? imgFirebase;
-  const PhotoAnimalComponent({Key? key, this.file, this.imgFirebase})
-      : super(key: key);
+  const UploadPhotoComponent({Key? key, this.file, this.imgFirebase}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
