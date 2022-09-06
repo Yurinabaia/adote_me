@@ -75,7 +75,6 @@ class _AlertDialogComponentState extends State<AlertDialogComponent> {
             foregroundColor: Colors.white,
             backgroundColor: status[widget.statusType]['color'],
           ),
-          // TODO: Implementar ação do botão
           onPressed: () {
             Navigator.pop(context, true);
           },

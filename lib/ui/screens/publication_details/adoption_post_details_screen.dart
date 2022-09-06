@@ -1,4 +1,3 @@
-import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/service/animal_publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
@@ -8,6 +7,7 @@ import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/carousel_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/contact_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/term_description_component.dart';
+import 'package:adoteme/utils/contact_open.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class PublicationDetailsScreen extends StatefulWidget {
-  static const routeName = "/publication_details";
+  static const routeName = "/adoption_post_details";
 
   const PublicationDetailsScreen({Key? key}) : super(key: key);
 
@@ -74,10 +74,9 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
     // TODO: implementar passagem de dados dinâmicos
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
         await AnimalPublicationService.getPublication(
-            'D4BgUd4AwzANV0Tlcyg3', 'animal_lost');
+            'BeYH4tLvRDydoJYh3MOH', 'animal_lost');
 
     if (dataPublication?.data() != null) {
-      // TODO: corrigir chave para idUser
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
         listImages =
@@ -257,7 +256,6 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                             term: "Cor",
                             description: "$color",
                           ),
-                          //TODO: esconder campo quando obtiver tipo de publicação
                           TermDescriptionComponent(
                             term: "Castrado",
                             description: "$castrated",
@@ -271,18 +269,21 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                                 userName: userName,
                                 userPhoto: userPhoto,
                                 userPhone: userPhone1,
+                                typePhone: 'WhatsApp',
                               ),
                               if (userPhone2 != null)
                                 ContactComponent(
                                   userName: userName,
                                   userPhoto: userPhoto,
                                   userPhone: userPhone2,
+                                  typePhone: 'Telefone',
                                 ),
                               if (userPhone3 != null)
                                 ContactComponent(
                                   userName: userName,
                                   userPhoto: userPhoto,
                                   userPhone: userPhone3,
+                                  typePhone: 'Telefone',
                                 ),
                             ],
                           ),

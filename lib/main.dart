@@ -9,7 +9,7 @@ import 'package:adoteme/ui/screens/create_publication/informative_publication_sc
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/ui/screens/my_publications_screen.dart';
-import 'package:adoteme/ui/screens/publication_details/publication_details_screen.dart';
+import 'package:adoteme/ui/screens/publication_details/adoption_post_details_screen.dart';
 import 'package:adoteme/ui/screens/splash_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';

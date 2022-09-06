@@ -187,8 +187,10 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
     //   resultFirebase = await CreatePublicationService.createPublication(
     //       animalModel.toJson());
     // }
-    bool resultFirebase = await AnimalPublicationService.updatePublication(
-        'D4BgUd4AwzANV0Tlcyg3', animalModel.toJsonLost(), nameCollection);
+    // bool resultFirebase = await AnimalPublicationService.updatePublication(
+    //     'D4BgUd4AwzANV0Tlcyg3', animalModel.toJsonLost(), nameCollection);
+    bool resultFirebase = await AnimalPublicationService.createPublication(
+        animalModel.toJsonLost(), nameCollection);
 
     if (resultFirebase) {
       // ignore: use_build_context_synchronously
