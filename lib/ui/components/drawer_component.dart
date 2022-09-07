@@ -135,7 +135,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
               ),
               onTap: () {
                 auth.signOut();
-                Navigator.pushReplacementNamed(context, LoginScren.routeName);
+                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
               },
               selectedTileColor: Theme.of(context).primaryColor,
             ),

@@ -11,6 +11,7 @@ import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/ui/screens/my_publications_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/adoption_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/informative_post_details_screen.dart';
+import 'package:adoteme/ui/screens/publication_details/lost_post_details_screen.dart';
 import 'package:adoteme/ui/screens/splash_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
@@ -44,10 +45,10 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
-      home: const LoginScren(),
+      home: const LoginScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
-        LoginScren.routeName: (context) => const LoginScren(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
         UserProfileScreen.routeName: (context) => const UserProfileScreen(),
         DetailsAnimalScreen.routeName: (context) => const DetailsAnimalScreen(),
         AnimalPhotosScreen.routeName: (context) => const AnimalPhotosScreen(),
@@ -63,11 +64,11 @@ class MyApp extends StatelessWidget {
             const PicturesVaccineCardScreen(),
         InformativePublicationScreen.routeName: (context) =>
             const InformativePublicationScreen(),
-        PublicationDetailsScreen.routeName: (context) =>
-            const PublicationDetailsScreen(),
+        AdoptionDetailsScreen.routeName: (context) => const AdoptionDetailsScreen(),
         EndPublicationScreen.routeName: (context) =>
             const EndPublicationScreen(),
         InformativePostDetailsScreen.routeName: (context) => const InformativePostDetailsScreen(),
+        LostDetailsScreen.routeName: (context) => const LostDetailsScreen(),
       },
     );
   }

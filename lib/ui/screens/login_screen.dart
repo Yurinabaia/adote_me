@@ -7,15 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class LoginScren extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   static const routeName = "/login";
-  const LoginScren({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScren> createState() => _LoginScrenState();
+  State<LoginScreen> createState() => _LoginScrenState();
 }
 
-class _LoginScrenState extends State<LoginScren> {
+class _LoginScrenState extends State<LoginScreen> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([
@@ -79,7 +79,7 @@ class _LoginScrenState extends State<LoginScren> {
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/my_publications');
+                                context, '/lost_post_details');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

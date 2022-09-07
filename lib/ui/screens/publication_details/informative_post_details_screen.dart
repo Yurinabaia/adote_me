@@ -1,4 +1,3 @@
-import 'package:adoteme/data/service/animal_publication_service.dart';
 import 'package:adoteme/data/service/informative_publication_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -60,7 +59,7 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          // TODO: falta implementar o card em 'Minhas publicações para editar'
+          // TODO: falta implementar o card para obter o id da publicação em 'Minhas publicações para editar'
           // Navigator.of(context).pushNamed('/create-publication/basic_animal_data')
           onPressed: () => {},
           child: const Icon(
@@ -157,15 +156,14 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
                         text: "$description",
                       ),
                       const SizedBox(height: 32),
-                      if (url != null) ...[
-                        // const TitleThreeComponent(text: 'Acesse para ver mais'),
+                      if (url != null)
                         Link(
                           uri: Uri.parse(url!),
                           target: LinkTarget.blank,
                           builder: (BuildContext ctx, FollowLink? openLink) {
                             return TextButton.icon(
                               onPressed: openLink,
-                              label: Text(
+                              label: const Text(
                                 'Acesse para ver mais ',
                                 style: TextStyle(
                                   fontSize: 16,
@@ -180,14 +178,6 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
                             );
                           },
                         ),
-                        // Text(
-                        //   '$url',
-                        //   style: const TextStyle(
-                        //     color: Colors.blue,
-                        //     decoration: TextDecoration.underline,
-                        //   ),
-                        // ),
-                      ],
                       const SizedBox(height: 64),
                       ButtonComponent(
                         text: 'Excluir publicação',

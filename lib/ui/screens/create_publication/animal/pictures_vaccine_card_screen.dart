@@ -133,7 +133,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
             ButtonOutlineComponent(
               text: 'Cancelar',
               onPressed: () {
-                // TODO: Implementar a ação para Minhas Publicações ou para a tela da publicação
+                // TODO: Implementar a ação para Minhas Publicações ou para a tela da publicação (criando ou editand)
                 Navigator.pushReplacementNamed(context, '/my_publications');
               },
             ),

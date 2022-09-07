@@ -36,7 +36,7 @@ class _InformativePublicationScreenState extends State<InformativePublicationScr
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _urlController = TextEditingController();
 
-  PlatformFile? _file;
+  PlatformFile? _imgCover;
   String? _imgFirebaseCover;
   final List<String?> _listImgFirebase = List<String?>.filled(4, null);
   final List<PlatformFile?> _listImagesFile = List<PlatformFile?>.filled(4, null);
@@ -110,7 +110,7 @@ class _InformativePublicationScreenState extends State<InformativePublicationScr
                           width: MediaQuery.of(context).size.width * 0.5,
                           height: MediaQuery.of(context).size.width * 0.5,
                           child: UploadPhotoComponent(
-                            file: _file,
+                            file: _imgCover,
                             imgFirebase: _imgFirebaseCover,
                           ),
                         ),
@@ -208,6 +208,7 @@ class _InformativePublicationScreenState extends State<InformativePublicationScr
                               'listImages': listImages,
                               'createdAt': dataCreated,
                               'updatedAt': dateUpdate,
+                              'typePublication': 'informative_publication',
                             };
                             //TODO Incluir código abaixo quando obtiver id da publicacao
                             // bool resultFirebase = false;
@@ -270,7 +271,7 @@ class _InformativePublicationScreenState extends State<InformativePublicationScr
             _listImagesFile[index] = result.files.first;
             _listImgFirebase[index] = null;
           } else {
-            _file = result.files.first;
+            _imgCover = result.files.first;
             _imgFirebaseCover = null;
           }
         });
@@ -304,11 +305,11 @@ class _InformativePublicationScreenState extends State<InformativePublicationScr
   }
 
   Future<String> loadingImageCover() async {
-    if (_file != null) {
+    if (_imgCover != null) {
       Uuid uid = const Uuid();
       var idImg = uid.v4();
       var result =
-          await UploadFileFirebaseService.uploadImage(File(_file!.path!), '${_idUser.value}/informative/$idImg');
+          await UploadFileFirebaseService.uploadImage(File(_imgCover!.path!), '${_idUser.value}/informative/$idImg');
 
       if (result) {
         var resultImg = await UploadFileFirebaseService.getImage('${_idUser.value}/informative/$idImg');
