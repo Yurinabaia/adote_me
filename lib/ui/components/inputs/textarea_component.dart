@@ -7,6 +7,7 @@ class TextareaComponent extends StatefulWidget {
   final String hint;
   final int maxLength;
   final bool isRequired;
+  final String? Function(String?)? validator;
 
   const TextareaComponent({
     Key? key,
@@ -14,6 +15,7 @@ class TextareaComponent extends StatefulWidget {
     required this.hint,
     this.isRequired = true,
     this.maxLength = 255,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -57,12 +59,7 @@ class _TextareaComponentState extends State<TextareaComponent> {
         formKey.value = formKeyProvider.get();
         formKey.value.currentState!.validate();
       },
-      validator: (value) {
-        if (widget.isRequired && value!.isEmpty) {
-          return 'Campo obrigatório';
-        }
-        return null;
-      },
+      validator: widget.validator,
     );
   }
 }

@@ -17,6 +17,7 @@ import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/utils/text_mask.dart';
+import 'package:adoteme/utils/validator_inputs.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -174,19 +175,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           controller: _nameController,
                           labelTextValue: 'Nome',
                           keyboardType: TextInputType.text,
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
                         InputComponent(
                           controller: _emailController,
                           labelTextValue: 'Email',
                           keyboardType: TextInputType.emailAddress,
                           isActive: false,
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
-                        // TODO: criar validação de 8 digitos
                         InputComponent(
                           textMask: TextMask('CELL'),
                           controller: _mainCellController,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Whatsapp',
+                          validator: (value) {
+                            String? msg = ValidatorInputs.validatorText(value);
+                            return msg ??=
+                                ValidatorInputs.validatorCellPhone(value ?? '');
+                          },
                         ),
                         InputComponent(
                           textMask: TextMask('CELL'),
@@ -194,6 +205,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isRequired: false,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
+                          validator: (value) {
+                            return ValidatorInputs.validatorCellPhone(
+                                value ?? '');
+                          },
                         ),
                         InputComponent(
                           textMask: TextMask('CELL'),
@@ -201,6 +216,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           isRequired: false,
                           keyboardType: TextInputType.phone,
                           labelTextValue: 'Celular (Opcional)',
+                          validator: (value) {
+                            return ValidatorInputs.validatorCellPhone(
+                                value ?? '');
+                          },
                         ),
                         const Center(
                           child: TitleThreeComponent(text: 'Endereço'),
@@ -210,28 +229,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           keyboardType: TextInputType.number,
                           isError: _isNotAddress,
                           errorMessage: 'CEP inválido',
-                          onChanged: (String value) async {
-                            if (value.length == 8) {
-                              var dataCep =
-                                  await _viaCepController.fetchViaCep(value);
-                              if (dataCep.cep == null) {
-                                setState(() {
-                                  _isNotAddress = true;
-                                });
-                              } else {
-                                setState(() {
-                                  _isNotAddress = false;
-                                });
-                              }
-                              _zipCodeController.text = dataCep.cep ?? '';
-                              _streetController.text = dataCep.logradouro ?? '';
-                              _numberController.text =
-                                  dataCep.complemento ?? '';
-                              _districtController.text = dataCep.bairro ?? '';
-                              _cityController.text = dataCep.localidade ?? '';
-                              _stateController.text = dataCep.uf ?? '';
-                            }
-                          },
+                          onChanged: (value) => searchCEP(value),
                           labelTextValue: 'Pesquisar CEP',
                         ),
                         InputComponent(
@@ -245,6 +243,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           controller: _numberController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Número',
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
                         InputComponent(
                           controller: _complementController,
@@ -301,6 +302,27 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ),
     );
+  }
+
+  searchCEP(String value) async {
+    if (value.length == 8) {
+      var dataCep = await _viaCepController.fetchViaCep(value);
+      if (dataCep.cep == null) {
+        setState(() {
+          _isNotAddress = true;
+        });
+      } else {
+        setState(() {
+          _isNotAddress = false;
+        });
+      }
+      _zipCodeController.text = dataCep.cep ?? '';
+      _streetController.text = dataCep.logradouro ?? '';
+      _numberController.text = dataCep.complemento ?? '';
+      _districtController.text = dataCep.bairro ?? '';
+      _cityController.text = dataCep.localidade ?? '';
+      _stateController.text = dataCep.uf ?? '';
+    }
   }
 
   void _showPopupMenu(Offset offset) async {

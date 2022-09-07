@@ -9,6 +9,7 @@ import 'package:adoteme/ui/components/inputs/dropdown_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/utils/text_mask.dart';
+import 'package:adoteme/utils/validator_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -94,20 +95,29 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                 runSpacing: 24,
                 children: <Widget>[
                   InputComponent(
-                      controller: _nameController,
-                      keyboardType: TextInputType.text,
-                      labelTextValue: 'Nome'),
+                    controller: _nameController,
+                    keyboardType: TextInputType.text,
+                    labelTextValue: 'Nome',
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
+                  ),
                   InputComponent(
-                      controller: _animalController,
-                      keyboardType: TextInputType.text,
-                      labelTextValue: 'Tipo Animal'),
+                    controller: _animalController,
+                    keyboardType: TextInputType.text,
+                    labelTextValue: 'Tipo Animal',
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
+                  ),
                   if (animalModel.typePublication == 'animal_adoption') ...[
                     InputComponent(
-                        controller: _ageController,
-                        textMask: TextMask('IDADE_ANIMAL'),
-                        isRequired: false,
-                        keyboardType: TextInputType.number,
-                        labelTextValue: 'Idade (meses)'),
+                      controller: _ageController,
+                      textMask: TextMask('IDADE_ANIMAL'),
+                      isRequired: false,
+                      keyboardType: TextInputType.number,
+                      labelTextValue: 'Idade (meses)',
+                    ),
                   ],
                   DropDownComponent(
                     labelText: 'Tamanho',
@@ -119,6 +129,9 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       'Gigante'
                     ],
                     controller: _sizeController,
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
                   ),
                   DropDownComponent(
                     labelText: 'Sexo',
@@ -127,6 +140,9 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       'Fêmea',
                     ],
                     controller: _sexController,
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
                   ),
                   if (animalModel.typePublication == 'animal_adoption') ...[
                     InputComponent(
@@ -141,9 +157,13 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       keyboardType: TextInputType.text,
                       labelTextValue: 'Raça'),
                   InputComponent(
-                      controller: _colorAnimalController,
-                      keyboardType: TextInputType.text,
-                      labelTextValue: 'Cor'),
+                    controller: _colorAnimalController,
+                    keyboardType: TextInputType.text,
+                    labelTextValue: 'Cor',
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
+                  ),
                   if (animalModel.typePublication == 'animal_adoption') ...[
                     DropDownComponent(
                       labelText: 'Castrado',
@@ -165,13 +185,21 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                 if (_formKey.currentState!.validate()) {
                   animalModel.setName(_nameController.text);
                   animalModel.setAnimal(_animalController.text);
-                  animalModel.setAge(_ageController.text != '' ? int.parse(_ageController.text) : null);
+                  animalModel.setAge(_ageController.text != ''
+                      ? int.parse(_ageController.text)
+                      : null);
                   animalModel.setSize(_sizeController.text);
                   animalModel.setSex(_sexController.text);
-                  animalModel.setTemperament(_temperamentController.text != '' ? _temperamentController.text : null);
-                  animalModel.setBreed(_breedController.text != '' ? _breedController.text : null);
+                  animalModel.setTemperament(_temperamentController.text != ''
+                      ? _temperamentController.text
+                      : null);
+                  animalModel.setBreed(_breedController.text != ''
+                      ? _breedController.text
+                      : null);
                   animalModel.setColor(_colorAnimalController.text);
-                  animalModel.setCastrated(_castratedController.text != '' ? _castratedController.text : null);
+                  animalModel.setCastrated(_castratedController.text != ''
+                      ? _castratedController.text
+                      : null);
 
                   Navigator.pushNamed(
                       context, '/create-publication/details_animal');

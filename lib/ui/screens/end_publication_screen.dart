@@ -4,7 +4,7 @@ import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
-import 'package:adoteme/ui/components/texts/textarea_component.dart';
+import 'package:adoteme/ui/components/inputs/textarea_component.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

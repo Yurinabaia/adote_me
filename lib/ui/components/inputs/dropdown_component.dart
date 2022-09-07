@@ -7,12 +7,14 @@ class DropDownComponent extends StatefulWidget {
   final TextEditingController controller;
   final List<String> items;
   final bool isRequired;
+  final String? Function(String?)? validator;
   const DropDownComponent({
     Key? key,
     required this.labelText,
     required this.controller,
     this.isRequired = true,
     required this.items,
+    this.validator,
   }) : super(key: key);
   @override
   State<DropDownComponent> createState() => _DropDownComponentState();
@@ -80,12 +82,7 @@ class _DropDownComponentState extends State<DropDownComponent> {
           ),
         );
       }).toList(),
-      validator: (value) {
-        if (widget.isRequired) {
-          return value != null ? null : 'Campo obrigatório';
-        }
-        return null;
-      },
+      validator: widget.validator,
     );
   }
 }

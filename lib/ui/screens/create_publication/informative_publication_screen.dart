@@ -11,9 +11,10 @@ import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
-import 'package:adoteme/ui/components/texts/textarea_component.dart';
+import 'package:adoteme/ui/components/inputs/textarea_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/components/upload_photo_component.dart';
+import 'package:adoteme/utils/validator_inputs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -126,18 +127,26 @@ class _InformativePublicationScreenState
                     controller: _titleController,
                     labelTextValue: 'Título da publicação',
                     keyboardType: TextInputType.text,
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
                   ),
                   TextareaComponent(
                     controller: _descriptionController,
                     hint: 'Informações adicionais',
                     maxLength: 1000,
+                    validator: (value) {
+                      return ValidatorInputs.validatorText(value);
+                    },
                   ),
                   InputComponent(
                     controller: _urlController,
                     labelTextValue: 'URL (opcional)',
-                    isUrl: true,
                     isRequired: false,
                     keyboardType: TextInputType.text,
+                    validator: (value) {
+                      return ValidatorInputs.validatorUrl(value: value ?? '');
+                    },
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

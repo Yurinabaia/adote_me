@@ -11,7 +11,7 @@ class InputComponent extends StatefulWidget {
   final bool isActive;
   final TextMask? textMask;
   final bool isRequired;
-  final bool isUrl;
+  final String? Function(String?)? validator;
   bool iconErro;
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
@@ -22,7 +22,7 @@ class InputComponent extends StatefulWidget {
     this.textMask,
     this.isRequired = true,
     this.iconErro = false,
-    this.isUrl = false,
+    this.validator,
     required this.labelTextValue,
     this.isActive = true,
   }) : super(key: key);
@@ -76,38 +76,21 @@ class _InputComponentState extends State<InputComponent> {
       ),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.textMask?.maskTexFormated(),
-      // TODO: Definir onchanges e validadors personalizados
       onChanged: (value) {
-        if (widget.isRequired || widget.isUrl) {
-          if (value.isEmpty) {
-            setState(() {
-              widget.iconErro = true;
-            });
-          } else {
-            final formKeyProvider = context.read<FormKeyProvider>();
-            widget.formKey.value = formKeyProvider.get();
-            widget.formKey.value.currentState!.validate();
-            setState(() {
-              widget.iconErro = false;
-            });
-          }
-        }
-      },
-      validator: (value) {
-        if ((value == null || value.isEmpty) && widget.isRequired) {
+        final formKeyProvider = context.read<FormKeyProvider>();
+        widget.formKey.value = formKeyProvider.get();
+        widget.formKey.value.currentState!.validate();
+        if (value.isEmpty && widget.isRequired) {
           setState(() {
             widget.iconErro = true;
           });
-          return 'Campo obrigatório';
+        } else {
+          setState(() {
+            widget.iconErro = false;
+          });
         }
-        if (widget.isUrl) {
-          if (!Uri.parse(value!).isAbsolute) return 'Url inválida';
-        }
-        setState(() {
-          widget.iconErro = false;
-        });
-        return null;
       },
+      validator: widget.validator,
     );
   }
 }
