@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:adoteme/data/providers/form_key_provider.dart';
-import 'package:adoteme/data/service/informative_publication_serve.dart';
+import 'package:adoteme/data/service/informative_publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
@@ -47,19 +47,19 @@ class _InformativePublicationScreenState
   final ValueNotifier<String> _idUser = ValueNotifier<String>('');
   void startData() async {
     var dataPublication =
-        await InformativePublicationServe.getInformativePublication(
+        await InformativePublicationService.getInformativePublication(
             'VvbV8RJzoUxypotJYxGi');
     if (dataPublication.data() != null) {
       _titleController.text = dataPublication.data()!['title'];
       _descriptionController.text = dataPublication.data()!['description'];
-      _urlController.text = dataPublication.data()!['url_informative'];
-      var list = dataPublication.data()!['listImg'];
+      _urlController.text = dataPublication.data()!['url'];
+      var list = dataPublication.data()!['listImages'];
       if (list != null) {
         for (var i = 0; i < list.length; i++) {
           _listImgFirebase[i] = list[i];
         }
       }
-      var imgCover = dataPublication.data()!['imgCover'];
+      var imgCover = dataPublication.data()!['imageCover'];
       if (imgCover != null) {
         _imgFirebaseCover = imgCover;
       }
@@ -190,9 +190,9 @@ class _InformativePublicationScreenState
                                 LoadingModalComponent();
 
                             loadingModalComponent.showModal(context);
-                            InformativePublicationServe
+                            InformativePublicationService
                                 informativePublicationServe =
-                                InformativePublicationServe();
+                                InformativePublicationService();
                             List<String> listImages =
                                 await loadingImageOptional();
                             String imgCover = await loadingImageCover();
@@ -214,12 +214,12 @@ class _InformativePublicationScreenState
                               'idUser': _idUser.value,
                               'title': _titleController.text,
                               'description': _descriptionController.text,
-                              'url_informative': _urlController.text,
-                              'imgCover':
+                              'url': _urlController.text,
+                              'imageCover':
                                   imgCover != '' ? imgCover : _imgFirebaseCover,
-                              'listImg': listImages,
-                              'createDate': dataCreated,
-                              'updateDate': dateUpdate,
+                              'listImages': listImages,
+                              'createdAt': dataCreated,
+                              'updatedAt': dateUpdate,
                             };
                             //TODO Incluir código abaixo quando obtiver id da publicacao
                             // bool resultFirebase = false;
