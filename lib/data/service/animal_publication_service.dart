@@ -26,16 +26,24 @@ class AnimalPublicationService {
   }
 
   static void deletePublication(String idPublication, String collection) {
-    final docPublication =
-        FirebaseFirestore.instance.collection(collection).doc(idPublication);
-    docPublication.delete();
+    try {
+      final docPublication =
+          FirebaseFirestore.instance.collection(collection).doc(idPublication);
+      docPublication.delete();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getPublicationAll(
       String collection) async {
-    final docPublication =
-        FirebaseFirestore.instance.collection(collection).doc();
-    return await docPublication.get();
+    try {
+      final docPublication =
+          FirebaseFirestore.instance.collection(collection).doc();
+      return await docPublication.get();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   static Future<DocumentSnapshot<Map<String, dynamic>>?>? getPublication(

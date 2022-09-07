@@ -24,7 +24,12 @@ class UserProfileFirebaseService extends ChangeNotifier {
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserProfile(
       String userId) async {
-    final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
-    return await docUser.get();
+    try {
+      final docUser =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      return await docUser.get();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

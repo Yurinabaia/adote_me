@@ -53,19 +53,31 @@ class LoginFirebaseService extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    if (!kIsWeb) {
-      await _googleSignIn.signOut();
+    try {
+      if (!kIsWeb) {
+        await _googleSignIn.signOut();
+      }
+      await _auth.signOut();
+      await FacebookAuth.instance.logOut();
+    } catch (e) {
+      rethrow;
     }
-    await _auth.signOut();
-    await FacebookAuth.instance.logOut();
   }
 
   Future<void> excluirConta() async {
-    await _auth.currentUser?.delete();
+    try {
+      await _auth.currentUser!.delete();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   clearAuth() {
-    _auth.signOut();
+    try {
+      _auth.signOut();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   String idFirebase() {

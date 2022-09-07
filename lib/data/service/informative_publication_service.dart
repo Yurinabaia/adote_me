@@ -27,24 +27,37 @@ class InformativePublicationService {
   }
 
   static void deleteInformativePublication(String idInformative) {
-    final docUser = FirebaseFirestore.instance
-        .collection('informative_publication')
-        .doc(idInformative);
-    docUser.delete();
+    try {
+      final docUser = FirebaseFirestore.instance
+          .collection('informative_publication')
+          .doc(idInformative);
+      docUser.delete();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   static Future<DocumentSnapshot<Map<String, dynamic>>>
       getInformativePublication(String idInformative) async {
-    final docUser = FirebaseFirestore.instance
-        .collection('informative_publication')
-        .doc(idInformative);
-    return await docUser.get();
+    try {
+      final docUser = FirebaseFirestore.instance
+          .collection('informative_publication')
+          .doc(idInformative);
+      return await docUser.get();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>>
       getInformativePublicationAll() async {
-    final docUser =
-        FirebaseFirestore.instance.collection('informative_publication').doc();
-    return await docUser.get();
+    try {
+      final docUser = FirebaseFirestore.instance
+          .collection('informative_publication')
+          .doc();
+      return await docUser.get();
+    } catch (e) {
+      rethrow;
+    }
   }
 }
