@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class InformativePublicationServe {
+class InformativePublicationService {
   Future<bool> saveInformativePublication(
       Map<String, dynamic> dataInformative) async {
     final docUser =
@@ -26,7 +26,7 @@ class InformativePublicationServe {
     return true;
   }
 
-  void deleteInformativePublication(String idInformative) {
+  static void deleteInformativePublication(String idInformative) {
     final docUser = FirebaseFirestore.instance
         .collection('informative_publication')
         .doc(idInformative);

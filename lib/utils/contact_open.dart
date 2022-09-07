@@ -18,4 +18,12 @@ class ContactOpen {
       throw 'Could not launch $url';
     }
   }
+
+  openBrowser(String url) async {
+    if (await canLaunchUrl(Uri(path: url))) {
+      await launchUrl(Uri(path: url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }

@@ -126,8 +126,8 @@ class AnimalModel extends ChangeNotifier {
         "typePublication": typePublication,
         "feedBack": feedBack,
         "status": status,
-        "createDate": createDate,
-        "updateDate": updateDate,
+        "createdAt": createDate,
+        "updatedAt": updateDate,
         "idUser": idUser,
       };
 
@@ -143,8 +143,8 @@ class AnimalModel extends ChangeNotifier {
         "typePublication": typePublication,
         "feedBack": feedBack,
         "status": status,
-        "createDate": createDate,
-        "updateDate": updateDate,
+        "createdAt": createDate,
+        "updatedAt": updateDate,
         "idUser": idUser,
       };
 }

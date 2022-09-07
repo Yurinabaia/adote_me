@@ -96,8 +96,8 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
         color = dataPublication.data()?['color'];
         castrated = dataPublication.data()?['castrated'] ?? 'Não informado';
 
-        var timestamp = dataPublication.data()?['updateDate'] ??
-            dataPublication.data()?['createDate'];
+        var timestamp = dataPublication.data()?['updatedAt'] ??
+            dataPublication.data()?['createdAt'];
         var dateTime = DateTime.fromMicrosecondsSinceEpoch(
             timestamp!.microsecondsSinceEpoch);
         date =
