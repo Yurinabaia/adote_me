@@ -27,12 +27,10 @@ class InformativePublicationScreen extends StatefulWidget {
   const InformativePublicationScreen({Key? key}) : super(key: key);
 
   @override
-  State<InformativePublicationScreen> createState() =>
-      _InformativePublicationScreenState();
+  State<InformativePublicationScreen> createState() => _InformativePublicationScreenState();
 }
 
-class _InformativePublicationScreenState
-    extends State<InformativePublicationScreen> {
+class _InformativePublicationScreenState extends State<InformativePublicationScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -41,14 +39,11 @@ class _InformativePublicationScreenState
   PlatformFile? _file;
   String? _imgFirebaseCover;
   final List<String?> _listImgFirebase = List<String?>.filled(4, null);
-  final List<PlatformFile?> _listImagesFile =
-      List<PlatformFile?>.filled(4, null);
+  final List<PlatformFile?> _listImagesFile = List<PlatformFile?>.filled(4, null);
 
   final ValueNotifier<String> _idUser = ValueNotifier<String>('');
   void startData() async {
-    var dataPublication =
-        await InformativePublicationService.getInformativePublication(
-            'VvbV8RJzoUxypotJYxGi');
+    var dataPublication = await InformativePublicationService.getInformativePublication('pvyFaWjN8loEjLYr2Acx');
     if (dataPublication.data() != null) {
       _titleController.text = dataPublication.data()!['title'];
       _descriptionController.text = dataPublication.data()!['description'];
@@ -105,8 +100,7 @@ class _InformativePublicationScreenState
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const BodyTextComponent(
-                          text: 'Capa da Publicação (Opcional)'),
+                      const BodyTextComponent(text: 'Capa da Publicação (Opcional)'),
                       const SizedBox(height: 16),
                       GestureDetector(
                         onTap: () {
@@ -156,8 +150,7 @@ class _InformativePublicationScreenState
                       ),
                       const SizedBox(height: 16),
                       GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
@@ -186,15 +179,11 @@ class _InformativePublicationScreenState
                         text: 'Publicar',
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            LoadingModalComponent loadingModalComponent =
-                                LoadingModalComponent();
+                            LoadingModalComponent loadingModalComponent = LoadingModalComponent();
 
                             loadingModalComponent.showModal(context);
-                            InformativePublicationService
-                                informativePublicationServe =
-                                InformativePublicationService();
-                            List<String> listImages =
-                                await loadingImageOptional();
+                            InformativePublicationService informativePublicationServe = InformativePublicationService();
+                            List<String> listImages = await loadingImageOptional();
                             String imgCover = await loadingImageCover();
 
                             DateTime currentPhoneDate = DateTime.now();
@@ -215,8 +204,7 @@ class _InformativePublicationScreenState
                               'title': _titleController.text,
                               'description': _descriptionController.text,
                               'url': _urlController.text,
-                              'imageCover':
-                                  imgCover != '' ? imgCover : _imgFirebaseCover,
+                              'imageCover': imgCover != '' ? imgCover : _imgFirebaseCover,
                               'listImages': listImages,
                               'createdAt': dataCreated,
                               'updatedAt': dateUpdate,
@@ -234,21 +222,16 @@ class _InformativePublicationScreenState
                             //           .saveInformativePublication(
                             //               dataInformative);
                             // }
-                            bool resultFirebase =
-                                await informativePublicationServe
-                                    .updateInformativePublication(
-                                        'VvbV8RJzoUxypotJYxGi',
-                                        dataInformative);
+                            bool resultFirebase = await informativePublicationServe.saveInformativePublication(
+                                dataInformative);
                             if (resultFirebase) {
                               // ignore: use_build_context_synchronously
-                              Navigator.pushReplacementNamed(
-                                  context, '/my_publications');
+                              Navigator.pushReplacementNamed(context, '/my_publications');
                               return;
                             }
                             const snack = SnackBar(
                               behavior: SnackBarBehavior.floating,
-                              content: Text(
-                                  'Erro ao gravar dados, carregue novamente outras imagens'),
+                              content: Text('Erro ao gravar dados, carregue novamente outras imagens'),
                               backgroundColor: Colors.red,
                             );
                             // ignore: use_build_context_synchronously
@@ -283,10 +266,13 @@ class _InformativePublicationScreenState
       );
       if (result != null) {
         setState(() {
-          index != null ? _listImagesFile[index] = result.files.first : null;
-          _file = result.files.first;
-          _imgFirebaseCover = null;
-          index != null ? _listImgFirebase[index] = null : null;
+          if (index != null) {
+            _listImagesFile[index] = result.files.first;
+            _listImgFirebase[index] = null;
+          } else {
+            _file = result.files.first;
+            _imgFirebaseCover = null;
+          }
         });
       }
     } catch (e) {
@@ -300,12 +286,11 @@ class _InformativePublicationScreenState
     for (var photo in _listImagesFile) {
       if (photo != null) {
         var idImg = uid.v4();
-        var result = await UploadFileFirebaseService.uploadImage(
-            File(photo.path!), '${_idUser.value}/informative/$idImg');
+        var result =
+            await UploadFileFirebaseService.uploadImage(File(photo.path!), '${_idUser.value}/informative/$idImg');
 
         if (result) {
-          var resultImg = await UploadFileFirebaseService.getImage(
-              '${_idUser.value}/informative/$idImg');
+          var resultImg = await UploadFileFirebaseService.getImage('${_idUser.value}/informative/$idImg');
           listImages.add(resultImg);
         }
       }
@@ -322,12 +307,11 @@ class _InformativePublicationScreenState
     if (_file != null) {
       Uuid uid = const Uuid();
       var idImg = uid.v4();
-      var result = await UploadFileFirebaseService.uploadImage(
-          File(_file!.path!), '${_idUser.value}/informative/$idImg');
+      var result =
+          await UploadFileFirebaseService.uploadImage(File(_file!.path!), '${_idUser.value}/informative/$idImg');
 
       if (result) {
-        var resultImg = await UploadFileFirebaseService.getImage(
-            '${_idUser.value}/informative/$idImg');
+        var resultImg = await UploadFileFirebaseService.getImage('${_idUser.value}/informative/$idImg');
         return resultImg;
       }
     }
