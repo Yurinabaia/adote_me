@@ -14,17 +14,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-class PublicationDetailsScreen extends StatefulWidget {
+class AdoptionDetailsScreen extends StatefulWidget {
   static const routeName = "/adoption_post_details";
 
-  const PublicationDetailsScreen({Key? key}) : super(key: key);
+  const AdoptionDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<PublicationDetailsScreen> createState() =>
-      _PublicationDetailsScreenState();
+  State<AdoptionDetailsScreen> createState() =>
+      _AdoptionDetailsScreenState();
 }
 
-class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
+class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController controllerTab;
 
@@ -86,7 +86,7 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
             List<String>.from(dataPublication.data()?['picturesVaccineCard']);
 
         name = dataPublication.data()?['name'];
-        description = dataPublication.data()?['description'] ?? 'Não informado';
+        description = dataPublication.data()?['description'];
         animal = dataPublication.data()?['animal'];
         age = dataPublication.data()?['age'] ?? 'Não informado';
         size = dataPublication.data()?['size'];
@@ -124,7 +124,7 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          // TODO: falta implementar o card em 'Minhas publicações para editar'
+          // TODO: falta implementar o card para obter o id da publicação em 'Minhas publicações para editar'
           // Navigator.of(context).pushNamed('/create-publication/basic_animal_data')
           onPressed: () => {},
           child: const Icon(
@@ -223,7 +223,7 @@ class _PublicationDetailsScreenState extends State<PublicationDetailsScreen>
                             ),
                           ),
                           DetailTextComponent(
-                            // TODO: implementar distãncia dinâmica
+                            // TODO: implementar distancia dinâmica
                             text: "$street, $number, $city - $state \n1,5 km",
                           ),
                           const SizedBox(height: 32),

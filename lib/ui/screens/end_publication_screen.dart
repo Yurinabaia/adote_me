@@ -5,6 +5,7 @@ import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/inputs/textarea_component.dart';
+import 'package:adoteme/utils/validator_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,9 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
               child: TextareaComponent(
                 controller: controllerTextArea,
                 hint: 'Deixe o seu feedback aqui',
-                isRequired: true,
+                validator: (value) {
+                  return ValidatorInputs.validatorText(value);
+                },
               ),
             ),
             const SizedBox(
@@ -77,10 +80,11 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
                     if (value) {
                       Map<String, dynamic> data = {
                         'feedback': controllerTextArea.text,
+                        'status': 'finished',
                       };
                       AnimalPublicationService.updatePublication(
-                          "D4BgUd4AwzANV0Tlcyg3", data, "animal_lost");
-                      //TODO - Finalizar publicação e abrir tela caso de sucesso
+                          "4Z51Qwd8TXflhehPFI9H", data, "animal_lost");
+                      //TODO - abrir tela caso de sucesso
                       Navigator.pushReplacementNamed(context, '/user_profile');
                     }
                   });

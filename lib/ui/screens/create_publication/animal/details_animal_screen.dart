@@ -7,6 +7,7 @@ import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/inputs/textarea_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
+import 'package:adoteme/utils/validator_inputs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -76,7 +77,9 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                       controller: _descriptionController,
                       hint: 'Descreva o animal',
                       maxLength: 255,
-                      isRequired: false,
+                      validator: (value) {
+                        return ValidatorInputs.validatorText(value);
+                      },
                     ),
                   ],
                 ),
