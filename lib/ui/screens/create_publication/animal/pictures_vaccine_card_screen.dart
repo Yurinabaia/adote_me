@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:adoteme/data/models/animal_model.dart';
-import 'package:adoteme/data/service/animal_publication_service.dart';
+import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
@@ -32,7 +32,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   List<String?> imagesFirebase = List<String?>.filled(4, null);
   String nameCollection = '';
   void startData() async {
-    var dataPublication = await AnimalPublicationService.getPublication(
+    var dataPublication = await PublicationService.getPublication(
         'OMV59MpLx31zpIBMhDf2', nameCollection);
     if (dataPublication?.data() != null) {
       var list = dataPublication?.data()!['picturesVaccineCard'];
@@ -161,7 +161,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     //       animalModel.toJson());
     // }
 
-    resultFirebase = await AnimalPublicationService.updatePublication(
+    resultFirebase = await PublicationService.updatePublication(
         'OMV59MpLx31zpIBMhDf2', animalModel.toJsonAdoption(), nameCollection);
 
     if (resultFirebase) {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AnimalPublicationService {
+class PublicationService {
   static Future<bool> createPublication(
       Map<String, dynamic> publication, String collection) async {
     final docPublication =

@@ -1,4 +1,4 @@
-import 'package:adoteme/data/service/informative_publication_service.dart';
+import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
@@ -16,10 +16,12 @@ class InformativePostDetailsScreen extends StatefulWidget {
   const InformativePostDetailsScreen({super.key});
 
   @override
-  State<InformativePostDetailsScreen> createState() => _InformativePostDetailsScreenState();
+  State<InformativePostDetailsScreen> createState() =>
+      _InformativePostDetailsScreenState();
 }
 
-class _InformativePostDetailsScreenState extends State<InformativePostDetailsScreen> {
+class _InformativePostDetailsScreenState
+    extends State<InformativePostDetailsScreen> {
   String? title;
   String? description;
   String? url;
@@ -36,17 +38,22 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
   void startData() async {
     initializeDateFormatting('pt-br');
 
-    var dataPublication = await InformativePublicationService.getInformativePublication('VvbV8RJzoUxypotJYxGi');
-    if (dataPublication.data() != null) {
+    var dataPublication = await PublicationService.getPublication(
+        'VvbV8RJzoUxypotJYxGi', 'informative_publication');
+    if (dataPublication?.data() != null) {
       setState(() {
-        _listImagesCarousel = List<String>.from(dataPublication.data()?['listImages']);
-        title = dataPublication.data()!['title'];
-        description = dataPublication.data()!['description'];
-        url = dataPublication.data()!['url'];
+        _listImagesCarousel =
+            List<String>.from(dataPublication?.data()?['listImages']);
+        title = dataPublication?.data()!['title'];
+        description = dataPublication?.data()!['description'];
+        url = dataPublication?.data()!['url'];
 
-        var timestamp = dataPublication.data()?['updatedAt'] ?? dataPublication.data()?['createdAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
-        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var timestamp = dataPublication?.data()?['updatedAt'] ??
+            dataPublication?.data()?['createdAt'];
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
+            timestamp!.microsecondsSinceEpoch);
+        date =
+            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -188,12 +195,16 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
                             builder: (context) => const AlertDialogComponent(
                               statusType: 'error',
                               title: 'Excluir publicação',
-                              message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                              message:
+                                  'A publicação será excluída permanentemente. Deseja prosseguir ?',
                             ),
                           ).then((value) {
                             if (value) {
-                              InformativePublicationService.deleteInformativePublication("VvbV8RJzoUxypotJYxGi");
-                              Navigator.pushReplacementNamed(context, '/my_publications');
+                              PublicationService.deletePublication(
+                                  "VvbV8RJzoUxypotJYxGi",
+                                  'informative_publication');
+                              Navigator.pushReplacementNamed(
+                                  context, '/my_publications');
                             }
                           });
                         },

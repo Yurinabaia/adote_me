@@ -1,6 +1,6 @@
 import 'package:adoteme/data/models/animal_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
-import 'package:adoteme/data/service/animal_publication_service.dart';
+import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -35,7 +35,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   String nameCollection = '';
   String nameAppBar = '';
   void startData() async {
-    var dataPublication = await AnimalPublicationService.getPublication(
+    var dataPublication = await PublicationService.getPublication(
         'D4BgUd4AwzANV0Tlcyg3', nameCollection);
     if (dataPublication?.data() != null) {
       if (nameCollection == 'animal_adoption') {

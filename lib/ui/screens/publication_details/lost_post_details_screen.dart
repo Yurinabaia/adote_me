@@ -1,4 +1,4 @@
-import 'package:adoteme/data/service/animal_publication_service.dart';
+import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -22,7 +22,8 @@ class LostDetailsScreen extends StatefulWidget {
   State<LostDetailsScreen> createState() => _LostDetailsScreenState();
 }
 
-class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTickerProviderStateMixin {
+class _LostDetailsScreenState extends State<LostDetailsScreen>
+    with SingleTickerProviderStateMixin {
   List<String?> _listImagesCarousel = List.filled(6, null);
 
   String? name;
@@ -46,7 +47,8 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
 
   getAdvertiser(String idUser) async {
     UserProfileFirebaseService userService = UserProfileFirebaseService();
-    DocumentSnapshot<Map<String, dynamic>> address = await userService.getUserProfile(idUser);
+    DocumentSnapshot<Map<String, dynamic>> address =
+        await userService.getUserProfile(idUser);
     setState(() {
       userName = address.data()?["name"];
       userPhoto = address.data()?["image"];
@@ -64,12 +66,14 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
     initializeDateFormatting('pt-br');
     // TODO: implementar passagem de dados dinâmicos
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
-        await AnimalPublicationService.getPublication('4Z51Qwd8TXflhehPFI9H', 'animal_lost');
+        await PublicationService.getPublication(
+            '4Z51Qwd8TXflhehPFI9H', 'animal_lost');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
-        _listImagesCarousel = List<String>.from(dataPublication!.data()?['animalPhotos']);
+        _listImagesCarousel =
+            List<String>.from(dataPublication!.data()?['animalPhotos']);
 
         name = dataPublication.data()?['name'];
         description = dataPublication.data()?['description'];
@@ -79,9 +83,12 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
         breed = dataPublication.data()?['breed'] ?? 'Não informado';
         color = dataPublication.data()?['color'];
 
-        var timestamp = dataPublication.data()?['updatedAt'] ?? dataPublication.data()?['createdAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
-        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var timestamp = dataPublication.data()?['updatedAt'] ??
+            dataPublication.data()?['createdAt'];
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
+            timestamp!.microsecondsSinceEpoch);
+        date =
+            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -139,7 +146,8 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (_listImagesCarousel.every((element) => element != null))
+                      if (_listImagesCarousel
+                          .every((element) => element != null))
                         CarouselComponent(
                           listImages: _listImagesCarousel,
                         ),
@@ -247,12 +255,15 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
                         builder: (context) => const AlertDialogComponent(
                           statusType: 'error',
                           title: 'Excluir publicação',
-                          message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                          message:
+                              'A publicação será excluída permanentemente. Deseja prosseguir ?',
                         ),
                       ).then((value) {
                         if (value) {
-                          AnimalPublicationService.deletePublication("4Z51Qwd8TXflhehPFI9H", "animal_lost");
-                          Navigator.pushReplacementNamed(context, '/my_publications');
+                          PublicationService.deletePublication(
+                              "4Z51Qwd8TXflhehPFI9H", "animal_lost");
+                          Navigator.pushReplacementNamed(
+                              context, '/my_publications');
                         }
                       });
                     },

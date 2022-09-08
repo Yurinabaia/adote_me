@@ -1,4 +1,4 @@
-import 'package:adoteme/data/service/animal_publication_service.dart';
+import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -20,8 +20,7 @@ class AdoptionDetailsScreen extends StatefulWidget {
   const AdoptionDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<AdoptionDetailsScreen> createState() =>
-      _AdoptionDetailsScreenState();
+  State<AdoptionDetailsScreen> createState() => _AdoptionDetailsScreenState();
 }
 
 class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
@@ -74,7 +73,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
     initializeDateFormatting('pt-br');
     // TODO: implementar passagem de dados dinâmicos
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
-        await AnimalPublicationService.getPublication(
+        await PublicationService.getPublication(
             'OMV59MpLx31zpIBMhDf2', 'animal_adoption');
 
     if (dataPublication?.data() != null) {
@@ -316,7 +315,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                                 ),
                               ).then((value) {
                                 if (value) {
-                                  AnimalPublicationService.deletePublication(
+                                  PublicationService.deletePublication(
                                       "D4BgUd4AwzANV0Tlcyg3", "animal_lost");
                                   Navigator.pushReplacementNamed(
                                       context, '/my_publications');
