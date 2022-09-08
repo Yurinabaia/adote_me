@@ -43,7 +43,7 @@ class CardLayoutGrid extends StatelessWidget {
                               'Adoção',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0xff334155),
+                                color: Colors.black,
                               ),
                             ),
                             backgroundColor: Color(0xFFFBC224),

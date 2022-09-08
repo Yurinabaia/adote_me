@@ -33,7 +33,6 @@ void main() {
       ),
     ),
   );
-  // runApp(MultiProvider(providers: providers, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
