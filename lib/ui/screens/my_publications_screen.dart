@@ -1,6 +1,7 @@
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
+import 'package:adoteme/ui/components/card_layout_grid.dart';
 import 'package:flutter/material.dart';
 
 class MyPublicationsScreen extends StatelessWidget {
@@ -31,18 +32,19 @@ class MyPublicationsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: const <Widget>[
-            SizedBox(
+        child: ListView(
+          children: <Widget>[
+            const SizedBox(
               height: 24,
             ),
-            SeachComponent(
+            const SeachComponent(
               labelTextValue: 'Pesquisa rápida',
               keyboardType: TextInputType.text,
             ),
-            SizedBox(
+            const SizedBox(
               height: 24,
             ),
+            CardLayoutGrid(),
           ],
         ),
       ),
