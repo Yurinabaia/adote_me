@@ -21,6 +21,6 @@ final providers = <SingleChildWidget>[
     create: (context) => PublicationModel(),
   ),
   ChangeNotifierProvider<IdPublicationProvider>(
-    create: (context) => IdPublicationProvider(''),
+    create: (context) => IdPublicationProvider(null),
   ),
 ];

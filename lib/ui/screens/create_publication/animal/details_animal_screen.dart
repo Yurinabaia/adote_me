@@ -1,5 +1,6 @@
 import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
@@ -24,15 +25,17 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   String nameCollection = '';
   String nameAppBar = '';
+  final ValueNotifier<String> _idUser = ValueNotifier<String>('');
+  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
+
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'kkns7enrGWtVsx95iFys', 'publications_animal');
+        _idPublication.value!, 'publications_animal');
     if (dataPublication?.data() != null) {
       _descriptionController.text = dataPublication?.data()!['description'];
     }
   }
 
-  final ValueNotifier<String> _idUser = ValueNotifier<String>('');
   @override
   void initState() {
     final auth = context.read<LoginFirebaseService>();
@@ -42,9 +45,10 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
     nameAppBar = animalModel.typePublication == 'animal_adoption'
         ? 'Criar publicação de adoção'
         : 'Criar publicação de animal perdido';
-    //TODO IMPEMENTAR O IF ABAIXO
-    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
-    if (_idUser.value.isNotEmpty) {
+
+    final idPublication = context.read<IdPublicationProvider>();
+    _idPublication.value = idPublication.get();
+    if (_idPublication.value != null && _idUser.value.isNotEmpty) {
       startData();
     }
     super.initState();
@@ -54,7 +58,6 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   Widget build(BuildContext context) {
     final formKeyProvider = context.watch<FormKeyProvider>();
     formKeyProvider.set(_formKey);
-    final animalModel = context.read<PublicationModel>();
     return Scaffold(
         appBar: AppBarToBackComponent(
           title: nameAppBar,

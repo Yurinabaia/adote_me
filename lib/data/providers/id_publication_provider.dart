@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class IdPublicationProvider extends ChangeNotifier {
-  String _formKey = '';
-  IdPublicationProvider(this._formKey);
+  String? _idPublication;
+  IdPublicationProvider(this._idPublication);
 
-  set(formKey) {
-    _formKey = formKey;
+  set(idPublication) {
+    _idPublication = idPublication;
   }
 
   get() {
-    return _formKey;
+    return _idPublication;
   }
 }

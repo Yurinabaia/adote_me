@@ -1,6 +1,7 @@
 import 'package:adoteme/data/controller/address/via_cep_controller.dart';
 import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
@@ -42,10 +43,11 @@ class _AddressScreenState extends State<AddressScreen> {
   final ViaCepController _viaCepController = Get.put(ViaCepController());
 
   final ValueNotifier<String> _idUser = ValueNotifier<String>('');
+  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
 
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'kkns7enrGWtVsx95iFys', 'publications_animal');
+        _idPublication.value!, 'publications_animal');
     if (dataPublication?.data() != null) {
       _zipCodeController.text = dataPublication?.data()?['address']['zipCode'];
       _streetController.text = dataPublication?.data()?['address']['street'];
@@ -71,12 +73,18 @@ class _AddressScreenState extends State<AddressScreen> {
     nameAppBar = animalModel.typePublication == 'animal_adoption'
         ? 'Criar publicação de adoção'
         : 'Criar publicação de animal perdido';
-    //TODO IMPEMENTAR O IF ABAIXO
-    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
-    if (_idUser.value.isNotEmpty) {
-      //startData();
+    final idPublication = context.read<IdPublicationProvider>();
+    _idPublication.value = idPublication.get();
+    if (_idPublication.value != null && _idUser.value.isNotEmpty) {
+      startData();
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<ViaCepController>();
+    super.dispose();
   }
 
   @override
@@ -178,8 +186,10 @@ class _AddressScreenState extends State<AddressScreen> {
                   const SizedBox(height: 16),
                   ButtonOutlineComponent(
                     text: 'Cancelar',
-                    //TODO: Implementar ação de voltar para a Página Inicial
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                          context, '/my_publications');
+                    },
                   ),
                 ],
               ),

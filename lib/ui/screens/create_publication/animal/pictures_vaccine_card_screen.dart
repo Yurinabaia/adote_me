@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adoteme/data/models/publication_model.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
@@ -31,9 +32,12 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   List<PlatformFile?> file = List<PlatformFile?>.filled(4, null);
   List<String?> imagesFirebase = List<String?>.filled(4, null);
   String nameCollection = '';
+  final ValueNotifier<String> _idUser = ValueNotifier('');
+  final ValueNotifier<String?> _idPublication = ValueNotifier(null);
+
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'DWClYodTDcdi62MAOvz5', 'publications_animal');
+        _idPublication.value!, 'publications_animal');
     if (dataPublication?.data() != null) {
       var list = dataPublication?.data()!['picturesVaccineCard'];
       if (list != null) {
@@ -64,16 +68,15 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     }
   }
 
-  final ValueNotifier<String> _idUser = ValueNotifier('');
   @override
   void initState() {
     final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
     final animalModel = context.read<PublicationModel>();
     nameCollection = animalModel.typePublication!;
-    //TODO IMPEMENTAR O IF ABAIXO
-    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
-    if (_idUser.value.isNotEmpty) {
+    final idPublication = context.read<IdPublicationProvider>();
+    _idPublication.value = idPublication.get();
+    if (_idPublication.value != null && _idUser.value.isNotEmpty) {
       startData();
     }
     super.initState();
@@ -133,7 +136,6 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
             ButtonOutlineComponent(
               text: 'Cancelar',
               onPressed: () {
-                // TODO: Implementar a ação para Minhas Publicações ou para a tela da publicação (criando ou editand)
                 Navigator.pushReplacementNamed(context, '/my_publications');
               },
             ),
@@ -152,18 +154,15 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     await initPublication(animalModel);
     bool resultFirebase = false;
 
-    //TODO implementar o seguinte método abaixo quando estiver criado idPublicação
-    // if (_idPublication != null) {
-    //   resultFirebase = await CreatePublicationService.updatePublication(
-    //       _idPublication!, animalModel);
-    // } else {
-    //   resultFirebase = await CreatePublicationService.createPublication(
-    //       animalModel.toJson());
-    // }
-
-    resultFirebase = await PublicationService.createPublication(
-        animalModel.toJsonAdoption(), 'publications_animal');
-
+    if (_idPublication.value != null) {
+      resultFirebase = await PublicationService.updatePublication(
+          _idPublication.value!,
+          animalModel.toJsonAdoption(),
+          'publications_animal');
+    } else {
+      resultFirebase = await PublicationService.createPublication(
+          animalModel.toJsonAdoption(), 'publications_animal');
+    }
     if (resultFirebase) {
       // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, '/my_publications');
@@ -226,13 +225,11 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
 
   Future<void> initPublication(animalModel) async {
     final DateTime currentPhoneDate = DateTime.now();
-    //TODO: implementar quando obtiver o id da publicação
-    // if (_idPublication != null) {
-    //   await animalModel.setUpdateDate(currentPhoneDate);
-    // }else {
-    //   await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
-    // }
-    await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+    if (_idPublication.value != null) {
+      await animalModel.setUpdateDate(Timestamp.fromDate(currentPhoneDate));
+    } else {
+      await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+    }
     animalModel.setIdUser(_idUser.value);
     animalModel.setStatus('in_progress');
   }

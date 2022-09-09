@@ -1,3 +1,5 @@
+import 'package:adoteme/data/models/publication_model.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
@@ -12,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:provider/provider.dart';
 
 class LostDetailsScreen extends StatefulWidget {
   static const routeName = "/lost_post_details";
@@ -64,10 +67,10 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
 
   getDataPublication() async {
     initializeDateFormatting('pt-br');
-    // TODO: implementar passagem de dados dinâmicos
+    final idPublication = context.read<IdPublicationProvider>();
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
         await PublicationService.getPublication(
-            '4Z51Qwd8TXflhehPFI9H', 'animal_lost');
+            idPublication.get(), 'publications_animal');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
@@ -104,15 +107,18 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final animalModel = context.read<PublicationModel>();
     return Scaffold(
       floatingActionButton: SizedBox(
         height: 70,
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          // TODO: falta implementar o card para obter o id da publicação em 'Minhas publicações para editar'
-          // Navigator.of(context).pushNamed('/create-publication/basic_animal_data')
-          onPressed: () => {},
+          onPressed: () {
+            animalModel.setTypePublication('animal_lost');
+            Navigator.pushNamed(
+                context, '/create-publication/basic_animal_data');
+          },
           child: const Icon(
             Icons.edit,
             size: 40,

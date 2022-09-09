@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adoteme/data/models/publication_model.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
@@ -32,9 +33,13 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   List<String?> imagesFirebase = List<String?>.filled(6, null);
   String nameCollection = '';
   String nameAppBar = ' ';
+
+  final ValueNotifier<String> _idUser = ValueNotifier<String>('');
+  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
+
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'kkns7enrGWtVsx95iFys', 'publications_animal');
+        _idPublication.value!, 'publications_animal');
     if (dataPublication?.data() != null) {
       var list = dataPublication?.data()!['animalPhotos'];
       if (list != null) {
@@ -65,7 +70,6 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
     }
   }
 
-  final ValueNotifier<String> _idUser = ValueNotifier<String>('');
   @override
   void initState() {
     final auth = context.read<LoginFirebaseService>();
@@ -75,9 +79,9 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
     nameAppBar = animalModel.typePublication == 'animal_adoption'
         ? 'Criar publicação de adoção'
         : 'Criar publicação de animal perdido';
-    //TODO IMPEMENTAR O IF ABAIXO
-    // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
-    if (_idUser.value.isNotEmpty) {
+    final idPublication = context.read<IdPublicationProvider>();
+    _idPublication.value = idPublication.get();
+    if (_idPublication.value != null && _idUser.value.isNotEmpty) {
       startData();
     }
     super.initState();
@@ -179,18 +183,16 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
     loadingModalComponent.showModal(context);
     await uploadsImages(animalModel);
     await initPublication(animalModel);
-    //TODO implementar o seguinte método abaixo quando estiver criado idPublicação
-    // if (_idPublication != null) {
-    //   resultFirebase = await CreatePublicationService.updatePublication(
-    //       _idPublication!, animalModel);
-    // } else {
-    //   resultFirebase = await CreatePublicationService.createPublication(
-    //       animalModel.toJson());
-    // }
-    // bool resultFirebase = await AnimalPublicationService.updatePublication(
-    //     'D4BgUd4AwzANV0Tlcyg3', animalModel.toJsonLost(), nameCollection);
-    bool resultFirebase = await PublicationService.createPublication(
-        animalModel.toJsonLost(), 'publications_animal');
+    bool resultFirebase;
+    if (_idPublication.value != null) {
+      resultFirebase = await PublicationService.updatePublication(
+          _idPublication.value!,
+          animalModel.toJsonLost(),
+          'publications_animal');
+    } else {
+      resultFirebase = await PublicationService.createPublication(
+          animalModel.toJsonLost(), 'publications_animal');
+    }
 
     if (resultFirebase) {
       // ignore: use_build_context_synchronously
@@ -234,13 +236,11 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
 
   Future<void> initPublication(animalModel) async {
     final DateTime currentPhoneDate = DateTime.now();
-    //TODO: implementar quando obtiver o id da publicação
-    // if (_idPublication != null) {
-    //   await animalModel.setUpdateDate(currentPhoneDate);
-    // }else {
-    //   await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
-    // }
-    await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+    if (_idPublication.value != null) {
+      await animalModel.setUpdateDate(Timestamp.fromDate(currentPhoneDate));
+    } else {
+      await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+    }
     animalModel.setIdUser(_idUser.value);
     animalModel.setStatus('in_progress');
   }

@@ -46,12 +46,6 @@ class PublicationService {
     }
   }
 
-  static Future<String> get_data(DocumentReference doc_ref) async {
-    DocumentSnapshot docSnap = await doc_ref.get();
-    var doc_id2 = docSnap.reference.id;
-    return doc_id2;
-  }
-
   static Future<DocumentSnapshot<Map<String, dynamic>>?>? getPublication(
       String idPublication, String collection) async {
     try {

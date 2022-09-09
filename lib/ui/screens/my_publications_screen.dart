@@ -46,8 +46,12 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => Navigator.of(context)
-              .pushNamed('/create-publication/select_publication'),
+          onPressed: () {
+            final idPublication = context.read<IdPublicationProvider>();
+            idPublication.set(null);
+            Navigator.of(context)
+                .pushNamed('/create-publication/select_publication');
+          },
           child: const Icon(
             Icons.add,
             size: 40,
@@ -73,6 +77,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.size > 0) {
+                    final idPublication = context.read<IdPublicationProvider>();
                     final rowSizes = List.generate(
                         (snapshot.data!.size / 2).round(), (_) => auto);
                     return LayoutBuilder(builder: (context, constraints) {
@@ -84,13 +89,30 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                           rowGap: 8,
                           columnGap: 8,
                           children: <Widget>[
-                            for (var element in snapshot.data!.docChanges)
-                              CardLayoutGrid(
-                                imagem: element.doc['animalPhotos'][0],
-                                typePublication: element.doc['typePublication'],
-                                name: element.doc['name'],
-                                district: element.doc['address']['district'],
+                            for (var element in snapshot.data!.docChanges) ...[
+                              GestureDetector(
+                                child: CardLayoutGrid(
+                                  imagem: element.doc['animalPhotos'][0],
+                                  typePublication:
+                                      element.doc['typePublication'],
+                                  name: element.doc['name'],
+                                  district: element.doc['address']['district'],
+                                  //status: element.doc['status'],
+                                ),
+                                onTap: () {
+                                  idPublication.set(element.doc.id);
+                                  if (element.doc['typePublication'] ==
+                                      'animal_adoption') {
+                                    Navigator.pushNamed(
+                                        context, '/adoption_post_details');
+                                  } else if (element.doc['typePublication'] ==
+                                      'animal_lost') {
+                                    Navigator.pushNamed(
+                                        context, '/lost_post_details');
+                                  }
+                                },
                               ),
+                            ]
                           ]);
                     });
                   } else {
@@ -98,7 +120,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                       child: Text('Nenhuma publicação encontrada'),
                     );
                   }
-                } else if (snapshot.hasError || snapshot.data == null) {
+                } else if (snapshot.hasError) {
                   return const Center(
                     child: Text('Erro ao carregar publicações'),
                   );

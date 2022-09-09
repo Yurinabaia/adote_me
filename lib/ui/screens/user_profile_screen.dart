@@ -116,6 +116,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   void dispose() {
     _imgFirebase = null;
+    Get.delete<ViaCepController>();
     super.dispose();
   }
 

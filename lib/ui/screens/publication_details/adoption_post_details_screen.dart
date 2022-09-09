@@ -77,7 +77,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
     final idPublication = context.read<IdPublicationProvider>();
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
         await PublicationService.getPublication(
-            idPublication.get(), 'animal_adoption');
+            idPublication.get(), 'publications_animal');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
@@ -120,15 +120,18 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final animalModel = context.read<PublicationModel>();
     return Scaffold(
       floatingActionButton: SizedBox(
         height: 70,
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          // TODO: falta implementar o card para obter o id da publicação em 'Minhas publicações para editar'
-          // Navigator.of(context).pushNamed('/create-publication/basic_animal_data')
-          onPressed: () => {},
+          onPressed: () {
+            animalModel.setTypePublication('animal_adoption');
+            Navigator.pushNamed(
+                context, '/create-publication/basic_animal_data');
+          },
           child: const Icon(
             Icons.edit,
             size: 40,

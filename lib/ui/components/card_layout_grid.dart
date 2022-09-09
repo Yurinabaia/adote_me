@@ -1,7 +1,4 @@
-import 'package:adoteme/data/models/publication_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
 Map<String, dynamic> typePu = {
   "animal_lost": {
@@ -19,15 +16,13 @@ class CardLayoutGrid extends StatelessWidget {
   final String typePublication;
   final String name;
   final String district;
-  CardLayoutGrid({
+  const CardLayoutGrid({
     Key? key,
     required this.imagem,
     required this.typePublication,
     required this.name,
     required this.district,
   }) : super(key: key);
-
-  int crossAxisCount = 2;
 
   @override
   Widget build(BuildContext context) {
