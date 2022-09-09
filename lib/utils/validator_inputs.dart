@@ -1,12 +1,4 @@
 class ValidatorInputs {
-  static bool onChageText(String value) {
-    if (value.isEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   static String? validatorText(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
@@ -23,6 +15,12 @@ class ValidatorInputs {
 
   static String? validatorCellPhone(String value) {
     if (value.length < 15 && value.isNotEmpty) return 'Celular Invalido';
+    return null;
+  }
+
+  static String? validatorCep(bool isNotAddress, String value) {
+    if (!isNotAddress) return null;
+    if (isNotAddress || value.length != 8) return 'CEP inválido';
     return null;
   }
 }

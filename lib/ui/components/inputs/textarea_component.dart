@@ -58,6 +58,7 @@ class _TextareaComponentState extends State<TextareaComponent> {
         final formKeyProvider = context.read<FormKeyProvider>();
         formKey.value = formKeyProvider.get();
         formKey.value.currentState!.validate();
+        setState(() {});
       },
       validator: widget.validator,
     );

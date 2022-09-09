@@ -84,16 +84,3 @@ class _AlertDialogComponentState extends State<AlertDialogComponent> {
     );
   }
 }
-
-// class AlertDialogComponents {
-
-
-    
-
-//   bool showAlert(BuildContext context) {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) => 
-//     return result;
-//   }
-// }

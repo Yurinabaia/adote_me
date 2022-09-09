@@ -59,7 +59,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final ViaCepController _viaCepController = Get.put(ViaCepController());
-  bool _isNotAddress = false;
+  bool _isNotAddress = true;
   Future selectFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -95,6 +95,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       if (dataUser.data()?['image'] != null) {
         setState(() {
           _imgFirebase = dataUser.data()!['image'];
+          _isNotAddress = false;
         });
       }
     }
@@ -227,10 +228,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         SeachComponent(
                           textMask: TextMask('CEP'),
                           keyboardType: TextInputType.number,
-                          isError: _isNotAddress,
-                          errorMessage: 'CEP inválido',
                           onChanged: (value) => searchCEP(value),
                           labelTextValue: 'Pesquisar CEP',
+                          validator: (value) {
+                            return ValidatorInputs.validatorCep(
+                                _isNotAddress, value ?? '');
+                          },
                         ),
                         InputComponent(
                           iconErro: _isNotAddress,
@@ -316,6 +319,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           _isNotAddress = false;
         });
       }
+      final formKeyProvider = context.read<FormKeyProvider>();
+      formKeyProvider.get().currentState!.validate();
       _zipCodeController.text = dataCep.cep ?? '';
       _streetController.text = dataCep.logradouro ?? '';
       _numberController.text = dataCep.complemento ?? '';

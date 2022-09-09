@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-class AnimalModel extends ChangeNotifier {
+class PublicationModel extends ChangeNotifier {
   String? name;
   setName(String? name) {
     this.name = name;
@@ -110,6 +110,12 @@ class AnimalModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Map<String, dynamic>? address;
+  setAddress(Map<String, dynamic>? address) {
+    this.address = address;
+    notifyListeners();
+  }
+
   Map<String, dynamic> toJsonAdoption() => {
         "name": name,
         "animal": animal,
@@ -129,6 +135,7 @@ class AnimalModel extends ChangeNotifier {
         "createdAt": createDate,
         "updatedAt": updateDate,
         "idUser": idUser,
+        "address": address,
       };
 
   Map<String, dynamic> toJsonLost() => {
@@ -146,5 +153,6 @@ class AnimalModel extends ChangeNotifier {
         "createdAt": createDate,
         "updatedAt": updateDate,
         "idUser": idUser,
+        "address": address,
       };
 }

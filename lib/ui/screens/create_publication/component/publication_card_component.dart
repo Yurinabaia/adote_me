@@ -1,4 +1,4 @@
-import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/models/publication_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +29,7 @@ class PublicationCardComponent extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        final animalModel = context.read<AnimalModel>();
+        final animalModel = context.read<PublicationModel>();
         animalModel.setTypePublication(typePublication);
         Navigator.of(context).pushNamed(route);
       },

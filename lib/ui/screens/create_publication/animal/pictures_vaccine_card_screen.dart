@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
@@ -33,7 +33,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   String nameCollection = '';
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'OMV59MpLx31zpIBMhDf2', nameCollection);
+        'DWClYodTDcdi62MAOvz5', 'publications_animal');
     if (dataPublication?.data() != null) {
       var list = dataPublication?.data()!['picturesVaccineCard'];
       if (list != null) {
@@ -69,7 +69,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   void initState() {
     final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
-    final animalModel = context.read<AnimalModel>();
+    final animalModel = context.read<PublicationModel>();
     nameCollection = animalModel.typePublication!;
     //TODO IMPEMENTAR O IF ABAIXO
     // if (_idPublicated.isNotEmpty && _idUser.value.isNotEmpty) {
@@ -90,7 +90,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
         child: ListView(
           children: <Widget>[
             const Center(
-              child: TitleThreeComponent(text: '4. Fotos do cartão de vacina'),
+              child: TitleThreeComponent(text: '5. Fotos do cartão de vacina'),
             ),
             const Center(
               child: DetailTextComponent(
@@ -147,7 +147,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     LoadingModalComponent loadingModalComponent = LoadingModalComponent();
     loadingModalComponent.showModal(context);
 
-    final animalModel = context.read<AnimalModel>();
+    final animalModel = context.read<PublicationModel>();
     await uploadsImages(animalModel);
     await initPublication(animalModel);
     bool resultFirebase = false;
@@ -161,8 +161,8 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
     //       animalModel.toJson());
     // }
 
-    resultFirebase = await PublicationService.updatePublication(
-        'OMV59MpLx31zpIBMhDf2', animalModel.toJsonAdoption(), nameCollection);
+    resultFirebase = await PublicationService.createPublication(
+        animalModel.toJsonAdoption(), 'publications_animal');
 
     if (resultFirebase) {
       // ignore: use_build_context_synchronously

@@ -35,12 +35,12 @@ class PublicationService {
     }
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getPublicationAll(
-      String collection) async {
+  static Future<QuerySnapshot<Map<String, dynamic>>> getPublicationAll(
+      String nameCollection) async {
     try {
       final docPublication =
-          FirebaseFirestore.instance.collection(collection).doc();
-      return await docPublication.get();
+          await FirebaseFirestore.instance.collection(nameCollection).get();
+      return docPublication;
     } catch (e) {
       rethrow;
     }

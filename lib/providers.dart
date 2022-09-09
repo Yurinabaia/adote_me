@@ -1,4 +1,4 @@
-import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
@@ -16,7 +16,7 @@ final providers = <SingleChildWidget>[
   ChangeNotifierProvider<FormKeyProvider>(
     create: (context) => FormKeyProvider(GlobalKey<FormState>()),
   ),
-  ChangeNotifierProvider<AnimalModel>(
-    create: (context) => AnimalModel(),
+  ChangeNotifierProvider<PublicationModel>(
+    create: (context) => PublicationModel(),
   ),
 ];

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
@@ -34,7 +34,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   String nameAppBar = ' ';
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'D4BgUd4AwzANV0Tlcyg3', nameCollection);
+        'kkns7enrGWtVsx95iFys', 'publications_animal');
     if (dataPublication?.data() != null) {
       var list = dataPublication?.data()!['animalPhotos'];
       if (list != null) {
@@ -70,7 +70,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   void initState() {
     final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
-    final animalModel = context.read<AnimalModel>();
+    final animalModel = context.read<PublicationModel>();
     nameCollection = animalModel.typePublication!;
     nameAppBar = animalModel.typePublication == 'animal_adoption'
         ? 'Criar publicação de adoção'
@@ -85,7 +85,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final animalModel = context.read<AnimalModel>();
+    final animalModel = context.read<PublicationModel>();
     return Scaffold(
       appBar: AppBarToBackComponent(
         title: nameAppBar,
@@ -95,7 +95,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
         child: ListView(
           children: <Widget>[
             const Center(
-              child: TitleThreeComponent(text: '3. Fotos do animal'),
+              child: TitleThreeComponent(text: '4. Fotos do animal'),
             ),
             const Center(
               child: DetailTextComponent(
@@ -190,7 +190,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
     // bool resultFirebase = await AnimalPublicationService.updatePublication(
     //     'D4BgUd4AwzANV0Tlcyg3', animalModel.toJsonLost(), nameCollection);
     bool resultFirebase = await PublicationService.createPublication(
-        animalModel.toJsonLost(), nameCollection);
+        animalModel.toJsonLost(), 'publications_animal');
 
     if (resultFirebase) {
       // ignore: use_build_context_synchronously

@@ -1,4 +1,5 @@
-import 'package:adoteme/data/models/animal_model.dart';
+import 'package:adoteme/data/models/publication_model.dart';
+import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
@@ -25,7 +26,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   String nameAppBar = '';
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'D4BgUd4AwzANV0Tlcyg3', nameCollection);
+        'kkns7enrGWtVsx95iFys', 'publications_animal');
     if (dataPublication?.data() != null) {
       _descriptionController.text = dataPublication?.data()!['description'];
     }
@@ -36,7 +37,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
   void initState() {
     final auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
-    final animalModel = context.read<AnimalModel>();
+    final animalModel = context.read<PublicationModel>();
     nameCollection = animalModel.typePublication!;
     nameAppBar = animalModel.typePublication == 'animal_adoption'
         ? 'Criar publicação de adoção'
@@ -51,6 +52,9 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final formKeyProvider = context.watch<FormKeyProvider>();
+    formKeyProvider.set(_formKey);
+    final animalModel = context.read<PublicationModel>();
     return Scaffold(
         appBar: AppBarToBackComponent(
           title: nameAppBar,
@@ -89,10 +93,9 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                 text: 'Continuar',
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    final animalModel = context.read<AnimalModel>();
+                    final animalModel = context.read<PublicationModel>();
                     animalModel.setDescription(_descriptionController.text);
-                    Navigator.pushNamed(
-                        context, '/create-publication/animal_photos');
+                    Navigator.pushNamed(context, '/create-publication/address');
                   }
                 },
               ),
