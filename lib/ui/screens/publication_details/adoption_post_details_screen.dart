@@ -33,6 +33,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   List<String?> _listImagesCarousel = List.filled(6, null);
   List<String> _listImagesVaccine = [];
 
+  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
+
   String? name;
   String? description;
   String? animal;
@@ -111,7 +113,11 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   @override
   void initState() {
     super.initState();
-    getDataPublication();
+    final idPublication = context.read<IdPublicationProvider>();
+    _idPublication.value = idPublication.get();
+    if (_idPublication.value != null) {
+      getDataPublication();
+    }
     controllerTab = TabController(length: 2, vsync: this);
   }
 
@@ -322,7 +328,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                               ).then((value) {
                                 if (value) {
                                   PublicationService.deletePublication(
-                                      "D4BgUd4AwzANV0Tlcyg3", "animal_lost");
+                                      _idPublication.value!,
+                                      "publications_animal");
                                   Navigator.pushReplacementNamed(
                                       context, '/my_publications');
                                 }

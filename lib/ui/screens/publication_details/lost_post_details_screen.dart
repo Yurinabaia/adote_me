@@ -65,12 +65,12 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
     });
   }
 
+  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
   getDataPublication() async {
     initializeDateFormatting('pt-br');
-    final idPublication = context.read<IdPublicationProvider>();
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
         await PublicationService.getPublication(
-            idPublication.get(), 'publications_animal');
+            _idPublication.value!, 'publications_animal');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
@@ -99,7 +99,11 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
   @override
   void initState() {
     super.initState();
-    getDataPublication();
+    final idPublication = context.read<IdPublicationProvider>();
+    _idPublication.value = idPublication.get();
+    if (_idPublication.value != null) {
+      getDataPublication();
+    }
   }
 
   int current = 0;
@@ -267,7 +271,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                       ).then((value) {
                         if (value) {
                           PublicationService.deletePublication(
-                              "4Z51Qwd8TXflhehPFI9H", "animal_lost");
+                              _idPublication.value!, "publications_animal");
                           Navigator.pushReplacementNamed(
                               context, '/my_publications');
                         }

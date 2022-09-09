@@ -132,6 +132,7 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
             const SizedBox(
               height: 64,
             ),
+            //TODO opções de apagar foto e trocar foto
             ButtonComponent(
               text: animalModel.typePublication == 'animal_adoption'
                   ? 'Continuar'
