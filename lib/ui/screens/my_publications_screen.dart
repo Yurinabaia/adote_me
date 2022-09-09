@@ -1,10 +1,13 @@
 import 'package:adoteme/data/bloc/publications_bloc.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/card_layout_grid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:provider/provider.dart';
 
 class MyPublicationsScreen extends StatefulWidget {
   const MyPublicationsScreen({Key? key}) : super(key: key);
@@ -70,9 +73,26 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.size > 0) {
-                    return CardLayoutGrid(
-                      items: snapshot.data!,
-                    );
+                    final rowSizes = List.generate(
+                        (snapshot.data!.size / 2).round(), (_) => auto);
+                    return LayoutBuilder(builder: (context, constraints) {
+                      return LayoutGrid(
+                          columnSizes: List.generate(
+                              (constraints.maxWidth / 220).round(),
+                              (_) => 1.fr),
+                          rowSizes: rowSizes,
+                          rowGap: 8,
+                          columnGap: 8,
+                          children: <Widget>[
+                            for (var element in snapshot.data!.docChanges)
+                              CardLayoutGrid(
+                                imagem: element.doc['animalPhotos'][0],
+                                typePublication: element.doc['typePublication'],
+                                name: element.doc['name'],
+                                district: element.doc['address']['district'],
+                              ),
+                          ]);
+                    });
                   } else {
                     return const Center(
                       child: Text('Nenhuma publicação encontrada'),

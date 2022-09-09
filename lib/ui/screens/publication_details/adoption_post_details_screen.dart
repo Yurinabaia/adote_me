@@ -1,3 +1,5 @@
+import 'package:adoteme/data/models/publication_model.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
@@ -13,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:provider/provider.dart';
 
 class AdoptionDetailsScreen extends StatefulWidget {
   static const routeName = "/adoption_post_details";
@@ -71,10 +74,10 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
 
   getDataPublication() async {
     initializeDateFormatting('pt-br');
-    // TODO: implementar passagem de dados dinâmicos
+    final idPublication = context.read<IdPublicationProvider>();
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
         await PublicationService.getPublication(
-            'OMV59MpLx31zpIBMhDf2', 'animal_adoption');
+            idPublication.get(), 'animal_adoption');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
