@@ -7,6 +7,7 @@ import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/inputs/textarea_component.dart';
 import 'package:adoteme/utils/validator_inputs.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -82,12 +83,12 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
                       Map<String, dynamic> data = {
                         'feedback': controllerTextArea.text,
                         'status': 'finished',
+                        'updatedAt': Timestamp.fromDate(DateTime.now()),
                       };
                       final idPublication = context.read<IdPublicationProvider>();
                       PublicationService.updatePublication(
-                          idPublication.get(), data, "animal_lost");
-                      //TODO - abrir tela caso de sucesso
-                      Navigator.pushReplacementNamed(context, '/user_profile');
+                          idPublication.get(), data, 'publications_animal');
+                      Navigator.pushReplacementNamed(context, '/success_case');
                     }
                   });
                 }

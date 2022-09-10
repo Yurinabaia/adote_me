@@ -41,7 +41,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
     {
       'name': 'Caso de sucesso',
       'icon': Icons.task_alt_sharp,
-      'route': '/user_profile',
+      'route': '/success_case',
     },
     {
       'name': 'Perfil',
