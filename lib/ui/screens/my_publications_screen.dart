@@ -142,7 +142,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                                         name: element.data()['name'],
                                         district: element.data()['address']
                                             ['district'],
-                                        //status: element.data()['status'],
+                                        status: element.data()['status'],
                                       )
                                     : InformativeCard(
                                         image: element.data()['imageCover'],

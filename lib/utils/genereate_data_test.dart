@@ -54,7 +54,7 @@ class GenereateDataTest {
       'status': 'in_progress',
     };
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 2; i++) {
       if (i == 2) {
         publicationModel.setTypePublication('animal_lost');
       }

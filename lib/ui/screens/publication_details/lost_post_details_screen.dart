@@ -5,6 +5,7 @@ import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
+import 'package:adoteme/ui/components/texts/label_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/carousel_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/contact_component.dart';
@@ -25,8 +26,7 @@ class LostDetailsScreen extends StatefulWidget {
   State<LostDetailsScreen> createState() => _LostDetailsScreenState();
 }
 
-class _LostDetailsScreenState extends State<LostDetailsScreen>
-    with SingleTickerProviderStateMixin {
+class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTickerProviderStateMixin {
   List<String?> _listImagesCarousel = List.filled(6, null);
 
   String? name;
@@ -37,6 +37,8 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
   String? breed;
   String? color;
   String? date;
+  String? status;
+  String? feedback;
 
   String? userName;
   String? userPhoto;
@@ -50,8 +52,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
 
   getAdvertiser(String idUser) async {
     UserProfileFirebaseService userService = UserProfileFirebaseService();
-    DocumentSnapshot<Map<String, dynamic>> address =
-        await userService.getUserProfile(idUser);
+    DocumentSnapshot<Map<String, dynamic>> address = await userService.getUserProfile(idUser);
     setState(() {
       userName = address.data()?["name"];
       userPhoto = address.data()?["image"];
@@ -69,14 +70,12 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
   getDataPublication() async {
     initializeDateFormatting('pt-br');
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
-        await PublicationService.getPublication(
-            _idPublication.value!, 'publications_animal');
+        await PublicationService.getPublication(_idPublication.value!, 'publications_animal');
 
     if (dataPublication?.data() != null) {
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
-        _listImagesCarousel =
-            List<String>.from(dataPublication!.data()?['animalPhotos']);
+        _listImagesCarousel = List<String>.from(dataPublication!.data()?['animalPhotos']);
 
         name = dataPublication.data()?['name'];
         description = dataPublication.data()?['description'];
@@ -85,12 +84,12 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
         sex = dataPublication.data()?['sex'];
         breed = dataPublication.data()?['breed'] ?? 'Não informado';
         color = dataPublication.data()?['color'];
+        status = dataPublication.data()?['status'];
+        feedback = dataPublication.data()?['feedback'];
 
         var timestamp = dataPublication.data()?['updatedAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
-            timestamp!.microsecondsSinceEpoch);
-        date =
-            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
+        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -112,22 +111,23 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
   Widget build(BuildContext context) {
     final animalModel = context.read<PublicationModel>();
     return Scaffold(
-      floatingActionButton: SizedBox(
-        height: 70,
-        width: 70,
-        child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () {
-            animalModel.setTypePublication('animal_lost');
-            Navigator.pushNamed(
-                context, '/create-publication/basic_animal_data');
-          },
-          child: const Icon(
-            Icons.edit,
-            size: 40,
-          ),
-        ),
-      ),
+      floatingActionButton: status != 'finished'
+          ? SizedBox(
+              height: 70,
+              width: 70,
+              child: FloatingActionButton(
+                backgroundColor: Theme.of(context).primaryColor,
+                onPressed: () {
+                  animalModel.setTypePublication('animal_lost');
+                  Navigator.pushNamed(context, '/create-publication/basic_animal_data');
+                },
+                child: const Icon(
+                  Icons.edit,
+                  size: 40,
+                ),
+              ),
+            )
+          : Container(),
       body: NestedScrollView(
         scrollBehavior: const ScrollBehavior(),
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -155,10 +155,10 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (_listImagesCarousel
-                          .every((element) => element != null))
+                      if (_listImagesCarousel.every((element) => element != null))
                         CarouselComponent(
                           listImages: _listImagesCarousel,
+                          status: status,
                         ),
                     ],
                   ),
@@ -219,64 +219,116 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                     term: "Cor",
                     description: "$color",
                   ),
-                  const SizedBox(height: 32),
-                  Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      ContactComponent(
-                        userName: userName,
-                        userPhoto: userPhoto,
-                        userPhone: userPhone1,
-                        typePhone: 'WhatsApp',
-                      ),
-                      if (userPhone2 != null)
-                        ContactComponent(
-                          userName: userName,
-                          userPhoto: userPhoto,
-                          userPhone: userPhone2,
-                          typePhone: 'Telefone',
-                        ),
-                      if (userPhone3 != null)
-                        ContactComponent(
-                          userName: userName,
-                          userPhoto: userPhoto,
-                          userPhone: userPhone3,
-                          typePhone: 'Telefone',
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 64),
-                  ButtonComponent(
-                    text: 'Finalizar publicação',
-                    color: const Color(0xff21725E),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/end_publication');
-                    },
-                  ),
                   const SizedBox(height: 16),
-                  ButtonComponent(
-                    text: 'Excluir publicação',
-                    color: const Color(0xffA82525),
-                    onPressed: () async {
-                      await showDialog(
-                        context: context,
-                        builder: (context) => const AlertDialogComponent(
-                          statusType: 'error',
-                          title: 'Excluir publicação',
-                          message:
-                              'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                  if (status != 'finished') ...[
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: [
+                        ContactComponent(
+                          userName: userName,
+                          userPhoto: userPhoto,
+                          userPhone: userPhone1,
+                          typePhone: 'WhatsApp',
                         ),
-                      ).then((value) {
-                        if (value) {
-                          PublicationService.deletePublication(
-                              _idPublication.value!, "publications_animal");
-                          Navigator.pushReplacementNamed(
-                              context, '/my_publications');
-                        }
-                      });
-                    },
-                  ),
+                        if (userPhone2 != null)
+                          ContactComponent(
+                            userName: userName,
+                            userPhoto: userPhoto,
+                            userPhone: userPhone2,
+                            typePhone: 'Telefone',
+                          ),
+                        if (userPhone3 != null)
+                          ContactComponent(
+                            userName: userName,
+                            userPhoto: userPhoto,
+                            userPhone: userPhone3,
+                            typePhone: 'Telefone',
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 64),
+                    ButtonComponent(
+                      text: 'Finalizar publicação',
+                      color: const Color(0xff21725E),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/end_publication');
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    ButtonComponent(
+                      text: 'Excluir publicação',
+                      color: const Color(0xffA82525),
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => const AlertDialogComponent(
+                            statusType: 'error',
+                            title: 'Excluir publicação',
+                            message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                          ),
+                        ).then((value) {
+                          if (value) {
+                            PublicationService.deletePublication(_idPublication.value!, "publications_animal");
+                            Navigator.pushReplacementNamed(context, '/my_publications');
+                          }
+                        });
+                      },
+                    ),
+                  ] else
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            // minVerticalPadding: -4,
+                            tileColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            leading: SizedBox(
+                              height: 100,
+                              width: 50,
+                              child: CircleAvatar(
+                                backgroundImage: userPhoto != null
+                                    ? Image.network(
+                                        '$userPhoto',
+                                      ).image
+                                    : Image.asset(
+                                        'assets/images/user_profile.png',
+                                      ).image,
+                              ),
+                            ),
+                            title: Text(
+                              '$userName',
+                              style: const TextStyle(
+                                color: Color(0xff334155),
+                                fontSize: 18,
+                              ),
+                            ),
+                            subtitle: const LabelTextComponent(
+                              text: 'Anunciante',
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          const TitleThreeComponent(text: 'Feedback'),
+                          DetailTextComponent(
+                            text: '$feedback',
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ],

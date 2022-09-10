@@ -114,6 +114,7 @@ class _InformativePostDetailsScreenState
                           children: <Widget>[
                             CarouselComponent(
                               listImages: _listImagesCarousel,
+                              status: null,
                             ),
                           ],
                         ),
