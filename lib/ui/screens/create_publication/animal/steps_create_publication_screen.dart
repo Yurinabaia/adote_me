@@ -77,10 +77,10 @@ class StepsCreatePublicationScreen extends StatelessWidget {
               text:
                   'Para identificar o animal e permitir que as pessoas interessadas em adotar possam ver mais detalhes de sua aparência.',
             ),
-            const SizedBox(
-              height: 20,
-            ),
             if (animalModel.typePublication == 'animal_adoption') ...[
+              const SizedBox(
+                height: 20,
+              ),
               const BodyTextComponent(
                 text: '5. Fotos do cartão de vacina',
                 fontWeight: FontWeight.w600,
