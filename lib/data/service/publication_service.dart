@@ -35,11 +35,11 @@ class PublicationService {
     }
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getPublicationAll(
-      String nameCollection) async {
+  static Future<QuerySnapshot<Map<String, dynamic>>> getPublicationsCurrentUser(
+      String nameCollection, String idUser) async {
     try {
       final docPublication =
-          await FirebaseFirestore.instance.collection(nameCollection).get();
+          await FirebaseFirestore.instance.collection(nameCollection).where('idUser', isEqualTo: idUser).get();
       return docPublication;
     } catch (e) {
       rethrow;

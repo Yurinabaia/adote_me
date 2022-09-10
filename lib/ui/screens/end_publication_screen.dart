@@ -1,4 +1,5 @@
 import 'package:adoteme/data/providers/form_key_provider.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
@@ -82,8 +83,9 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
                         'feedback': controllerTextArea.text,
                         'status': 'finished',
                       };
+                      final idPublication = context.read<IdPublicationProvider>();
                       PublicationService.updatePublication(
-                          "4Z51Qwd8TXflhehPFI9H", data, "animal_lost");
+                          idPublication.get(), data, "animal_lost");
                       //TODO - abrir tela caso de sucesso
                       Navigator.pushReplacementNamed(context, '/user_profile');
                     }

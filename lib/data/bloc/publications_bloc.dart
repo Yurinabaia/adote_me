@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PublicationsBloc
     extends GenericBloc<QuerySnapshot<Map<String, dynamic>>> {
-  getPublications(String nomeCollection) async {
+  getPublicationsCurrentUser(String nomeCollection, String idUser) async {
     try {
       var publicationsOne =
-          await PublicationService.getPublicationAll(nomeCollection);
+          await PublicationService.getPublicationsCurrentUser(nomeCollection, idUser);
       add(publicationsOne);
     } catch (e) {
       return e;

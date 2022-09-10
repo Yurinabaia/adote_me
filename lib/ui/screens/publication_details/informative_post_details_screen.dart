@@ -1,3 +1,4 @@
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/link.dart';
 
 class InformativePostDetailsScreen extends StatefulWidget {
@@ -16,12 +18,10 @@ class InformativePostDetailsScreen extends StatefulWidget {
   const InformativePostDetailsScreen({super.key});
 
   @override
-  State<InformativePostDetailsScreen> createState() =>
-      _InformativePostDetailsScreenState();
+  State<InformativePostDetailsScreen> createState() => _InformativePostDetailsScreenState();
 }
 
-class _InformativePostDetailsScreenState
-    extends State<InformativePostDetailsScreen> {
+class _InformativePostDetailsScreenState extends State<InformativePostDetailsScreen> {
   String? title;
   String? description;
   String? url;
@@ -29,31 +29,33 @@ class _InformativePostDetailsScreenState
 
   List<String?> _listImagesCarousel = [];
 
+  final ValueNotifier<String?> _idPublicationNotifier = ValueNotifier<String?>(null);
+
   @override
   void initState() {
+    final idPublicationProvider = context.read<IdPublicationProvider>();
+    _idPublicationNotifier.value = idPublicationProvider.get();
+    if (_idPublicationNotifier.value != null) {
+      startData();
+    }
     super.initState();
-    startData();
   }
 
   void startData() async {
     initializeDateFormatting('pt-br');
 
-    var dataPublication = await PublicationService.getPublication(
-        'VvbV8RJzoUxypotJYxGi', 'informative_publication');
+    var dataPublication =
+        await PublicationService.getPublication(_idPublicationNotifier.value!, 'informative_publication');
     if (dataPublication?.data() != null) {
       setState(() {
-        _listImagesCarousel =
-            List<String>.from(dataPublication?.data()?['listImages']);
+        _listImagesCarousel = List<String>.from(dataPublication?.data()?['listImages']);
         title = dataPublication?.data()!['title'];
         description = dataPublication?.data()!['description'];
         url = dataPublication?.data()!['url'];
 
-        var timestamp = dataPublication?.data()?['updatedAt'] ??
-            dataPublication?.data()?['createdAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
-            timestamp!.microsecondsSinceEpoch);
-        date =
-            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var timestamp = dataPublication?.data()?['updatedAt'] ?? dataPublication?.data()?['createdAt'];
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
+        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -66,9 +68,7 @@ class _InformativePostDetailsScreenState
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          // TODO: falta implementar o card para obter o id da publicação em 'Minhas publicações para editar'
-          // Navigator.of(context).pushNamed('/create-publication/basic_animal_data')
-          onPressed: () => {},
+          onPressed: () => {Navigator.pushNamed(context, '/create-publication/informative_publication')},
           child: const Icon(
             Icons.edit,
             size: 40,
@@ -195,16 +195,13 @@ class _InformativePostDetailsScreenState
                             builder: (context) => const AlertDialogComponent(
                               statusType: 'error',
                               title: 'Excluir publicação',
-                              message:
-                                  'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                              message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
                             ),
                           ).then((value) {
                             if (value) {
                               PublicationService.deletePublication(
-                                  "VvbV8RJzoUxypotJYxGi",
-                                  'informative_publication');
-                              Navigator.pushReplacementNamed(
-                                  context, '/my_publications');
+                                  _idPublicationNotifier.value!, 'informative_publication');
+                              Navigator.pushReplacementNamed(context, '/my_publications');
                             }
                           });
                         },

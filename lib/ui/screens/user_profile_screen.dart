@@ -59,7 +59,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final ViaCepController _viaCepController = Get.put(ViaCepController());
-  bool _isNotAddress = true;
+  bool _isNotAddress = false;
   Future selectFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(

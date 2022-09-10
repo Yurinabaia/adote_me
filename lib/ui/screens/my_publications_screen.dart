@@ -1,12 +1,15 @@
 import 'package:adoteme/data/bloc/publications_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
+import 'package:adoteme/ui/components/informative_card.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
-import 'package:adoteme/ui/components/card_layout_grid.dart';
+import 'package:adoteme/ui/components/animal_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:provider/provider.dart';
 
 class MyPublicationsScreen extends StatefulWidget {
@@ -19,16 +22,23 @@ class MyPublicationsScreen extends StatefulWidget {
 }
 
 class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
-  final PublicationsBloc _publicationAnimalLostBloc = PublicationsBloc();
+  final PublicationsBloc _publicationAnimalBloc = PublicationsBloc();
+  final PublicationsBloc _publicationInformativeBloc = PublicationsBloc();
+  final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
+
   @override
   void initState() {
-    _publicationAnimalLostBloc.getPublications('publications_animal');
+    var auth = context.read<LoginFirebaseService>();
+    _idUserNotifier.value = auth.idFirebase();
+    _publicationAnimalBloc.getPublicationsCurrentUser('publications_animal', auth.idFirebase());
+    _publicationInformativeBloc.getPublicationsCurrentUser('informative_publication', auth.idFirebase());
     super.initState();
   }
 
   @override
   void dispose() {
-    _publicationAnimalLostBloc.dispose();
+    _publicationAnimalBloc.dispose();
+    _publicationInformativeBloc.dispose();
     super.dispose();
   }
 
@@ -49,8 +59,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
           onPressed: () {
             final idPublication = context.read<IdPublicationProvider>();
             idPublication.set(null);
-            Navigator.of(context)
-                .pushNamed('/create-publication/select_publication');
+            Navigator.pushNamed(context, '/create-publication/select_publication');
           },
           child: const Icon(
             Icons.add,
@@ -72,14 +81,23 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
             const SizedBox(
               height: 24,
             ),
-            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: _publicationAnimalLostBloc.streams,
+            StreamBuilder2<QuerySnapshot<Map<String, dynamic>>, QuerySnapshot<Map<String, dynamic>>>(
+              streams: StreamTuple2(
+                _publicationInformativeBloc.stream,
+                _publicationAnimalBloc.stream,
+                // _publicationsBloc.getPublicationsCurrentUser('publications_animal', _idUserNotifier.value),
+                // _publicationsBloc.getPublicationsCurrentUser('informative_publication', _idUserNotifier.value),
+              ),
+              // stream: _publicationsBloc.streams,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!.size > 0) {
+                if (snapshot.snapshot1.hasData || snapshot.snapshot2.hasData) {
+                  var snapshot1Length = snapshot.snapshot1.data?.size ?? 0;
+                  var snapshot2Length = snapshot.snapshot2.data?.size ?? 0;
+                  if (snapshot1Length > 0 || snapshot2Length > 0) {
                     final idPublication = context.read<IdPublicationProvider>();
                     final rowSizes = List.generate(
-                        (snapshot.data!.size / 2).round(), (_) => auto);
+                        (((snapshot.snapshot1.data?.size ?? 0) + (snapshot.snapshot2.data?.size ?? 0)) / 2).round(),
+                        (_) => auto);
                     return LayoutBuilder(builder: (context, constraints) {
                       return LayoutGrid(
                           columnSizes: List.generate(
@@ -89,16 +107,25 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                           rowGap: 8,
                           columnGap: 8,
                           children: <Widget>[
-                            for (var element in snapshot.data!.docChanges) ...[
+                            for (var element in [
+                              ...snapshot.snapshot1.data?.docChanges ?? [],
+                              ...snapshot.snapshot2.data?.docChanges ?? []
+                            ]) ...[
                               GestureDetector(
-                                child: CardLayoutGrid(
-                                  imagem: element.doc['animalPhotos'][0],
+                                child: ['animal_lost', 'animal_adoption'].contains(element.doc['typePublication'])
+                                    ? AnimalCard(
+                                        image: element.doc['animalPhotos'][0],
                                   typePublication:
                                       element.doc['typePublication'],
                                   name: element.doc['name'],
                                   district: element.doc['address']['district'],
                                   //status: element.doc['status'],
-                                ),
+                                      )
+                                    : InformativeCard(
+                                        image: element.doc?['imageCover'],
+                                        title: element.doc['title'],
+                                        description: element.doc['description'],
+                                      ),
                                 onTap: () {
                                   idPublication.set(element.doc.id);
                                   if (element.doc['typePublication'] ==
@@ -110,6 +137,9 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                                     Navigator.pushNamed(
                                         context, '/lost_post_details');
                                   }
+                                  else {
+                                    Navigator.pushNamed(context, '/informative_post_details');
+                                  }
                                 },
                               ),
                             ]
@@ -120,7 +150,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                       child: Text('Nenhuma publicação encontrada'),
                     );
                   }
-                } else if (snapshot.hasError) {
+                } else if (snapshot.snapshot1.hasError || snapshot.snapshot2.hasError) {
                   return const Center(
                     child: Text('Erro ao carregar publicações'),
                   );

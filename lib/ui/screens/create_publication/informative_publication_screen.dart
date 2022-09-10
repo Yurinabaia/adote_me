@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adoteme/data/providers/form_key_provider.dart';
+import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
@@ -45,20 +46,21 @@ class _InformativePublicationScreenState
       List<PlatformFile?>.filled(4, null);
 
   final ValueNotifier<String> _idUser = ValueNotifier<String>('');
+  final ValueNotifier<String?> _idPublicationNotifier = ValueNotifier<String?>(null);
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
-        'pvyFaWjN8loEjLYr2Acx', 'informative_publication');
+        _idPublicationNotifier.value!, 'informative_publication');
     if (dataPublication?.data() != null) {
       _titleController.text = dataPublication?.data()!['title'];
       _descriptionController.text = dataPublication?.data()!['description'];
-      _urlController.text = dataPublication?.data()!['url'];
-      var list = dataPublication?.data()!['listImages'];
+      _urlController.text = dataPublication!.data()?['url'] ?? '';
+      var list = dataPublication.data()!['listImages'];
       if (list != null) {
         for (var i = 0; i < list.length; i++) {
           _listImgFirebase[i] = list[i];
         }
       }
-      var imgCover = dataPublication?.data()!['imageCover'];
+      var imgCover = dataPublication.data()!['imageCover'];
       if (imgCover != null) {
         _imgFirebaseCover = imgCover;
       }
@@ -70,7 +72,9 @@ class _InformativePublicationScreenState
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUser.value = auth.idFirebase();
-    if (_idUser.value.isNotEmpty) {
+    final idPublicationProvider = context.read<IdPublicationProvider>();
+    _idPublicationNotifier.value = idPublicationProvider.get();
+    if (_idUser.value.isNotEmpty && _idPublicationNotifier.value != null) {
       startData();
     }
     super.initState();
@@ -193,47 +197,35 @@ class _InformativePublicationScreenState
                                 await loadingImageOptional();
                             String imgCover = await loadingImageCover();
 
-                            DateTime currentPhoneDate = DateTime.now();
+                            DateTime currentDate = DateTime.now();
                             Timestamp? dataCreated;
                             Timestamp? dateUpdate;
-                            //TODO Incluir código abaixo quando obtiver id da publicacao
-                            // if (_idPublicated.value != null) {
-                            //    dateUpdate =
-                            //       Timestamp.fromDate(currentPhoneDate);
-                            // }else {
-                            //   dataCreated =
-                            //       Timestamp.fromDate(currentPhoneDate);
-                            // }
-                            dateUpdate = Timestamp.fromDate(currentPhoneDate);
-
+                            if (_idPublicationNotifier.value != null) {
+                              dateUpdate = Timestamp.fromDate(currentDate);
+                            } else {
+                              dataCreated = Timestamp.fromDate(currentDate);
+                            }
                             Map<String, dynamic> dataInformative = {
                               'idUser': _idUser.value,
                               'title': _titleController.text,
                               'description': _descriptionController.text,
-                              'url': _urlController.text,
+                              'url': _urlController.text != '' ? _urlController.text : null,
                               'imageCover':
                                   imgCover != '' ? imgCover : _imgFirebaseCover,
                               'listImages': listImages,
                               'createdAt': dataCreated,
                               'updatedAt': dateUpdate,
-                              'typePublication': 'informative_publication',
+                              'typePublication': 'informative',
                             };
-                            //TODO Incluir código abaixo quando obtiver id da publicacao
-                            // bool resultFirebase = false;
-                            // if (_idPublicated.value != null) {
-                            //   bool resultFirebase =
-                            //       await informativePublicationServe
-                            //           .updateInformativePublication(
-                            //               dataInformative);
-                            // } else {
-                            //   bool resultFirebase =
-                            //       await informativePublicationServe
-                            //           .saveInformativePublication(
-                            //               dataInformative);
-                            // }
-                            bool resultFirebase =
-                                await PublicationService.createPublication(
-                                    dataInformative, 'informative_publication');
+                            bool resultFirebase = false;
+                            if (_idPublicationNotifier.value != null) {
+                              resultFirebase = await PublicationService.updatePublication(
+                                  _idPublicationNotifier.value!, dataInformative, 'informative_publication');
+                            } else {
+                              resultFirebase = await PublicationService.createPublication(
+                                  dataInformative, 'informative_publication');
+                            }
+                            
                             if (resultFirebase) {
                               // ignore: use_build_context_synchronously
                               Navigator.pushReplacementNamed(
@@ -256,8 +248,9 @@ class _InformativePublicationScreenState
                       const SizedBox(height: 16),
                       ButtonOutlineComponent(
                         text: 'Cancelar',
-                        //TODO: Implementar ação de voltar para a Página Inicial
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/my_publications');
+                        },
                       ),
                     ],
                   ),
