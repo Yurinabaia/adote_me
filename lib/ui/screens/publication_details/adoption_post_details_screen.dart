@@ -86,8 +86,10 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
       setState(() {
         _listImagesCarousel =
             List<String>.from(dataPublication!.data()?['animalPhotos']);
-        _listImagesVaccine =
-            List<String>.from(dataPublication.data()?['picturesVaccineCard']);
+        if (dataPublication.data()?['picturesVaccineCard'] != null) {
+          _listImagesVaccine =
+              List<String>.from(dataPublication.data()?['picturesVaccineCard']);
+        }
 
         name = dataPublication.data()?['name'];
         description = dataPublication.data()?['description'];
@@ -341,18 +343,19 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                     ],
                   ),
                 ),
-                GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _listImagesVaccine.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _listImagesVaccine.isNotEmpty
-                        ? GestureDetector(
+                _listImagesVaccine.isNotEmpty
+                    ? GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _listImagesVaccine.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -370,14 +373,21 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                                 fit: BoxFit.cover,
                               ),
                             ),
-                          )
-                        : const Center(
-                            child: DetailTextComponent(
-                              text: 'Nenhuma imagem encontrada',
-                            ),
                           );
-                  },
-                ),
+                        },
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const <Widget>[
+                          Icon(
+                            Icons.pets,
+                            size: 64,
+                            color: Color(0xff334155),
+                          ),
+                          SizedBox(width: 16),
+                          DetailTextComponent(text: 'Sem imagens'),
+                        ],
+                      ),
               ],
             );
           },

@@ -30,8 +30,10 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    _publicationAnimalBloc.getPublicationsCurrentUser('publications_animal', auth.idFirebase());
-    _publicationInformativeBloc.getPublicationsCurrentUser('informative_publication', auth.idFirebase());
+    _publicationAnimalBloc.getPublicationsCurrentUser(
+        'publications_animal', auth.idFirebase());
+    _publicationInformativeBloc.getPublicationsCurrentUser(
+        'informative_publication', auth.idFirebase());
     super.initState();
   }
 
@@ -59,7 +61,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
           onPressed: () {
             final idPublication = context.read<IdPublicationProvider>();
             idPublication.set(null);
-            Navigator.pushNamed(context, '/create-publication/select_publication');
+            Navigator.pushNamed(
+                context, '/create-publication/select_publication');
           },
           child: const Icon(
             Icons.add,
@@ -81,23 +84,22 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
             const SizedBox(
               height: 24,
             ),
-            StreamBuilder2<QuerySnapshot<Map<String, dynamic>>, QuerySnapshot<Map<String, dynamic>>>(
+            StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
+                QuerySnapshot<Map<String, dynamic>>>(
               streams: StreamTuple2(
                 _publicationInformativeBloc.stream,
                 _publicationAnimalBloc.stream,
-                // _publicationsBloc.getPublicationsCurrentUser('publications_animal', _idUserNotifier.value),
-                // _publicationsBloc.getPublicationsCurrentUser('informative_publication', _idUserNotifier.value),
               ),
-              // stream: _publicationsBloc.streams,
-              builder: (context, snapshot) {
+              builder: (BuildContext context, snapshot) {
                 if (snapshot.snapshot1.hasData || snapshot.snapshot2.hasData) {
-                  var snapshot1Length = snapshot.snapshot1.data?.size ?? 0;
-                  var snapshot2Length = snapshot.snapshot2.data?.size ?? 0;
-                  if (snapshot1Length > 0 || snapshot2Length > 0) {
+                  var snap = [
+                    ...snapshot.snapshot1.data?.docs ?? [],
+                    ...snapshot.snapshot2.data?.docs ?? []
+                  ];
+                  if (snap.isNotEmpty) {
                     final idPublication = context.read<IdPublicationProvider>();
-                    final rowSizes = List.generate(
-                        (((snapshot.snapshot1.data?.size ?? 0) + (snapshot.snapshot2.data?.size ?? 0)) / 2).round(),
-                        (_) => auto);
+                    final rowSizes =
+                        List.generate((snap.length / 2).round(), (_) => auto);
                     return LayoutBuilder(builder: (context, constraints) {
                       return LayoutGrid(
                           columnSizes: List.generate(
@@ -107,42 +109,45 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                           rowGap: 8,
                           columnGap: 8,
                           children: <Widget>[
-                            for (var element in [
-                              ...snapshot.snapshot1.data?.docChanges ?? [],
-                              ...snapshot.snapshot2.data?.docChanges ?? []
-                            ]) ...[
+                            for (var element in snap)
                               GestureDetector(
-                                child: ['animal_lost', 'animal_adoption'].contains(element.doc['typePublication'])
+                                child: [
+                                  'animal_lost',
+                                  'animal_adoption'
+                                ].contains(element.data()['typePublication'])
                                     ? AnimalCard(
-                                        image: element.doc['animalPhotos'][0],
-                                  typePublication:
-                                      element.doc['typePublication'],
-                                  name: element.doc['name'],
-                                  district: element.doc['address']['district'],
-                                  //status: element.doc['status'],
+                                        image: element.data()['animalPhotos']
+                                            [0],
+                                        typePublication:
+                                            element.data()['typePublication'],
+                                        name: element.data()['name'],
+                                        district: element.data()['address']
+                                            ['district'],
+                                        //status: element.data()['status'],
                                       )
                                     : InformativeCard(
-                                        image: element.doc?['imageCover'],
-                                        title: element.doc['title'],
-                                        description: element.doc['description'],
+                                        image: element.data()['imageCover'],
+                                        title: element.data()['title'],
+                                        description:
+                                            element.data()['description'],
                                       ),
                                 onTap: () {
-                                  idPublication.set(element.doc.id);
-                                  if (element.doc['typePublication'] ==
+                                  idPublication.set(element.id);
+                                  if (element.data()['typePublication'] ==
                                       'animal_adoption') {
                                     Navigator.pushNamed(
                                         context, '/adoption_post_details');
-                                  } else if (element.doc['typePublication'] ==
+                                  } else if (element
+                                          .data()['typePublication'] ==
                                       'animal_lost') {
                                     Navigator.pushNamed(
                                         context, '/lost_post_details');
-                                  }
-                                  else {
-                                    Navigator.pushNamed(context, '/informative_post_details');
+                                  } else {
+                                    Navigator.pushNamed(
+                                        context, '/informative_post_details');
                                   }
                                 },
                               ),
-                            ]
                           ]);
                     });
                   } else {
@@ -150,7 +155,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                       child: Text('Nenhuma publicação encontrada'),
                     );
                   }
-                } else if (snapshot.snapshot1.hasError || snapshot.snapshot2.hasError) {
+                } else if (snapshot.snapshot1.hasError ||
+                    snapshot.snapshot2.hasError) {
                   return const Center(
                     child: Text('Erro ao carregar publicações'),
                   );
