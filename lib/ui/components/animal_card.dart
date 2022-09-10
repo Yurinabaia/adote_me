@@ -16,12 +16,15 @@ class AnimalCard extends StatelessWidget {
   final String typePublication;
   final String name;
   final String district;
+  final String status;
+
   const AnimalCard({
     Key? key,
     required this.image,
     required this.typePublication,
     required this.name,
     required this.district,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -46,6 +49,24 @@ class AnimalCard extends StatelessWidget {
                   height: 250,
                   fit: BoxFit.cover,
                 ),
+                if (status == 'finished')
+                  Positioned(
+                    bottom: 5,
+                    right: 5,
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 class CarouselComponent extends StatefulWidget {
   final List<String?> listImages;
+  final String? status;
 
   const CarouselComponent({
     Key? key,
     required this.listImages,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -50,12 +52,13 @@ class _CarouselComponentState extends State<CarouselComponent> {
                         ),
                       );
                     },
-                    child: Image.network(
-                          item!,
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width
-                        ),
-                  ))
+                      child: Stack(
+                        children: [
+                          Image.network(item!, fit: BoxFit.cover, width: MediaQuery.of(context).size.width),
+                        ],
+                      ),
+                    ),
+                  )
                   .toList(),
             );
           },
@@ -83,6 +86,24 @@ class _CarouselComponentState extends State<CarouselComponent> {
             );
           }).toList(),
         ),
+        if (widget.status == 'finished')
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: Container(
+              height: 75,
+              width: 75,
+              decoration: const BoxDecoration(
+                color: Colors.green,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 60,
+              ),
+            ),
+          ),
       ],
     );
   }

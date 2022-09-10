@@ -124,7 +124,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     //TODO - Povoar banco para testes Cuidado!!!
-    //GenereateDataTest(_idUser.value);
+    // GenereateDataTest(_idUser.value);
     final formKeyProvider = context.watch<FormKeyProvider>();
     formKeyProvider.set(_formKey);
     return Scaffold(
@@ -149,7 +149,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: Stack(
                         children: <Widget>[
                           CircleAvatarComponent.findCircleAvatar(
-                              imgFirebase: _imgFirebase, file: _file),
+                            imgFirebase: _imgFirebase,
+                            file: _file,
+                          ),
                           Positioned(
                             bottom: 0,
                             right: 0,
