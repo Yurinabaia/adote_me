@@ -13,6 +13,7 @@ import 'package:adoteme/ui/screens/my_publications_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/adoption_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/informative_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/lost_post_details_screen.dart';
+import 'package:adoteme/ui/screens/success_case_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
 import 'package:adoteme/ui/screens/first_access_screen.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         InformativePostDetailsScreen.routeName: (context) =>
             const InformativePostDetailsScreen(),
         LostDetailsScreen.routeName: (context) => const LostDetailsScreen(),
+        SuccessCaseScreen.routeName: (context) => const SuccessCaseScreen(),
       },
     );
   }

@@ -1,4 +1,4 @@
-import 'package:adoteme/data/bloc/publications_bloc.dart';
+import 'package:adoteme/data/bloc/my_publications_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
@@ -22,17 +22,17 @@ class MyPublicationsScreen extends StatefulWidget {
 }
 
 class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
-  final PublicationsBloc _publicationAnimalBloc = PublicationsBloc();
-  final PublicationsBloc _publicationInformativeBloc = PublicationsBloc();
+  final MyPublicationsBloc _publicationAnimalBloc = MyPublicationsBloc();
+  final MyPublicationsBloc _publicationInformativeBloc = MyPublicationsBloc();
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
 
   @override
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    _publicationAnimalBloc.getPublicationsCurrentUser(
+    _publicationAnimalBloc.getPublicationsAll(
         'publications_animal', auth.idFirebase());
-    _publicationInformativeBloc.getPublicationsCurrentUser(
+    _publicationInformativeBloc.getPublicationsAll(
         'informative_publication', auth.idFirebase());
     super.initState();
   }
@@ -82,14 +82,14 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
               keyboardType: TextInputType.text,
               onChanged: (value) {
                 if (value != '') {
-                  _publicationAnimalBloc.getPublicationsAnimal(
+                  _publicationAnimalBloc.getPublicationsAnimalSearch(
                       'publications_animal', _idUserNotifier.value, value);
-                  _publicationInformativeBloc.getPublicationsInformative(
+                  _publicationInformativeBloc.getPublicationsInformativeSearch(
                       'informative_publication', _idUserNotifier.value, value);
                 } else {
-                  _publicationAnimalBloc.getPublicationsCurrentUser(
+                  _publicationAnimalBloc.getPublicationsAll(
                       'publications_animal', _idUserNotifier.value);
-                  _publicationInformativeBloc.getPublicationsCurrentUser(
+                  _publicationInformativeBloc.getPublicationsAll(
                       'informative_publication', _idUserNotifier.value);
                 }
                 setState(() {});
@@ -111,10 +111,6 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                     ...snapshot.snapshot2.data?.docs ?? []
                   ];
                   snap.sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
-                  snap = snap
-                      .where((element) =>
-                          element.data()['idUser'] == _idUserNotifier.value)
-                      .toList();
                   if (snap.isNotEmpty) {
                     final idPublication = context.read<IdPublicationProvider>();
                     final rowSizes =
