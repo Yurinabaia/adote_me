@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:adoteme/utils/string_extension.dart';
 
 class PublicationModel extends ChangeNotifier {
   String? name;
@@ -116,7 +117,7 @@ class PublicationModel extends ChangeNotifier {
   }
 
   Map<String, dynamic> toJsonAdoption() => {
-        "name": name,
+        "name": name?.capitalize(),
         "animal": animal,
         "age": age,
         "size": size,
@@ -129,7 +130,7 @@ class PublicationModel extends ChangeNotifier {
         "animalPhotos": animalPhotos,
         "picturesVaccineCard": picturesVaccineCard,
         "typePublication": typePublication,
-        "feedBack": feedBack,
+        "feedback": feedBack,
         "status": status,
         "createdAt": createDate,
         "updatedAt": updateDate,
@@ -138,7 +139,7 @@ class PublicationModel extends ChangeNotifier {
       };
 
   Map<String, dynamic> toJsonLost() => {
-        "name": name,
+        "name": name?.capitalize(),
         "animal": animal,
         "size": size,
         "sex": sex,
@@ -147,7 +148,7 @@ class PublicationModel extends ChangeNotifier {
         "description": description,
         "animalPhotos": animalPhotos,
         "typePublication": typePublication,
-        "feedBack": feedBack,
+        "feedback": feedBack,
         "status": status,
         "createdAt": createDate,
         "updatedAt": updateDate,

@@ -18,10 +18,11 @@ class TermDescriptionComponent extends StatelessWidget {
         RichText(
           text: TextSpan(
             text: '$term: ',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xff334155),
+              color: const Color(0xff334155),
+              fontFamily: GoogleFonts.poppins().fontFamily,
             ),
             children: <TextSpan>[
               TextSpan(
@@ -39,26 +40,5 @@ class TermDescriptionComponent extends StatelessWidget {
         const SizedBox(height: 4),
       ],
     );
-    // Row(
-    //   children: <Widget>[
-    //     Text(
-    //       "$term: ",
-    // style: const TextStyle(
-    //   fontSize: 18,
-    //   fontWeight: FontWeight.bold,
-    //   color: Color(0xff334155),
-    // ),
-    //     ),
-    //     const SizedBox(width: 10),
-    //     Text(
-    //       description,
-    //       style: const TextStyle(
-    //         color: Color(0xff64748B),
-    //         fontSize: 18,
-    //       ),
-    //       softWrap: true,
-    //     ),
-    //   ],
-    // );
   }
 }

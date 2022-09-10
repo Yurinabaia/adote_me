@@ -34,10 +34,11 @@ class GenereateDataTest {
     publicationModel.setTypePublication('animal_adoption');
     publicationModel.setCreateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setUpdateDate(Timestamp.fromDate(DateTime.now()));
+    publicationModel.setStatus('in_progress');
 
     Map<String, dynamic> dataInformative = {
       'idUser': idUser,
-      'title': 'teste',
+      'title': 'Teste',
       'description': '_description',
       'url': 'https://picsum.photos/id/248/200/300',
       'imageCover': 'https://picsum.photos/id/248/200/300',
@@ -50,6 +51,7 @@ class GenereateDataTest {
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'updatedAt': Timestamp.fromDate(DateTime.now()),
       'typePublication': 'informative',
+      'status': 'in_progress',
     };
 
     for (var i = 0; i < 5; i++) {

@@ -21,6 +21,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:adoteme/utils/string_extension.dart';
 
 class InformativePublicationScreen extends StatefulWidget {
   static const routeName = "/create-publication/informative_publication";
@@ -211,7 +212,7 @@ class _InformativePublicationScreenState
                             }
                             Map<String, dynamic> dataInformative = {
                               'idUser': _idUser.value,
-                              'title': _titleController.text,
+                              'title': _titleController.text.capitalize(),
                               'description': _descriptionController.text,
                               'url': _urlController.text != ''
                                   ? _urlController.text

@@ -77,9 +77,23 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
             const SizedBox(
               height: 24,
             ),
-            const SeachComponent(
+            SeachComponent(
               labelTextValue: 'Pesquisa rápida',
               keyboardType: TextInputType.text,
+              onChanged: (value) {
+                if (value != '') {
+                  _publicationAnimalBloc.getPublicationsAnimal(
+                      'publications_animal', _idUserNotifier.value, value);
+                  _publicationInformativeBloc.getPublicationsInformative(
+                      'informative_publication', _idUserNotifier.value, value);
+                } else {
+                  _publicationAnimalBloc.getPublicationsCurrentUser(
+                      'publications_animal', _idUserNotifier.value);
+                  _publicationInformativeBloc.getPublicationsCurrentUser(
+                      'informative_publication', _idUserNotifier.value);
+                }
+                setState(() {});
+              },
             ),
             const SizedBox(
               height: 24,
@@ -97,6 +111,10 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                     ...snapshot.snapshot2.data?.docs ?? []
                   ];
                   snap.sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
+                  snap = snap
+                      .where((element) =>
+                          element.data()['idUser'] == _idUserNotifier.value)
+                      .toList();
                   if (snap.isNotEmpty) {
                     final idPublication = context.read<IdPublicationProvider>();
                     final rowSizes =
