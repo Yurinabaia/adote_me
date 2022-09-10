@@ -79,7 +79,7 @@ class _LoginScrenState extends State<LoginScreen> {
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/lost_post_details');
+                                context, '/user_profile');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

@@ -11,14 +11,14 @@ Map<String, dynamic> typePu = {
   },
 };
 
-class CardLayoutGrid extends StatelessWidget {
-  final String imagem;
+class AnimalCard extends StatelessWidget {
+  final String image;
   final String typePublication;
   final String name;
   final String district;
-  const CardLayoutGrid({
+  const AnimalCard({
     Key? key,
-    required this.imagem,
+    required this.image,
     required this.typePublication,
     required this.name,
     required this.district,
@@ -34,10 +34,20 @@ class CardLayoutGrid extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            imagem,
-            height: 250,
-            fit: BoxFit.cover,
+          ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxHeight: 175,
+            ),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.network(
+                  image,
+                  height: 250,
+                  fit: BoxFit.cover,
+                ),
+              ],
+            ),
           ),
           ListTile(
             title: Column(
@@ -48,9 +58,7 @@ class CardLayoutGrid extends StatelessWidget {
                     typePu[typePublication]['tag'],
                     style: TextStyle(
                       fontSize: 12,
-                      color: typePublication == 'animal_lost'
-                          ? Colors.white
-                          : Colors.black,
+                      color: typePublication == 'animal_lost' ? Colors.white : Colors.black,
                     ),
                   ),
                   backgroundColor: typePu[typePublication]['color'],
