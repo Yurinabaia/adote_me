@@ -11,6 +11,7 @@ import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/utils/text_mask.dart';
 import 'package:adoteme/utils/validator_inputs.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   final _formKey = GlobalKey<FormState>();
   String nameCollection = '';
   String nameAppBar = '';
+  Timestamp? _createdAt = null;
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
         _idPublication.value!, 'publications_animal');
@@ -55,7 +57,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
       _sexController.text = dataPublication?.data()!['sex'];
       _breedController.text = dataPublication?.data()?['breed'] ?? '';
       _colorAnimalController.text = dataPublication?.data()!['color'];
-
+      _createdAt = dataPublication?.data()?['createdAt'];
       setState(() {});
     }
   }
@@ -82,6 +84,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
     final formKeyProvider = context.watch<FormKeyProvider>();
     formKeyProvider.set(_formKey);
     final animalModel = context.read<PublicationModel>();
+    animalModel.setCreateDate(_createdAt);
     return Scaffold(
       appBar: AppBarToBackComponent(
         title: nameAppBar,

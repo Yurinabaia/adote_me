@@ -86,8 +86,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
         breed = dataPublication.data()?['breed'] ?? 'Não informado';
         color = dataPublication.data()?['color'];
 
-        var timestamp = dataPublication.data()?['updatedAt'] ??
-            dataPublication.data()?['createdAt'];
+        var timestamp = dataPublication.data()?['updatedAt'];
         var dateTime = DateTime.fromMicrosecondsSinceEpoch(
             timestamp!.microsecondsSinceEpoch);
         date =

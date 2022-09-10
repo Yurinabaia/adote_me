@@ -96,6 +96,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                     ...snapshot.snapshot1.data?.docs ?? [],
                     ...snapshot.snapshot2.data?.docs ?? []
                   ];
+                  snap.sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
                   if (snap.isNotEmpty) {
                     final idPublication = context.read<IdPublicationProvider>();
                     final rowSizes =

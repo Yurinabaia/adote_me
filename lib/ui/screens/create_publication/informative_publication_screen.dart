@@ -41,12 +41,14 @@ class _InformativePublicationScreenState
 
   PlatformFile? _imgCover;
   String? _imgFirebaseCover;
+  Timestamp? _createdAt;
   final List<String?> _listImgFirebase = List<String?>.filled(4, null);
   final List<PlatformFile?> _listImagesFile =
       List<PlatformFile?>.filled(4, null);
 
   final ValueNotifier<String> _idUser = ValueNotifier<String>('');
-  final ValueNotifier<String?> _idPublicationNotifier = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _idPublicationNotifier =
+      ValueNotifier<String?>(null);
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
         _idPublicationNotifier.value!, 'informative_publication');
@@ -54,6 +56,7 @@ class _InformativePublicationScreenState
       _titleController.text = dataPublication?.data()!['title'];
       _descriptionController.text = dataPublication?.data()!['description'];
       _urlController.text = dataPublication!.data()?['url'] ?? '';
+      _createdAt = dataPublication.data()?['createdAt'];
       var list = dataPublication.data()!['listImages'];
       if (list != null) {
         for (var i = 0; i < list.length; i++) {
@@ -204,28 +207,36 @@ class _InformativePublicationScreenState
                               dateUpdate = Timestamp.fromDate(currentDate);
                             } else {
                               dataCreated = Timestamp.fromDate(currentDate);
+                              dateUpdate = Timestamp.fromDate(currentDate);
                             }
                             Map<String, dynamic> dataInformative = {
                               'idUser': _idUser.value,
                               'title': _titleController.text,
                               'description': _descriptionController.text,
-                              'url': _urlController.text != '' ? _urlController.text : null,
+                              'url': _urlController.text != ''
+                                  ? _urlController.text
+                                  : null,
                               'imageCover':
                                   imgCover != '' ? imgCover : _imgFirebaseCover,
                               'listImages': listImages,
-                              'createdAt': dataCreated,
+                              'createdAt': _createdAt ?? dataCreated,
                               'updatedAt': dateUpdate,
                               'typePublication': 'informative',
                             };
                             bool resultFirebase = false;
                             if (_idPublicationNotifier.value != null) {
-                              resultFirebase = await PublicationService.updatePublication(
-                                  _idPublicationNotifier.value!, dataInformative, 'informative_publication');
+                              resultFirebase =
+                                  await PublicationService.updatePublication(
+                                      _idPublicationNotifier.value!,
+                                      dataInformative,
+                                      'informative_publication');
                             } else {
-                              resultFirebase = await PublicationService.createPublication(
-                                  dataInformative, 'informative_publication');
+                              resultFirebase =
+                                  await PublicationService.createPublication(
+                                      dataInformative,
+                                      'informative_publication');
                             }
-                            
+
                             if (resultFirebase) {
                               // ignore: use_build_context_synchronously
                               Navigator.pushReplacementNamed(
@@ -249,7 +260,8 @@ class _InformativePublicationScreenState
                       ButtonOutlineComponent(
                         text: 'Cancelar',
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/my_publications');
+                          Navigator.pushReplacementNamed(
+                              context, '/my_publications');
                         },
                       ),
                     ],

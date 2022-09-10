@@ -95,7 +95,6 @@ class PublicationModel extends ChangeNotifier {
   Timestamp? createDate;
   setCreateDate(Timestamp? createDate) {
     this.createDate = createDate;
-    notifyListeners();
   }
 
   Timestamp? updateDate;

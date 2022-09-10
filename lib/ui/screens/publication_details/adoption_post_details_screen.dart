@@ -102,8 +102,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
         color = dataPublication.data()?['color'];
         castrated = dataPublication.data()?['castrated'] ?? 'Não informado';
 
-        var timestamp = dataPublication.data()?['updatedAt'] ??
-            dataPublication.data()?['createdAt'];
+        var timestamp = dataPublication.data()?['updatedAt'];
         var dateTime = DateTime.fromMicrosecondsSinceEpoch(
             timestamp!.microsecondsSinceEpoch);
         date =

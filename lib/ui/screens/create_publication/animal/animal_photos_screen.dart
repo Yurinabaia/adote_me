@@ -236,11 +236,12 @@ class _AnimalPhotosScreenState extends State<AnimalPhotosScreen> {
   }
 
   Future<void> initPublication(animalModel) async {
-    final DateTime currentPhoneDate = DateTime.now();
+    final DateTime currentDate = DateTime.now();
     if (_idPublication.value != null) {
-      await animalModel.setUpdateDate(Timestamp.fromDate(currentPhoneDate));
+      await animalModel.setUpdateDate(Timestamp.fromDate(currentDate));
     } else {
-      await animalModel.setCreateDate(Timestamp.fromDate(currentPhoneDate));
+      await animalModel.setCreateDate(Timestamp.fromDate(currentDate));
+      await animalModel.setUpdateDate(Timestamp.fromDate(currentDate));
     }
     animalModel.setIdUser(_idUser.value);
     animalModel.setStatus('in_progress');

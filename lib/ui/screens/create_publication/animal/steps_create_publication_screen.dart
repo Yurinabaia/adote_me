@@ -1,3 +1,4 @@
+import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
@@ -5,6 +6,7 @@ import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class StepsCreatePublicationScreen extends StatelessWidget {
   static const routeName = "/create-publication/steps_create_publication";
@@ -13,6 +15,7 @@ class StepsCreatePublicationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final animalModel = context.read<PublicationModel>();
     return Scaffold(
       appBar: const AppBarToBackComponent(),
       body: Padding(
@@ -56,7 +59,18 @@ class StepsCreatePublicationScreen extends StatelessWidget {
               height: 20,
             ),
             const BodyTextComponent(
-              text: '3. Fotos do animal',
+              text: '3. Endereço',
+              fontWeight: FontWeight.w600,
+            ),
+            const DetailTextComponent(
+              text:
+                  'Informe o endereço onde o animal está disponível ou último local que foi visto.',
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const BodyTextComponent(
+              text: '4. Fotos do animal',
               fontWeight: FontWeight.w600,
             ),
             const DetailTextComponent(
@@ -66,14 +80,16 @@ class StepsCreatePublicationScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const BodyTextComponent(
-              text: '4. Fotos do cartão de vacina',
-              fontWeight: FontWeight.w600,
-            ),
-            const DetailTextComponent(
-              text:
-                  'Para identificar as vacinas que o animal possui e faltantes.',
-            ),
+            if (animalModel.typePublication == 'animal_adoption') ...[
+              const BodyTextComponent(
+                text: '5. Fotos do cartão de vacina',
+                fontWeight: FontWeight.w600,
+              ),
+              const DetailTextComponent(
+                text:
+                    'Para identificar as vacinas que o animal possui e faltantes.',
+              ),
+            ],
             const SizedBox(
               height: 40,
             ),

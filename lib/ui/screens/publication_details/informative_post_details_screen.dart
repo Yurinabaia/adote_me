@@ -18,10 +18,12 @@ class InformativePostDetailsScreen extends StatefulWidget {
   const InformativePostDetailsScreen({super.key});
 
   @override
-  State<InformativePostDetailsScreen> createState() => _InformativePostDetailsScreenState();
+  State<InformativePostDetailsScreen> createState() =>
+      _InformativePostDetailsScreenState();
 }
 
-class _InformativePostDetailsScreenState extends State<InformativePostDetailsScreen> {
+class _InformativePostDetailsScreenState
+    extends State<InformativePostDetailsScreen> {
   String? title;
   String? description;
   String? url;
@@ -29,7 +31,8 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
 
   List<String?> _listImagesCarousel = [];
 
-  final ValueNotifier<String?> _idPublicationNotifier = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _idPublicationNotifier =
+      ValueNotifier<String?>(null);
 
   @override
   void initState() {
@@ -44,18 +47,21 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
   void startData() async {
     initializeDateFormatting('pt-br');
 
-    var dataPublication =
-        await PublicationService.getPublication(_idPublicationNotifier.value!, 'informative_publication');
+    var dataPublication = await PublicationService.getPublication(
+        _idPublicationNotifier.value!, 'informative_publication');
     if (dataPublication?.data() != null) {
       setState(() {
-        _listImagesCarousel = List<String>.from(dataPublication?.data()?['listImages']);
+        _listImagesCarousel =
+            List<String>.from(dataPublication?.data()?['listImages']);
         title = dataPublication?.data()!['title'];
         description = dataPublication?.data()!['description'];
         url = dataPublication?.data()!['url'];
 
-        var timestamp = dataPublication?.data()?['updatedAt'] ?? dataPublication?.data()?['createdAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
-        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var timestamp = dataPublication?.data()?['updatedAt'];
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
+            timestamp!.microsecondsSinceEpoch);
+        date =
+            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -68,7 +74,10 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
         width: 70,
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => {Navigator.pushNamed(context, '/create-publication/informative_publication')},
+          onPressed: () => {
+            Navigator.pushNamed(
+                context, '/create-publication/informative_publication')
+          },
           child: const Icon(
             Icons.edit,
             size: 40,
@@ -195,13 +204,16 @@ class _InformativePostDetailsScreenState extends State<InformativePostDetailsScr
                             builder: (context) => const AlertDialogComponent(
                               statusType: 'error',
                               title: 'Excluir publicação',
-                              message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                              message:
+                                  'A publicação será excluída permanentemente. Deseja prosseguir ?',
                             ),
                           ).then((value) {
                             if (value) {
                               PublicationService.deletePublication(
-                                  _idPublicationNotifier.value!, 'informative_publication');
-                              Navigator.pushReplacementNamed(context, '/my_publications');
+                                  _idPublicationNotifier.value!,
+                                  'informative_publication');
+                              Navigator.pushReplacementNamed(
+                                  context, '/my_publications');
                             }
                           });
                         },
