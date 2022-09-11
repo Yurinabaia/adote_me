@@ -69,9 +69,6 @@ class _SuccessCaseScreenState extends State<SuccessCaseScreen> {
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasData) {
                   var snapshotData = snapshot.data!.docs;
-                  snapshotData
-                      .sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
-
                   if (snapshotData.isNotEmpty) {
                     final rowSizes = List.generate(
                         (snapshotData.length / 2).round(), (_) => auto);

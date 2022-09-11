@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:adoteme/utils/string_extension.dart';
 
 class SearchPublicationService {
-  static Future<QuerySnapshot<Map<String, dynamic>>> getPublicationsAnimalSearch(
-      String nameCollection, String search, String idUser) async {
+  static Future<QuerySnapshot<Map<String, dynamic>>>
+      getPublicationsAnimalSearch(
+          String nameCollection, String search, String idUser) async {
     try {
       final docPublication = await FirebaseFirestore.instance
           .collection(nameCollection)
@@ -17,8 +18,9 @@ class SearchPublicationService {
     }
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getPublicationsInformativeSearch(
-      String nameCollection, String search, String idUser) async {
+  static Future<QuerySnapshot<Map<String, dynamic>>>
+      getPublicationsInformativeSearch(
+          String nameCollection, String search, String idUser) async {
     try {
       final docPublication = await FirebaseFirestore.instance
           .collection(nameCollection)
@@ -32,7 +34,8 @@ class SearchPublicationService {
     }
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getSuccessCaseSearch(String search) async {
+  static Future<QuerySnapshot<Map<String, dynamic>>> getSuccessCaseSearch(
+      String search) async {
     try {
       final docPublication = await FirebaseFirestore.instance
           .collection('publications_animal')
@@ -48,5 +51,4 @@ class SearchPublicationService {
       rethrow;
     }
   }
-
 }
