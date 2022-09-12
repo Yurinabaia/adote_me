@@ -5,7 +5,7 @@ import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/inputs/dropdown_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
@@ -130,11 +130,11 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                   DropDownComponent(
                     labelText: 'Tamanho',
                     items: const [
-                      'Mini',
-                      'Pequeno',
-                      'Médio',
-                      'Grande',
-                      'Gigante'
+                      'Mini - Até 33cm',
+                      'Pequeno - Até 43cm',
+                      'Médio - Até 60cm',
+                      'Grande - Até 70cm',
+                      'Gigante - Acima de 70cm'
                     ],
                     controller: _sizeController,
                     validator: (value) {
@@ -215,7 +215,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
               },
             ),
             const SizedBox(height: 16),
-            ButtonOutlineComponent(
+            OutlineButtonComponent(
               text: 'Cancelar',
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/my_publications');

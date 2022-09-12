@@ -7,14 +7,14 @@ import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/inputs/textarea_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
-import 'package:adoteme/ui/components/upload_photo_component.dart';
+import 'package:adoteme/ui/components/upload_image_component.dart';
 import 'package:adoteme/utils/validator_inputs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
@@ -122,7 +122,7 @@ class _InformativePublicationScreenState
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
                           height: MediaQuery.of(context).size.width * 0.5,
-                          child: UploadPhotoComponent(
+                          child: UploadImageComponent(
                             file: _imgCover,
                             imgFirebase: _imgFirebaseCover,
                           ),
@@ -138,9 +138,8 @@ class _InformativePublicationScreenState
                       return ValidatorInputs.validatorText(value);
                     },
                   ),
-                  TextareaComponent(
+                  TextAreaComponent(
                     controller: _descriptionController,
-                    hint: 'Informações adicionais',
                     maxLength: 1000,
                     validator: (value) {
                       return ValidatorInputs.validatorText(value);
@@ -177,7 +176,7 @@ class _InformativePublicationScreenState
                             onTap: () {
                               selectFile(index);
                             },
-                            child: UploadPhotoComponent(
+                            child: UploadImageComponent(
                               file: _listImagesFile[index],
                               imgFirebase: _listImgFirebase[index],
                             ),
@@ -258,7 +257,7 @@ class _InformativePublicationScreenState
                         },
                       ),
                       const SizedBox(height: 16),
-                      ButtonOutlineComponent(
+                      OutlineButtonComponent(
                         text: 'Cancelar',
                         onPressed: () {
                           Navigator.pushReplacementNamed(

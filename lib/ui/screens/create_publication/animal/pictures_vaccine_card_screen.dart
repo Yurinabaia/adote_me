@@ -7,11 +7,11 @@ import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
-import 'package:adoteme/ui/components/upload_photo_component.dart';
+import 'package:adoteme/ui/components/upload_image_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +116,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
                   onTap: () {
                     selectFile(index);
                   },
-                  child: UploadPhotoComponent(
+                  child: UploadImageComponent(
                     file: file[index],
                     imgFirebase: imagesFirebase[index],
                   ),
@@ -133,7 +133,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
             const SizedBox(
               height: 16,
             ),
-            ButtonOutlineComponent(
+            OutlineButtonComponent(
               text: 'Cancelar',
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/my_publications');

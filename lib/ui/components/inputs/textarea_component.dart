@@ -2,27 +2,25 @@ import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class TextareaComponent extends StatefulWidget {
+class TextAreaComponent extends StatefulWidget {
   final TextEditingController controller;
-  final String hint;
   final int maxLength;
   final bool isRequired;
   final String? Function(String?)? validator;
 
-  const TextareaComponent({
+  const TextAreaComponent({
     Key? key,
     required this.controller,
-    required this.hint,
     this.isRequired = true,
     this.maxLength = 255,
     this.validator,
   }) : super(key: key);
 
   @override
-  State<TextareaComponent> createState() => _TextareaComponentState();
+  State<TextAreaComponent> createState() => _TextAreaComponentState();
 }
 
-class _TextareaComponentState extends State<TextareaComponent> {
+class _TextAreaComponentState extends State<TextAreaComponent> {
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
   @override
@@ -34,7 +32,7 @@ class _TextareaComponentState extends State<TextareaComponent> {
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        hintText: widget.hint,
+        hintText: 'Escreva aqui...',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),

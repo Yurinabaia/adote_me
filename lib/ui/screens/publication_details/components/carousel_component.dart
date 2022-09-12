@@ -32,7 +32,7 @@ class _CarouselComponentState extends State<CarouselComponent> {
               options: CarouselOptions(
                 height: 300,
                 viewportFraction: 1.0,
-                autoPlay: true,
+                autoPlay: widget.listImages.length > 1,
                 onPageChanged: (index, reason) {
                   setState(() {
                     current = index;

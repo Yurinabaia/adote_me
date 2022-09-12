@@ -9,7 +9,7 @@ import 'package:adoteme/data/service/upload_file_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/circle_avatar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
@@ -299,7 +299,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     onPressed: saveData,
                   ),
                   const SizedBox(height: 16),
-                  ButtonOutlineComponent(
+                  OutlineButtonComponent(
                     text: 'Cancelar',
                     //TODO: Implementar ação de voltar para a Página Inicial
                     onPressed: () {},

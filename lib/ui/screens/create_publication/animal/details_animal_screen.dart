@@ -5,7 +5,7 @@ import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/inputs/textarea_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
@@ -80,9 +80,8 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                 child: Wrap(
                   runSpacing: 24,
                   children: <Widget>[
-                    TextareaComponent(
+                    TextAreaComponent(
                       controller: _descriptionController,
-                      hint: 'Descreva o animal',
                       maxLength: 255,
                       validator: (value) {
                         return ValidatorInputs.validatorText(value);
@@ -103,7 +102,7 @@ class _DetailsAnimalScreenState extends State<DetailsAnimalScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              ButtonOutlineComponent(
+              OutlineButtonComponent(
                 text: 'Cancelar',
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, '/my_publications');
