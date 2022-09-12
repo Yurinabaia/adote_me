@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ButtonOutlineComponent extends StatelessWidget {
+class OutlineButtonComponent extends StatelessWidget {
   final String text;
   final Function onPressed;
   final String? svgIcon;
   final bool islogin;
 
-  const ButtonOutlineComponent({
+  const OutlineButtonComponent({
     Key? key,
     required this.text,
     required this.onPressed,

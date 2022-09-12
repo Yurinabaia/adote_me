@@ -62,12 +62,13 @@ class _FirstAccessScreenState extends State<FirstAccessScreen> {
                               vertical: 8.0, horizontal: 4.0),
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)
-                                  .withOpacity(
-                                      _current == entry.key ? 0.9 : 0.4)),
+                            color: Theme.of(context).primaryColor.withOpacity(_current == entry.key ? 1 : 0.4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),

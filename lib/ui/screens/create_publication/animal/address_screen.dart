@@ -6,7 +6,7 @@ import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
@@ -184,7 +184,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         saveData(animalModel);
                       }),
                   const SizedBox(height: 16),
-                  ButtonOutlineComponent(
+                  OutlineButtonComponent(
                     text: 'Cancelar',
                     onPressed: () {
                       Navigator.pushReplacementNamed(

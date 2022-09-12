@@ -34,6 +34,9 @@ class _DropDownComponentState extends State<DropDownComponent> {
     return DropdownButtonFormField(
       value: widget.controller.text == '' ? null : widget.controller.text,
       decoration: InputDecoration(
+        labelStyle: const TextStyle(
+          color: Color(0xff334155),
+        ),
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.red[700]!,
@@ -47,13 +50,11 @@ class _DropDownComponentState extends State<DropDownComponent> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         enabledBorder: OutlineInputBorder(
-          //<-- SEE HERE
           borderSide:
               BorderSide(color: Theme.of(context).primaryColor, width: 1),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          //<-- SEE HERE
           borderSide:
               BorderSide(color: Theme.of(context).primaryColor, width: 2),
           borderRadius: BorderRadius.circular(10),

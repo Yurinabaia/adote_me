@@ -1,5 +1,5 @@
 import 'package:adoteme/data/service/login_firebase_service.dart';
-import 'package:adoteme/ui/components/buttons/button_outline_component.dart';
+import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class _LoginScrenState extends State<LoginScreen> {
                 Wrap(
                   runSpacing: 16,
                   children: <Widget>[
-                    ButtonOutlineComponent(
+                    OutlineButtonComponent(
                       text: "Continuar sem login",
                       onPressed: () async {
                         final auth = context.read<LoginFirebaseService>();
@@ -70,7 +70,7 @@ class _LoginScrenState extends State<LoginScreen> {
                       },
                       islogin: true,
                     ),
-                    ButtonOutlineComponent(
+                    OutlineButtonComponent(
                       text: "Entrar com gmail",
                       onPressed: () async {
                         try {
@@ -88,7 +88,7 @@ class _LoginScrenState extends State<LoginScreen> {
                       svgIcon: "icon-google",
                       islogin: true,
                     ),
-                    ButtonOutlineComponent(
+                    OutlineButtonComponent(
                       text: "Entrar com facebook",
                       onPressed: () async {
                         try {

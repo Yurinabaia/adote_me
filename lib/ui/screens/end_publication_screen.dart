@@ -54,9 +54,8 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
             ),
             Form(
               key: _formKey,
-              child: TextareaComponent(
+              child: TextAreaComponent(
                 controller: controllerTextArea,
-                hint: 'Deixe o seu feedback aqui',
                 validator: (value) {
                   return ValidatorInputs.validatorText(value);
                 },
