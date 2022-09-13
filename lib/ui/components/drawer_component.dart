@@ -31,7 +31,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
     {
       'name': 'Favoritos',
       'icon': Icons.favorite_outline,
-      'route': '/user_profile',
+      'route': '/favorites',
     },
     {
       'name': 'Minhas publicações',

@@ -40,7 +40,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
   final _formKey = GlobalKey<FormState>();
   String nameCollection = '';
   String nameAppBar = '';
-  Timestamp? _createdAt = null;
+  Timestamp? _createdAt;
   void startData() async {
     var dataPublication = await PublicationService.getPublication(
         _idPublication.value!, 'publications_animal');

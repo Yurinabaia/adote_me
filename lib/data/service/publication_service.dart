@@ -72,4 +72,16 @@ class PublicationService {
       rethrow;
     }
   }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>> getFavorites(
+      String collecion, List<String?>? listIdPublicated) async {
+    try {
+      return await FirebaseFirestore.instance
+          .collection(collecion)
+          .where(FieldPath.documentId, whereIn: listIdPublicated)
+          .get();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
