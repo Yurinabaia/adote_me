@@ -6,7 +6,6 @@ import 'package:adoteme/ui/components/animal_card.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
-import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
@@ -31,7 +30,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     DocumentSnapshot<Map<String, dynamic>> user =
         await userService.getUserProfile(_idUserNotifier.value);
     setState(() {
-      //TODO buscar lista de favoritos do usuario
       List<String?>? listFavoritesAnimal =
           List<String?>.from(user.data()?['listFavoritesAnimal'] ?? []);
 
@@ -53,8 +51,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    //getListFavorites(auth.idFirebase());
-    //TODO BUSCAR ARRAY NA COLLECTION USER E PEGAR O ID COM ARRAY
     getListFavorites();
     super.initState();
   }
