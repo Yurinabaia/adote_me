@@ -74,12 +74,14 @@ class PublicationService {
   }
 
   static Future<QuerySnapshot<Map<String, dynamic>>> getFavorites(
-      String collecion, List<String?>? listIdPublicated) async {
+      String collecion, List<String?> listIdPublicated) async {
     try {
-      return await FirebaseFirestore.instance
+      var docFirebase = await FirebaseFirestore.instance
           .collection(collecion)
-          .where(FieldPath.documentId, whereIn: listIdPublicated)
+          .where(FieldPath.documentId,
+              whereIn: listIdPublicated.isNotEmpty ? listIdPublicated : [' '])
           .get();
+      return docFirebase;
     } catch (e) {
       rethrow;
     }

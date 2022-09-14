@@ -6,6 +6,7 @@ import 'package:adoteme/ui/components/animal_card.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
+import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
@@ -24,16 +25,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final FavoritesBloc _publicationInformativeBloc = FavoritesBloc();
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
 
-  getListFavorites(String idUser) async {
+  getListFavorites() async {
+    print("Carregou aqui");
     UserProfileFirebaseService userService = UserProfileFirebaseService();
     DocumentSnapshot<Map<String, dynamic>> user =
-        await userService.getUserProfile(idUser);
+        await userService.getUserProfile(_idUserNotifier.value);
     setState(() {
       //TODO buscar lista de favoritos do usuario
       List<String?>? listFavoritesAnimal =
-          user.data()?['listFavoritesAnimal'] ?? [];
-      List<String>? listFavoritesInformative =
-          user.data()?['listFavoritesInformative'] ?? [];
+          List<String?>.from(user.data()?['listFavoritesAnimal'] ?? []);
+
+      List<String?>? listFavoritesInformative =
+          List<String?>.from(user.data()?['listFavoritesInformative'] ?? []);
 
       _publicationAnimalBloc.getPublicationsAll(
           'publications_animal', listFavoritesAnimal);
@@ -42,17 +45,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     });
   }
 
+  refresh() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
     //getListFavorites(auth.idFirebase());
     //TODO BUSCAR ARRAY NA COLLECTION USER E PEGAR O ID COM ARRAY
-    _publicationAnimalBloc.getPublicationsAll('publications_animal',
-        ['2sjZSWz3UaGEawCjRiW8', '5Mzd6J3Z12jORkObyhVn']);
-
-    _publicationInformativeBloc.getPublicationsAll(
-        'informative_publication', ['1ChZJA5rIh4cQ2MhVdrO']);
+    getListFavorites();
     super.initState();
   }
 
@@ -131,16 +134,34 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                   idPublication.set(element.id);
                                   if (element.data()['typePublication'] ==
                                       'animal_adoption') {
-                                    Navigator.pushNamed(
-                                        context, '/adoption_post_details');
+                                    Navigator.of(context)
+                                        .pushNamed(
+                                      '/adoption_post_details',
+                                      arguments: 'favoritos',
+                                    )
+                                        .then((value) {
+                                      refresh();
+                                    });
                                   } else if (element
                                           .data()['typePublication'] ==
                                       'animal_lost') {
-                                    Navigator.pushNamed(
-                                        context, '/lost_post_details');
+                                    Navigator.of(context)
+                                        .pushNamed(
+                                      '/lost_post_details',
+                                      arguments: 'favoritos',
+                                    )
+                                        .then((value) {
+                                      refresh();
+                                    });
                                   } else {
-                                    Navigator.pushNamed(
-                                        context, '/informative_post_details');
+                                    Navigator.of(context)
+                                        .pushNamed(
+                                      '/informative_post_details',
+                                      arguments: 'favoritos',
+                                    )
+                                        .then((value) {
+                                      refresh();
+                                    });
                                   }
                                 },
                               ),

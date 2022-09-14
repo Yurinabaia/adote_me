@@ -1,5 +1,6 @@
 import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
@@ -8,6 +9,7 @@ import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/label_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/carousel_component.dart';
+import 'package:adoteme/ui/screens/publication_details/components/check_favorite_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/contact_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/term_description_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -26,8 +28,10 @@ class LostDetailsScreen extends StatefulWidget {
   State<LostDetailsScreen> createState() => _LostDetailsScreenState();
 }
 
-class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTickerProviderStateMixin {
+class _LostDetailsScreenState extends State<LostDetailsScreen>
+    with SingleTickerProviderStateMixin {
   List<String?> _listImagesCarousel = List.filled(6, null);
+  List<String> _listFavoritesFirebase = [];
 
   String? name;
   String? description;
@@ -50,9 +54,31 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
   String? city;
   String? state;
 
+  final CarouselController controller = CarouselController();
+  final UserProfileFirebaseService userService = UserProfileFirebaseService();
+
+  final ValueNotifier<String?> _idUser = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
+
+  int current = 0;
+  bool _isSelected = false;
+  bool _isMyPublication = false;
+
+  getFavoriteUser() async {
+    DocumentSnapshot<Map<String, dynamic>> dataUser =
+        await userService.getUserProfile(_idUser.value!);
+    if (dataUser.data() != null) {
+      setState(() {
+        _listFavoritesFirebase =
+            List<String>.from(dataUser.data()?['listFavoritesAnimal']);
+        _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
+      });
+    }
+  }
+
   getAdvertiser(String idUser) async {
-    UserProfileFirebaseService userService = UserProfileFirebaseService();
-    DocumentSnapshot<Map<String, dynamic>> address = await userService.getUserProfile(idUser);
+    DocumentSnapshot<Map<String, dynamic>> address =
+        await userService.getUserProfile(idUser);
     setState(() {
       userName = address.data()?["name"];
       userPhoto = address.data()?["image"];
@@ -66,16 +92,21 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
     });
   }
 
-  final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
   getDataPublication() async {
     initializeDateFormatting('pt-br');
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
-        await PublicationService.getPublication(_idPublication.value!, 'publications_animal');
+        await PublicationService.getPublication(
+            _idPublication.value!, 'publications_animal');
 
     if (dataPublication?.data() != null) {
+      _isMyPublication = dataPublication?.data()?['idUser'] == _idUser.value;
+      if (!_isMyPublication) {
+        getFavoriteUser();
+      }
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
-        _listImagesCarousel = List<String>.from(dataPublication!.data()?['animalPhotos']);
+        _listImagesCarousel =
+            List<String>.from(dataPublication!.data()?['animalPhotos']);
 
         name = dataPublication.data()?['name'];
         description = dataPublication.data()?['description'];
@@ -88,8 +119,10 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
         feedback = dataPublication.data()?['feedback'];
 
         var timestamp = dataPublication.data()?['updatedAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
-        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
+            timestamp!.microsecondsSinceEpoch);
+        date =
+            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -98,14 +131,13 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
   void initState() {
     super.initState();
     final idPublication = context.read<IdPublicationProvider>();
+    final auth = context.read<LoginFirebaseService>();
     _idPublication.value = idPublication.get();
+    _idUser.value = auth.idFirebase();
     if (_idPublication.value != null) {
       getDataPublication();
     }
   }
-
-  int current = 0;
-  final CarouselController controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +151,8 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
                 backgroundColor: Theme.of(context).primaryColor,
                 onPressed: () {
                   animalModel.setTypePublication('animal_lost');
-                  Navigator.pushNamed(context, '/create-publication/basic_animal_data');
+                  Navigator.pushNamed(
+                      context, '/create-publication/basic_animal_data');
                 },
                 child: const Icon(
                   Icons.edit,
@@ -144,7 +177,14 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
                       color: Color(0xff334155),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      final arguments =
+                          ModalRoute.of(context)?.settings.arguments;
+
+                      if (arguments != null) {
+                        Navigator.pushReplacementNamed(context, '/favorites');
+                      } else {
+                        Navigator.pop(context);
+                      }
                     },
                   ),
                 ),
@@ -155,7 +195,8 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (_listImagesCarousel.every((element) => element != null))
+                      if (_listImagesCarousel
+                          .every((element) => element != null))
                         CarouselComponent(
                           listImages: _listImagesCarousel,
                           status: status,
@@ -176,8 +217,38 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  DetailTextComponent(
-                    text: "$date",
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: DetailTextComponent(
+                          text: "$date",
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      if (!_isMyPublication)
+                        GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isSelected = !_isSelected;
+                                _listFavoritesFirebase
+                                        .contains(_idPublication.value)
+                                    ? _listFavoritesFirebase
+                                        .remove(_idPublication.value)
+                                    : _listFavoritesFirebase
+                                        .add(_idPublication.value!);
+
+                                Map<String, dynamic> data = {
+                                  'listFavoritesAnimal': _listFavoritesFirebase
+                                };
+                                userService.updateProfile(_idUser.value, data);
+                              });
+                            },
+                            child:
+                                CheckFavoriteComponent(isChecked: _isSelected)),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -266,12 +337,15 @@ class _LostDetailsScreenState extends State<LostDetailsScreen> with SingleTicker
                           builder: (context) => const AlertDialogComponent(
                             statusType: 'error',
                             title: 'Excluir publicação',
-                            message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                            message:
+                                'A publicação será excluída permanentemente. Deseja prosseguir ?',
                           ),
                         ).then((value) {
                           if (value) {
-                            PublicationService.deletePublication(_idPublication.value!, "publications_animal");
-                            Navigator.pushReplacementNamed(context, '/my_publications');
+                            PublicationService.deletePublication(
+                                _idPublication.value!, "publications_animal");
+                            Navigator.pushReplacementNamed(
+                                context, '/my_publications');
                           }
                         });
                       },

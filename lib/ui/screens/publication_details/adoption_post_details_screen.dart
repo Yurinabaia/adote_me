@@ -1,5 +1,6 @@
 import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
+import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alert_dialog_component.dart';
@@ -9,6 +10,7 @@ import 'package:adoteme/ui/components/texts/detail_text_component.dart';
 import 'package:adoteme/ui/components/texts/label_text_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/carousel_component.dart';
+import 'package:adoteme/ui/screens/publication_details/components/check_favorite_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/contact_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/term_description_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -27,13 +29,19 @@ class AdoptionDetailsScreen extends StatefulWidget {
   State<AdoptionDetailsScreen> createState() => _AdoptionDetailsScreenState();
 }
 
-class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with SingleTickerProviderStateMixin {
+class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController controllerTab;
 
   List<String?> _listImagesCarousel = List.filled(6, null);
   List<String> _listImagesVaccine = [];
+  List<String> _listFavoritesFirebase = [];
+
+  final CarouselController controller = CarouselController();
 
   final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _idUser = ValueNotifier<String?>(null);
+  final UserProfileFirebaseService userService = UserProfileFirebaseService();
 
   String? name;
   String? description;
@@ -59,9 +67,25 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
   String? city;
   String? state;
 
-  getAdvertiser(String idUser) async {
-    UserProfileFirebaseService userService = UserProfileFirebaseService();
-    DocumentSnapshot<Map<String, dynamic>> address = await userService.getUserProfile(idUser);
+  int current = 0;
+  bool _isSelected = false;
+  bool _isMyPublication = false;
+
+  getFavoriteUser() async {
+    DocumentSnapshot<Map<String, dynamic>> dataUser =
+        await userService.getUserProfile(_idUser.value!);
+    if (dataUser.data() != null) {
+      setState(() {
+        _listFavoritesFirebase =
+            List<String>.from(dataUser.data()?['listFavoritesAnimal']);
+        _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
+      });
+    }
+  }
+
+  getAdvertiser(String idAdverties) async {
+    DocumentSnapshot<Map<String, dynamic>> address =
+        await userService.getUserProfile(idAdverties);
     setState(() {
       userName = address.data()?["name"];
       userPhoto = address.data()?["image"];
@@ -79,14 +103,21 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
     initializeDateFormatting('pt-br');
     final idPublication = context.read<IdPublicationProvider>();
     DocumentSnapshot<Map<String, dynamic>>? dataPublication =
-        await PublicationService.getPublication(idPublication.get(), 'publications_animal');
+        await PublicationService.getPublication(
+            idPublication.get(), 'publications_animal');
 
     if (dataPublication?.data() != null) {
+      _isMyPublication = dataPublication?.data()?['idUser'] == _idUser.value;
+      if (!_isMyPublication) {
+        getFavoriteUser();
+      }
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
-        _listImagesCarousel = List<String>.from(dataPublication!.data()?['animalPhotos']);
+        _listImagesCarousel =
+            List<String>.from(dataPublication!.data()?['animalPhotos']);
         if (dataPublication.data()?['picturesVaccineCard'] != null) {
-          _listImagesVaccine = List<String>.from(dataPublication.data()?['picturesVaccineCard']);
+          _listImagesVaccine =
+              List<String>.from(dataPublication.data()?['picturesVaccineCard']);
         }
 
         name = dataPublication.data()?['name'];
@@ -103,8 +134,10 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
         feedback = dataPublication.data()?['feedback'];
 
         var timestamp = dataPublication.data()?['updatedAt'];
-        var dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp!.microsecondsSinceEpoch);
-        date = '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
+        var dateTime = DateTime.fromMicrosecondsSinceEpoch(
+            timestamp!.microsecondsSinceEpoch);
+        date =
+            '${DateFormat.yMMMMEEEEd('pt-br').format(dateTime)}    ${DateFormat.jms('pt-br').format(dateTime)}';
       });
     }
   }
@@ -113,15 +146,14 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
   void initState() {
     super.initState();
     final idPublication = context.read<IdPublicationProvider>();
+    final auth = context.read<LoginFirebaseService>();
     _idPublication.value = idPublication.get();
+    _idUser.value = auth.idFirebase();
     if (_idPublication.value != null) {
       getDataPublication();
     }
     controllerTab = TabController(length: 2, vsync: this);
   }
-
-  int current = 0;
-  final CarouselController controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +167,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                 backgroundColor: Theme.of(context).primaryColor,
                 onPressed: () {
                   animalModel.setTypePublication('animal_adoption');
-                  Navigator.pushNamed(context, '/create-publication/basic_animal_data');
+                  Navigator.pushNamed(
+                      context, '/create-publication/basic_animal_data');
                 },
                 child: const Icon(
                   Icons.edit,
@@ -160,7 +193,14 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                       color: Color(0xff334155),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      final arguments =
+                          ModalRoute.of(context)?.settings.arguments;
+
+                      if (arguments != null) {
+                        Navigator.pushReplacementNamed(context, '/favorites');
+                      } else {
+                        Navigator.pop(context);
+                      }
                     },
                   ),
                 ),
@@ -171,7 +211,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (_listImagesCarousel.every((element) => element != null))
+                      if (_listImagesCarousel
+                          .every((element) => element != null))
                         CarouselComponent(
                           listImages: _listImagesCarousel,
                           status: status,
@@ -221,8 +262,40 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          DetailTextComponent(
-                            text: "$date",
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: DetailTextComponent(
+                                  text: "$date",
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 50,
+                              ),
+                              if (!_isMyPublication)
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isSelected = !_isSelected;
+                                        _listFavoritesFirebase
+                                                .contains(_idPublication.value)
+                                            ? _listFavoritesFirebase
+                                                .remove(_idPublication.value)
+                                            : _listFavoritesFirebase
+                                                .add(_idPublication.value!);
+
+                                        Map<String, dynamic> data = {
+                                          'listFavoritesAnimal':
+                                              _listFavoritesFirebase
+                                        };
+                                        userService.updateProfile(
+                                            _idUser.value, data);
+                                      });
+                                    },
+                                    child: CheckFavoriteComponent(
+                                        isChecked: _isSelected)),
+                            ],
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -310,7 +383,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                               text: 'Finalizar publicação',
                               color: const Color(0xff21725E),
                               onPressed: () {
-                                Navigator.pushNamed(context, '/end_publication');
+                                Navigator.pushNamed(
+                                    context, '/end_publication');
                               },
                             ),
                             const SizedBox(height: 16),
@@ -320,15 +394,20 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                               onPressed: () async {
                                 await showDialog(
                                   context: context,
-                                  builder: (context) => const AlertDialogComponent(
+                                  builder: (context) =>
+                                      const AlertDialogComponent(
                                     statusType: 'error',
                                     title: 'Excluir publicação',
-                                    message: 'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                                    message:
+                                        'A publicação será excluída permanentemente. Deseja prosseguir ?',
                                   ),
                                 ).then((value) {
                                   if (value) {
-                                    PublicationService.deletePublication(_idPublication.value!, "publications_animal");
-                                    Navigator.pushReplacementNamed(context, '/my_publications');
+                                    PublicationService.deletePublication(
+                                        _idPublication.value!,
+                                        "publications_animal");
+                                    Navigator.pushReplacementNamed(
+                                        context, '/my_publications');
                                   }
                                 });
                               },
@@ -396,7 +475,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> with Sing
                 ),
                 _listImagesVaccine.isNotEmpty
                     ? GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 200,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,

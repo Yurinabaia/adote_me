@@ -17,6 +17,19 @@ class UserProfileFirebaseService extends ChangeNotifier {
     return true;
   }
 
+  Future<bool> updateProfile(
+      String? userId, Map<String, dynamic> dataUser) async {
+    final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
+    try {
+      await docUser.update(dataUser);
+      isExecute = true;
+      notifyListeners();
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
   void deleteUserProfile(String userId) {
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     docUser.delete();
