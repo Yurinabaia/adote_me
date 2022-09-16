@@ -339,9 +339,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void _showPopupMenu(Offset offset) async {
     double left = offset.dx;
     double top = offset.dy;
+    double direction = MediaQuery.of(context).size.width - left;
     await showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(left, top, 0, 0),
+      position: RelativeRect.fromLTRB(left, top, direction, 0),
       items: [
         PopupMenuItem(
           onTap: () {

@@ -228,9 +228,10 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
   void _showPopupMenu(Offset offset, int index) async {
     double left = offset.dx;
     double top = offset.dy;
+    double direction = MediaQuery.of(context).size.width - left;
     await showMenu(
       context: context,
-      position: RelativeRect.fromLTRB(left, top, 0, 0),
+      position: RelativeRect.fromLTRB(left, top, direction, 0),
       items: [
         PopupMenuItem(
           onTap: () {
