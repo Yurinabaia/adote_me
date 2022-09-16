@@ -113,8 +113,10 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
               itemCount: 4,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () {
-                    selectFile(index);
+                  onTapUp: (TapUpDetails details) {
+                    file[index] != null || imagesFirebase[index] != null
+                        ? _showPopupMenu(details.globalPosition, index)
+                        : selectFile(index);
                   },
                   child: UploadImageComponent(
                     file: file[index],
@@ -221,6 +223,33 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
       }
     }
     animalModel.setPicturesVaccineCard(vaccineseAnimal);
+  }
+
+  void _showPopupMenu(Offset offset, int index) async {
+    double left = offset.dx;
+    double top = offset.dy;
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, 0, 0),
+      items: [
+        PopupMenuItem(
+          onTap: () {
+            selectFile(index);
+          },
+          child: const Text("Editar"),
+        ),
+        PopupMenuItem(
+          onTap: () {
+            setState(() {
+              file[index] = null;
+              imagesFirebase[index] = null;
+            });
+          },
+          child: const Text("Remove"),
+        ),
+      ],
+      elevation: 8.0,
+    );
   }
 
   Future<void> initPublication(animalModel) async {

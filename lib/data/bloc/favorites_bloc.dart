@@ -8,9 +8,7 @@ class FavoritesBloc extends GenericBloc<QuerySnapshot<Map<String, dynamic>>> {
     try {
       var publicationsOne = await PublicationService.getFavorites(
           nomeCollection, listIdPublicated);
-      if (publicationsOne != null) {
-        add(publicationsOne);
-      }
+      add(publicationsOne);
     } catch (e) {
       return e;
     }

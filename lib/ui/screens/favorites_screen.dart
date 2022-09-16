@@ -25,7 +25,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
 
   getListFavorites() async {
-    print("Carregou aqui");
     UserProfileFirebaseService userService = UserProfileFirebaseService();
     DocumentSnapshot<Map<String, dynamic>> user =
         await userService.getUserProfile(_idUserNotifier.value);
