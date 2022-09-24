@@ -124,7 +124,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     //TODO - Povoar banco para testes Cuidado!!!
-    // GenereateDataTest(_idUser.value);
+    //GenereateDataTest(_idUser.value);
     final formKeyProvider = context.watch<FormKeyProvider>();
     formKeyProvider.set(_formKey);
     return Scaffold(
@@ -399,6 +399,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         'state': _stateController.text,
         'zipCode': _zipCodeController.text,
         'image': image != '' ? image : null,
+        'listFavoritesAnimal': []
       };
       LoadingModalComponent loadingModalComponent = LoadingModalComponent();
       loadingModalComponent.showModal(context);

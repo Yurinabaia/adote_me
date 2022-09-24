@@ -10,21 +10,22 @@ class GenereateDataTest {
   main() async {
     PublicationModel publicationModel = PublicationModel();
     Map<String, dynamic> address = {
-      'street': 'Rua 1',
-      'number': '1',
+      'street': 'Avenida Ortocrim',
+      'number': '435',
       'complement': '1',
-      'district': 'Vista Alegre',
-      'city': 'São Paulo',
-      'state': 'SP',
+      'district': 'Belo Vale',
+      'city': 'Santa Luzia',
+      'state': 'MG',
       'zipCode': '12345678',
+      'lat': -19.7852938,
+      'long': -43.9505989,
     };
-
     publicationModel.setAddress(address);
     publicationModel.setAge(10);
-    publicationModel.setAnimal('Nome do animal');
+    publicationModel.setAnimal('Cão');
     publicationModel.setCastrated('Sim');
     publicationModel.setBreed('Raça do animal');
-    publicationModel.setName('Nome do animal');
+    publicationModel.setName('Cidade Administrativa');
     publicationModel.setSex('Macho');
     publicationModel.setTemperament('Temperamento do animal');
     publicationModel.setIdUser(idUser);
@@ -35,10 +36,11 @@ class GenereateDataTest {
     publicationModel.setCreateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setUpdateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setStatus('in_progress');
+    publicationModel.setIdUser('DqJMvALZEGSvgBRJXPW3xR7iE8x1');
 
     Map<String, dynamic> dataInformative = {
       'idUser': idUser,
-      'title': 'Teste',
+      'title': 'Cidade Administrativa',
       'description': '_description',
       'url': 'https://picsum.photos/id/248/200/300',
       'imageCover': 'https://picsum.photos/id/248/200/300',
@@ -54,7 +56,7 @@ class GenereateDataTest {
       'status': 'in_progress',
     };
 
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < 6; i++) {
       if (i == 2) {
         publicationModel.setTypePublication('animal_lost');
       }

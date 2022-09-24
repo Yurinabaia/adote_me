@@ -1,5 +1,7 @@
 import 'package:adoteme/data/models/publication_model.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
+import 'package:adoteme/data/service/address/calculate_distance.dart';
+import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
@@ -42,6 +44,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
   final ValueNotifier<String?> _idUser = ValueNotifier<String?>(null);
   final UserProfileFirebaseService userService = UserProfileFirebaseService();
+  final CalculateDistance calculateDistance = CalculateDistance();
 
   String? name;
   String? description;
@@ -66,20 +69,38 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   String? number;
   String? city;
   String? state;
+  double? lat;
+  double? long;
 
   int current = 0;
   bool _isSelected = false;
   bool _isMyPublication = false;
 
-  getFavoriteUser() async {
+  double _distance = 0.0;
+  getDataUser() async {
+    double lat = 0.0;
+    double long = 0.0;
     DocumentSnapshot<Map<String, dynamic>> dataUser =
         await userService.getUserProfile(_idUser.value!);
     if (dataUser.data() != null) {
-      setState(() {
-        _listFavoritesFirebase =
-            List<String>.from(dataUser.data()?['listFavoritesAnimal']);
-        _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
-      });
+      _listFavoritesFirebase =
+          List<String>.from(dataUser.data()?['listFavoritesAnimal']);
+      _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
+      lat = dataUser.data()?['lat'] ?? 0.0;
+      long = dataUser.data()?['long'] ?? 0.0;
+    } else {
+      var localizationUser = await CurrentLocation.getPosition();
+      lat = double.parse(localizationUser['lat'].toString());
+      long = double.parse(localizationUser['long'].toString());
+    }
+    getDistance(lat, long);
+    setState(() {});
+  }
+
+  getDistance(double latUser, double longUser) async {
+    if (lat != null && long != null) {
+      _distance = await calculateDistance.getDirections(
+          latUser, longUser, lat ?? 0.0, long ?? 0.0);
     }
   }
 
@@ -92,10 +113,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
       userPhone1 = address.data()?["mainCell"];
       userPhone2 = address.data()?["optionalCell"];
       userPhone3 = address.data()?["optionalCell2"];
-      street = address.data()?['street'];
-      number = address.data()?['number'];
-      city = address.data()?['city'];
-      state = address.data()?['state'];
+      getDataUser();
     });
   }
 
@@ -108,9 +126,6 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
 
     if (dataPublication?.data() != null) {
       _isMyPublication = dataPublication?.data()?['idUser'] == _idUser.value;
-      if (!_isMyPublication) {
-        getFavoriteUser();
-      }
       getAdvertiser((dataPublication?.data()?['idUser']));
       setState(() {
         _listImagesCarousel =
@@ -133,6 +148,12 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
         status = dataPublication.data()?['status'];
         feedback = dataPublication.data()?['feedback'];
 
+        street = dataPublication.data()?['address']['street'];
+        number = dataPublication.data()?['address']['number'];
+        city = dataPublication.data()?['address']['city'];
+        state = dataPublication.data()?['address']['state'];
+        lat = dataPublication.data()?['address']['lat'] ?? 0.0;
+        long = dataPublication.data()?['address']['long'] ?? 0.0;
         var timestamp = dataPublication.data()?['updatedAt'];
         var dateTime = DateTime.fromMicrosecondsSinceEpoch(
             timestamp!.microsecondsSinceEpoch);
@@ -308,7 +329,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                           ),
                           DetailTextComponent(
                             // TODO: implementar distancia dinâmica
-                            text: "$street, $number, $city - $state \n1,5 km",
+                            text:
+                                "$street, $number, $city - $state \n${_distance == 0 ? '' : '${_distance.toStringAsFixed(2)} km'}",
                           ),
                           const SizedBox(height: 32),
                           const TitleThreeComponent(text: "Resumo"),

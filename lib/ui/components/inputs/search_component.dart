@@ -7,6 +7,7 @@ class SeachComponent extends StatelessWidget {
   final String labelTextValue;
   final Function? onChanged;
   final TextMask? textMask;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   const SeachComponent(
       {Key? key,
@@ -15,12 +16,14 @@ class SeachComponent extends StatelessWidget {
       this.textMask,
       required this.keyboardType,
       required this.labelTextValue,
+      this.controller,
       this.validator})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       initialValue: initTextValue,
       decoration: InputDecoration(
         labelText: labelTextValue,

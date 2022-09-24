@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:adoteme/data/bloc/my_publications_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
+import 'package:adoteme/data/service/address/calculate_distance.dart';
+import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
+import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
@@ -26,15 +31,53 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   final MyPublicationsBloc _publicationInformativeBloc = MyPublicationsBloc();
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
 
+  final UserProfileFirebaseService userService = UserProfileFirebaseService();
+  final _searchQuery = TextEditingController();
+  Timer? _debounce;
+  String searchText = "";
   @override
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    _publicationAnimalBloc.getPublicationsAll(
-        'publications_animal', auth.idFirebase());
-    _publicationInformativeBloc.getPublicationsAll(
-        'informative_publication', auth.idFirebase());
+    getMyPublicated();
     super.initState();
+  }
+
+  getMyPublicated() async {
+    var latLongUser = await getDataUser();
+    _publicationAnimalBloc.getPublicationsAll('publications_animal',
+        _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
+    _publicationInformativeBloc.getPublicationsAll('informative_publication',
+        _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
+  }
+
+  getMyPublicatedSearch(String value) async {
+    var latLongUser = await getDataUser();
+    _publicationAnimalBloc.getPublicationsAnimalSearch('publications_animal',
+        _idUserNotifier.value, latLongUser['lat'], latLongUser['long'], value);
+
+    _publicationInformativeBloc.getPublicationsInformativeSearch(
+        'informative_publication',
+        _idUserNotifier.value,
+        latLongUser['lat'],
+        latLongUser['long'],
+        value);
+  }
+
+  Future<Map<dynamic, dynamic>> getDataUser() async {
+    double latUser = 0;
+    double longUser = 0;
+    DocumentSnapshot<Map<String, dynamic>> dataUser =
+        await userService.getUserProfile(_idUserNotifier.value);
+    if (dataUser.data() != null) {
+      latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
+      longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
+    } else {
+      var localizationUser = await CurrentLocation.getPosition();
+      latUser = double.parse(localizationUser['lat'].toString());
+      longUser = double.parse(localizationUser['long'].toString());
+    }
+    return {'lat': latUser, 'long': longUser};
   }
 
   @override
@@ -80,17 +123,12 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
             SeachComponent(
               labelTextValue: 'Pesquisa rápida',
               keyboardType: TextInputType.text,
-              onChanged: (value) {
+              controller: _searchQuery,
+              onChanged: (value) async {
                 if (value != '') {
-                  _publicationAnimalBloc.getPublicationsAnimalSearch(
-                      'publications_animal', _idUserNotifier.value, value);
-                  _publicationInformativeBloc.getPublicationsInformativeSearch(
-                      'informative_publication', _idUserNotifier.value, value);
+                  _searchQuery.addListener(_onSearchChanged);
                 } else {
-                  _publicationAnimalBloc.getPublicationsAll(
-                      'publications_animal', _idUserNotifier.value);
-                  _publicationInformativeBloc.getPublicationsAll(
-                      'informative_publication', _idUserNotifier.value);
+                  await getMyPublicated();
                 }
                 setState(() {});
               },
@@ -98,8 +136,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
             const SizedBox(
               height: 24,
             ),
-            StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
-                QuerySnapshot<Map<String, dynamic>>>(
+            StreamBuilder2<List<Map<String, dynamic>>,
+                List<Map<String, dynamic>>>(
               streams: StreamTuple2(
                 _publicationInformativeBloc.stream,
                 _publicationAnimalBloc.stream,
@@ -107,8 +145,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
               builder: (BuildContext context, snapshot) {
                 if (snapshot.snapshot1.hasData || snapshot.snapshot2.hasData) {
                   var snap = [
-                    ...snapshot.snapshot1.data?.docs ?? [],
-                    ...snapshot.snapshot2.data?.docs ?? []
+                    ...snapshot.snapshot1.data ?? [],
+                    ...snapshot.snapshot2.data ?? []
                   ];
                   snap.sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
                   if (snap.isNotEmpty) {
@@ -123,37 +161,32 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                           rowSizes: rowSizes,
                           rowGap: 8,
                           columnGap: 8,
-                          children: <Widget>[
+                          children: [
                             for (var element in snap)
                               GestureDetector(
-                                child: [
-                                  'animal_lost',
-                                  'animal_adoption'
-                                ].contains(element.data()['typePublication'])
+                                child: ['animal_lost', 'animal_adoption']
+                                        .contains(element['typePublication'])
                                     ? AnimalCard(
-                                        image: element.data()['animalPhotos']
-                                            [0],
+                                        image: element['animalPhotos'][0],
                                         typePublication:
-                                            element.data()['typePublication'],
-                                        name: element.data()['name'],
-                                        district: element.data()['address']
+                                            element['typePublication'],
+                                        name: element['name'],
+                                        district: element['address']
                                             ['district'],
-                                        status: element.data()['status'],
+                                        status: element['status'],
                                       )
                                     : InformativeCard(
-                                        image: element.data()['imageCover'],
-                                        title: element.data()['title'],
-                                        description:
-                                            element.data()['description'],
+                                        image: element['imageCover'],
+                                        title: element['title'],
+                                        description: element['description'],
                                       ),
                                 onTap: () {
-                                  idPublication.set(element.id);
-                                  if (element.data()['typePublication'] ==
+                                  idPublication.set(element['id']);
+                                  if (element['typePublication'] ==
                                       'animal_adoption') {
                                     Navigator.pushNamed(
                                         context, '/adoption_post_details');
-                                  } else if (element
-                                          .data()['typePublication'] ==
+                                  } else if (element['typePublication'] ==
                                       'animal_lost') {
                                     Navigator.pushNamed(
                                         context, '/lost_post_details');
@@ -188,5 +221,18 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
         ),
       ),
     );
+  }
+
+  _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () async {
+      if (searchText != _searchQuery.text) {
+        setState(() {
+          searchText = _searchQuery.text;
+          getMyPublicatedSearch(searchText);
+          print("searchText: $searchText");
+        });
+      }
+    });
   }
 }

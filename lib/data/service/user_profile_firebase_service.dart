@@ -1,3 +1,4 @@
+import 'package:adoteme/data/service/address/calculate_distance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,6 +7,14 @@ class UserProfileFirebaseService extends ChangeNotifier {
   UserProfileFirebaseService({this.isExecute = false});
 
   Future<bool> saveUserProfile(String userId, Map<String, dynamic> user) async {
+    String addressUser = "${user['street']} ${user['number']}, ${user['city']}";
+    Map<dynamic, dynamic> latLongUser =
+        await CalculateDistance.addressCordenate(addressUser);
+    user.addAll({
+      'lat': latLongUser['lat'],
+      'long': latLongUser['long'],
+    });
+
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     try {
       await docUser.set(user);
@@ -19,6 +28,14 @@ class UserProfileFirebaseService extends ChangeNotifier {
 
   Future<bool> updateProfile(
       String? userId, Map<String, dynamic> dataUser) async {
+    String addressUser =
+        "${dataUser['street']} ${dataUser['number']}, ${dataUser['city']}";
+    Map<dynamic, dynamic> latLongUser =
+        await CalculateDistance.addressCordenate(addressUser);
+    dataUser.addAll({
+      'lat': latLongUser['lat'],
+      'long': latLongUser['long'],
+    });
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     try {
       await docUser.update(dataUser);
