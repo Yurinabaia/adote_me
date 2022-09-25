@@ -5,6 +5,7 @@ import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
+import 'package:adoteme/ui/components/alerts/alert_complete_registration_component.dart';
 import 'package:adoteme/ui/components/alerts/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/gallery_component.dart';
@@ -77,6 +78,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   int current = 0;
   bool _isSelected = false;
   bool _isMyPublication = false;
+  bool _isExistTelephoneUser = false;
 
   double _distance = 0.0;
   getDataUser() async {
@@ -90,6 +92,9 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
       _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
       latUser = dataUser.data()?['lat'] ?? 0.0;
       longUser = dataUser.data()?['long'] ?? 0.0;
+      if (dataUser.data()?['mainCell'] != null) {
+        _isExistTelephoneUser = true;
+      }
     } else {
       var localizationUser = await CurrentLocation.getPosition();
       longUser = double.parse(localizationUser['lat'].toString());
@@ -97,7 +102,9 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
     }
     _distance = CalculateDistance.calculateDistance(
         latUser, longUser, latAdvertiser ?? 0.0, longAdvertiser ?? 0.0);
-    setState(() {});
+    setState(() {
+      _distance = _distance;
+    });
   }
 
   getAdvertiser(String idAdverties) async {
@@ -296,20 +303,28 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                                 GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        _isSelected = !_isSelected;
-                                        _listFavoritesFirebase
-                                                .contains(_idPublication.value)
-                                            ? _listFavoritesFirebase
-                                                .remove(_idPublication.value)
-                                            : _listFavoritesFirebase
-                                                .add(_idPublication.value!);
+                                        if (_isExistTelephoneUser) {
+                                          _isSelected = !_isSelected;
+                                          _listFavoritesFirebase.contains(
+                                                  _idPublication.value)
+                                              ? _listFavoritesFirebase
+                                                  .remove(_idPublication.value)
+                                              : _listFavoritesFirebase
+                                                  .add(_idPublication.value!);
 
-                                        Map<String, dynamic> data = {
-                                          'listFavoritesAnimal':
-                                              _listFavoritesFirebase
-                                        };
-                                        userService.updateProfile(
-                                            _idUser.value, data);
+                                          Map<String, dynamic> data = {
+                                            'listFavoritesAnimal':
+                                                _listFavoritesFirebase
+                                          };
+                                          userService.updateProfile(
+                                              _idUser.value, data);
+                                        } else {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return const AlertCompleteRegistrationComponent();
+                                              });
+                                        }
                                       });
                                     },
                                     child: CheckFavoriteComponent(
