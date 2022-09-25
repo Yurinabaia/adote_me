@@ -5,14 +5,16 @@ import 'package:adoteme/utils/string_extension.dart';
 class PublicationService {
   static Future<bool> createPublication(
       Map<String, dynamic> publication, String collection) async {
-    // String addressAdvertiser =
-    //     "${publication['address']['street']} ${publication['address']['number']}, ${publication['address']['city']}";
-    // Map<dynamic, dynamic> latLongAdvertiser =
-    //     await CalculateDistance.addressCordenate(addressAdvertiser);
-    // publication['address'].addAll({
-    //   'lat': latLongAdvertiser['lat'],
-    //   'long': latLongAdvertiser['long'],
-    // });
+    if (publication['address'] != null) {
+      String addressAdvertiser =
+          "${publication['address']['street']} ${publication['address']['number']}, ${publication['address']['city']}";
+      Map<dynamic, dynamic> latLongAdvertiser =
+          await CalculateDistance.addressCordenate(addressAdvertiser);
+      publication['address'].addAll({
+        'lat': latLongAdvertiser['lat'],
+        'long': latLongAdvertiser['long'],
+      });
+    }
 
     final docPublication =
         FirebaseFirestore.instance.collection(collection).doc();
@@ -26,14 +28,16 @@ class PublicationService {
 
   static Future<bool> updatePublication(String idPublication,
       Map<String, dynamic> publication, String collection) async {
-    String addressAdvertiser =
-        "${publication['address']['street']} ${publication['address']['number']}, ${publication['address']['city']}";
-    Map<dynamic, dynamic> latLongAdvertiser =
-        await CalculateDistance.addressCordenate(addressAdvertiser);
-    publication['address'].addAll({
-      'lat': latLongAdvertiser['lat'],
-      'long': latLongAdvertiser['long'],
-    });
+    if (publication['address'] != null) {
+      String addressAdvertiser =
+          "${publication['address']['street']} ${publication['address']['number']}, ${publication['address']['city']}";
+      Map<dynamic, dynamic> latLongAdvertiser =
+          await CalculateDistance.addressCordenate(addressAdvertiser);
+      publication['address'].addAll({
+        'lat': latLongAdvertiser['lat'],
+        'long': latLongAdvertiser['long'],
+      });
+    }
 
     final docPublication =
         FirebaseFirestore.instance.collection(collection).doc(idPublication);
@@ -69,8 +73,8 @@ class PublicationService {
   static Future<List<Map<String, dynamic>>> getMyPublications({
     required String nameCollection,
     required String idUser,
-    double? latUser = 0.0,
-    double? longUser = 0.0,
+    required double latUser,
+    required double longUser,
     String? nameSeach,
     String? titleSeach,
   }) async {
@@ -106,7 +110,7 @@ class PublicationService {
               longUser,
               element.doc['address']['lat'],
               element.doc['address']['long']);
-          if (distance < 12) {
+          if (distance > 0) {
             listPublicated.add({...documents, 'id': element.doc.id});
           }
         } else {

@@ -3,7 +3,7 @@ import 'package:adoteme/data/service/publication_service.dart';
 
 class MyPublicationsBloc extends GenericBloc<List<Map<String, dynamic>>> {
   getPublicationsAll(
-      String nomeCollection, String idUser, double? lat, double? long) async {
+      String nomeCollection, String idUser, double lat, double long) async {
     try {
       var publicationsOne = await PublicationService.getMyPublications(
           nameCollection: nomeCollection,
@@ -16,8 +16,8 @@ class MyPublicationsBloc extends GenericBloc<List<Map<String, dynamic>>> {
     }
   }
 
-  getPublicationsAnimalSearch(String nomeCollection, String idUser, double? lat,
-      double? long, String search) async {
+  getPublicationsAnimalSearch(String nomeCollection, String idUser, double lat,
+      double long, String search) async {
     try {
       var publications = await PublicationService.getMyPublications(
           nameCollection: nomeCollection,
@@ -32,7 +32,7 @@ class MyPublicationsBloc extends GenericBloc<List<Map<String, dynamic>>> {
   }
 
   getPublicationsInformativeSearch(String nomeCollection, String idUser,
-      double? lat, double? long, String search) async {
+      double lat, double long, String search) async {
     try {
       var publications = await PublicationService.getMyPublications(
           nameCollection: nomeCollection,

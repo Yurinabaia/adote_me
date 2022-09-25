@@ -230,7 +230,6 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
         setState(() {
           searchText = _searchQuery.text;
           getMyPublicatedSearch(searchText);
-          print("searchText: $searchText");
         });
       }
     });

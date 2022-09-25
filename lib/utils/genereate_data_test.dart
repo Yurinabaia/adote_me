@@ -24,19 +24,19 @@ class GenereateDataTest {
     publicationModel.setAge(10);
     publicationModel.setAnimal('Cão');
     publicationModel.setCastrated('Sim');
-    publicationModel.setBreed('Raça do animal');
+    publicationModel.setBreed('Vira-lata');
     publicationModel.setName('Cidade Administrativa');
     publicationModel.setSex('Macho');
-    publicationModel.setTemperament('Temperamento do animal');
+    publicationModel.setTemperament('Docil');
     publicationModel.setIdUser(idUser);
-    publicationModel.setColor('11999999999');
+    publicationModel.setColor('Caramelo');
     publicationModel.setDescription('Descrição do animal');
-    publicationModel.setSize('Mini');
+    publicationModel.setSize('Mini - Até 33cm');
     publicationModel.setTypePublication('animal_adoption');
     publicationModel.setCreateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setUpdateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setStatus('in_progress');
-    publicationModel.setIdUser('DqJMvALZEGSvgBRJXPW3xR7iE8x1');
+    publicationModel.setIdUser('Ibloa0HqbfNGLJtOoCPVIjwJo7h1');
 
     Map<String, dynamic> dataInformative = {
       'idUser': idUser,

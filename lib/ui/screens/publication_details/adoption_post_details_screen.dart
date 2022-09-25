@@ -99,7 +99,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
 
   getDistance(double latUser, double longUser) async {
     if (lat != null && long != null) {
-      _distance = await calculateDistance.getDirections(
+      _distance = calculateDistance.calculateDistance(
           latUser, longUser, lat ?? 0.0, long ?? 0.0);
     }
   }
@@ -113,7 +113,9 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
       userPhone1 = address.data()?["mainCell"];
       userPhone2 = address.data()?["optionalCell"];
       userPhone3 = address.data()?["optionalCell2"];
-      getDataUser();
+      if (!_isMyPublication) {
+        getDataUser();
+      }
     });
   }
 
@@ -328,7 +330,6 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                             ),
                           ),
                           DetailTextComponent(
-                            // TODO: implementar distancia dinâmica
                             text:
                                 "$street, $number, $city - $state \n${_distance == 0 ? '' : '${_distance.toStringAsFixed(2)} km'}",
                           ),
