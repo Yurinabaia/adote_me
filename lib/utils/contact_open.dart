@@ -26,4 +26,13 @@ class ContactOpen {
       throw 'Could not launch $url';
     }
   }
+
+  openGoogleMaps(String lat, String long) async {
+    var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+    if (await canLaunchUrl(Uri.parse(mapsUrl))) {
+      await launchUrl(Uri.parse(mapsUrl));
+    } else {
+      throw 'Could not launch $mapsUrl';
+    }
+  }
 }

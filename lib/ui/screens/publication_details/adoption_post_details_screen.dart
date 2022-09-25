@@ -15,9 +15,11 @@ import 'package:adoteme/ui/screens/publication_details/components/carousel_compo
 import 'package:adoteme/ui/screens/publication_details/components/check_favorite_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/contact_component.dart';
 import 'package:adoteme/ui/screens/publication_details/components/term_description_component.dart';
+import 'package:adoteme/utils/contact_open.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +46,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
   final ValueNotifier<String?> _idUser = ValueNotifier<String?>(null);
   final UserProfileFirebaseService userService = UserProfileFirebaseService();
+  final ContactOpen contactOpen = ContactOpen();
 
   String? name;
   String? description;
@@ -68,8 +71,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   String? number;
   String? city;
   String? state;
-  double? lat;
-  double? long;
+  double? latAdvertiser;
+  double? longAdvertiser;
 
   int current = 0;
   bool _isSelected = false;
@@ -77,30 +80,24 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
 
   double _distance = 0.0;
   getDataUser() async {
-    double lat = 0.0;
-    double long = 0.0;
+    double latUser = 0.0;
+    double longUser = 0.0;
     DocumentSnapshot<Map<String, dynamic>> dataUser =
         await userService.getUserProfile(_idUser.value!);
     if (dataUser.data() != null) {
       _listFavoritesFirebase =
           List<String>.from(dataUser.data()?['listFavoritesAnimal']);
       _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
-      lat = dataUser.data()?['lat'] ?? 0.0;
-      long = dataUser.data()?['long'] ?? 0.0;
+      latUser = dataUser.data()?['lat'] ?? 0.0;
+      longUser = dataUser.data()?['long'] ?? 0.0;
     } else {
       var localizationUser = await CurrentLocation.getPosition();
-      lat = double.parse(localizationUser['lat'].toString());
-      long = double.parse(localizationUser['long'].toString());
+      longUser = double.parse(localizationUser['lat'].toString());
+      longUser = double.parse(localizationUser['long'].toString());
     }
-    getDistance(lat, long);
+    _distance = CalculateDistance.calculateDistance(
+        latUser, longUser, latAdvertiser ?? 0.0, longAdvertiser ?? 0.0);
     setState(() {});
-  }
-
-  getDistance(double latUser, double longUser) async {
-    if (lat != null && long != null) {
-      _distance = CalculateDistance.calculateDistance(
-          latUser, longUser, lat ?? 0.0, long ?? 0.0);
-    }
   }
 
   getAdvertiser(String idAdverties) async {
@@ -153,8 +150,8 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
         number = dataPublication.data()?['address']['number'];
         city = dataPublication.data()?['address']['city'];
         state = dataPublication.data()?['address']['state'];
-        lat = dataPublication.data()?['address']['lat'] ?? 0.0;
-        long = dataPublication.data()?['address']['long'] ?? 0.0;
+        latAdvertiser = dataPublication.data()?['address']['lat'] ?? 0.0;
+        longAdvertiser = dataPublication.data()?['address']['long'] ?? 0.0;
         var timestamp = dataPublication.data()?['updatedAt'];
         var dateTime = DateTime.fromMicrosecondsSinceEpoch(
             timestamp!.microsecondsSinceEpoch);
@@ -331,6 +328,25 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                           DetailTextComponent(
                             text:
                                 "$street, $number, $city - $state \n${_distance == 0 ? '' : '${_distance.toStringAsFixed(2)} km'}",
+                          ),
+                          TextButton.icon(
+                            onPressed: () => contactOpen.openGoogleMaps(
+                                latAdvertiser.toString(),
+                                longAdvertiser.toString()),
+                            label: const Text(
+                              'Ver no mapa',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                            icon: SvgPicture.asset(
+                              'assets/images/google-maps.svg',
+                              width: 30,
+                              height: 30,
+                            ),
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(0),
+                            ),
                           ),
                           const SizedBox(height: 32),
                           const TitleThreeComponent(text: "Resumo"),
