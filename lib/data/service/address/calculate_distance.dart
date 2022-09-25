@@ -11,7 +11,7 @@ class CalculateDistance {
   String googleAPiKey = "AIzaSyBlbUEqpPXp1U5EvlF1albkPPCjGsqn5vc";
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
-  double calculateDistance(lat1, lon1, lat2, lon2) {
+  static double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var a = 0.5 -
         cos((lat2 - lat1) * p) / 2 +

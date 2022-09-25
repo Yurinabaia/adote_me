@@ -17,6 +17,7 @@ class AnimalCard extends StatelessWidget {
   final String name;
   final String district;
   final String status;
+  final String? distance;
 
   const AnimalCard({
     Key? key,
@@ -25,6 +26,7 @@ class AnimalCard extends StatelessWidget {
     required this.name,
     required this.district,
     required this.status,
+    this.distance,
   }) : super(key: key);
 
   @override
@@ -79,7 +81,9 @@ class AnimalCard extends StatelessWidget {
                     typePu[typePublication]['tag'],
                     style: TextStyle(
                       fontSize: 12,
-                      color: typePublication == 'animal_lost' ? Colors.white : Colors.black,
+                      color: typePublication == 'animal_lost'
+                          ? Colors.white
+                          : Colors.black,
                     ),
                   ),
                   backgroundColor: typePu[typePublication]['color'],
@@ -88,7 +92,7 @@ class AnimalCard extends StatelessWidget {
               ],
             ),
             subtitle: Text(
-              district,
+              district + (distance != null ? ' • $distance km' : ''),
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
             minVerticalPadding: 0.0,

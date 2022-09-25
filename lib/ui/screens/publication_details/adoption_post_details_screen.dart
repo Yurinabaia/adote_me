@@ -44,7 +44,6 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
   final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
   final ValueNotifier<String?> _idUser = ValueNotifier<String?>(null);
   final UserProfileFirebaseService userService = UserProfileFirebaseService();
-  final CalculateDistance calculateDistance = CalculateDistance();
 
   String? name;
   String? description;
@@ -99,7 +98,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
 
   getDistance(double latUser, double longUser) async {
     if (lat != null && long != null) {
-      _distance = calculateDistance.calculateDistance(
+      _distance = CalculateDistance.calculateDistance(
           latUser, longUser, lat ?? 0.0, long ?? 0.0);
     }
   }

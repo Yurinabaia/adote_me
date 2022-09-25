@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:adoteme/data/bloc/my_publications_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
-import 'package:adoteme/data/service/address/calculate_distance.dart';
 import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';

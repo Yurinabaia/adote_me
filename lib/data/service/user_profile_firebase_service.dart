@@ -28,14 +28,16 @@ class UserProfileFirebaseService extends ChangeNotifier {
 
   Future<bool> updateProfile(
       String? userId, Map<String, dynamic> dataUser) async {
-    String addressUser =
-        "${dataUser['street']} ${dataUser['number']}, ${dataUser['city']}";
-    Map<dynamic, dynamic> latLongUser =
-        await CalculateDistance.addressCordenate(addressUser);
-    dataUser.addAll({
-      'lat': latLongUser['lat'],
-      'long': latLongUser['long'],
-    });
+    if (dataUser['street'] != null) {
+      String addressUser =
+          "${dataUser['street']} ${dataUser['number']}, ${dataUser['city']}";
+      Map<dynamic, dynamic> latLongUser =
+          await CalculateDistance.addressCordenate(addressUser);
+      dataUser.addAll({
+        'lat': latLongUser['lat'],
+        'long': latLongUser['long'],
+      });
+    }
     final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
     try {
       await docUser.update(dataUser);

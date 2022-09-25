@@ -63,7 +63,6 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
   final ValueNotifier<String?> _idUser = ValueNotifier<String?>(null);
   final ValueNotifier<String?> _idPublication = ValueNotifier<String?>(null);
   final UserProfileFirebaseService userService = UserProfileFirebaseService();
-  final CalculateDistance calculateDistance = CalculateDistance();
 
   int current = 0;
   bool _isSelected = false;
@@ -92,7 +91,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
 
   getDistance(double latUser, double longUser) async {
     if (lat != null && long != null) {
-      _distance = calculateDistance.calculateDistance(
+      _distance = CalculateDistance.calculateDistance(
           latUser, longUser, lat ?? 0.0, long ?? 0.0);
     }
   }

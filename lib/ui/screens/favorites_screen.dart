@@ -1,5 +1,6 @@
 import 'package:adoteme/data/bloc/favorites_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
+import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/animal_card.dart';
@@ -23,27 +24,46 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final FavoritesBloc _publicationAnimalBloc = FavoritesBloc();
   final FavoritesBloc _publicationInformativeBloc = FavoritesBloc();
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
+  final UserProfileFirebaseService userService = UserProfileFirebaseService();
 
   getListFavorites() async {
     UserProfileFirebaseService userService = UserProfileFirebaseService();
     DocumentSnapshot<Map<String, dynamic>> user =
         await userService.getUserProfile(_idUserNotifier.value);
-    setState(() {
-      List<String?>? listFavoritesAnimal =
-          List<String?>.from(user.data()?['listFavoritesAnimal'] ?? []);
+    List<String?>? listFavoritesAnimal =
+        List<String?>.from(user.data()?['listFavoritesAnimal'] ?? []);
+    List<String?>? listFavoritesInformative =
+        List<String?>.from(user.data()?['listFavoritesInformative'] ?? []);
 
-      List<String?>? listFavoritesInformative =
-          List<String?>.from(user.data()?['listFavoritesInformative'] ?? []);
-
-      _publicationAnimalBloc.getPublicationsAll(
-          'publications_animal', listFavoritesAnimal);
-      _publicationInformativeBloc.getPublicationsAll(
-          'informative_publication', listFavoritesInformative);
-    });
+    var latLongUser = await getDataUser();
+    _publicationAnimalBloc.getPublicationsAll(
+      'publications_animal',
+      listFavoritesAnimal,
+      latLongUser['lat'],
+      latLongUser['long'],
+    );
+    _publicationInformativeBloc.getPublicationsAll(
+      'informative_publication',
+      listFavoritesInformative,
+      latLongUser['lat'],
+      latLongUser['long'],
+    );
   }
 
-  refresh() {
-    setState(() {});
+  Future<Map<dynamic, dynamic>> getDataUser() async {
+    double latUser = 0;
+    double longUser = 0;
+    DocumentSnapshot<Map<String, dynamic>> dataUser =
+        await userService.getUserProfile(_idUserNotifier.value);
+    if (dataUser.data() != null) {
+      latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
+      longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
+    } else {
+      var localizationUser = await CurrentLocation.getPosition();
+      latUser = double.parse(localizationUser['lat'].toString());
+      longUser = double.parse(localizationUser['long'].toString());
+    }
+    return {'lat': latUser, 'long': longUser};
   }
 
   @override
@@ -77,8 +97,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             const SizedBox(
               height: 24,
             ),
-            StreamBuilder2<QuerySnapshot<Map<String, dynamic>>,
-                QuerySnapshot<Map<String, dynamic>>>(
+            StreamBuilder2<List<Map<String, dynamic>>,
+                List<Map<String, dynamic>>>(
               streams: StreamTuple2(
                 _publicationInformativeBloc.stream,
                 _publicationAnimalBloc.stream,
@@ -86,8 +106,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               builder: (BuildContext context, snapshot) {
                 if (snapshot.snapshot1.hasData || snapshot.snapshot2.hasData) {
                   var snap = [
-                    ...snapshot.snapshot1.data?.docs ?? [],
-                    ...snapshot.snapshot2.data?.docs ?? []
+                    ...snapshot.snapshot1.data ?? [],
+                    ...snapshot.snapshot2.data ?? []
                   ];
                   snap.sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
                   if (snap.isNotEmpty) {
@@ -105,58 +125,42 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           children: <Widget>[
                             for (var element in snap)
                               GestureDetector(
-                                child: [
-                                  'animal_lost',
-                                  'animal_adoption'
-                                ].contains(element.data()['typePublication'])
+                                child: ['animal_lost', 'animal_adoption']
+                                        .contains(element['typePublication'])
                                     ? AnimalCard(
-                                        image: element.data()['animalPhotos']
-                                            [0],
+                                        image: element['animalPhotos'][0],
                                         typePublication:
-                                            element.data()['typePublication'],
-                                        name: element.data()['name'],
-                                        district: element.data()['address']
+                                            element['typePublication'],
+                                        name: element['name'],
+                                        district: element['address']
                                             ['district'],
-                                        status: element.data()['status'],
+                                        status: element['status'],
+                                        distance: element['distance'],
                                       )
                                     : InformativeCard(
-                                        image: element.data()['imageCover'],
-                                        title: element.data()['title'],
-                                        description:
-                                            element.data()['description'],
+                                        image: element['imageCover'],
+                                        title: element['title'],
+                                        description: element['description'],
                                       ),
                                 onTap: () {
-                                  idPublication.set(element.id);
-                                  if (element.data()['typePublication'] ==
+                                  idPublication.set(element['id']);
+                                  if (element['typePublication'] ==
                                       'animal_adoption') {
-                                    Navigator.of(context)
-                                        .pushNamed(
+                                    Navigator.of(context).pushNamed(
                                       '/adoption_post_details',
                                       arguments: 'favoritos',
-                                    )
-                                        .then((value) {
-                                      refresh();
-                                    });
-                                  } else if (element
-                                          .data()['typePublication'] ==
+                                    );
+                                  } else if (element['typePublication'] ==
                                       'animal_lost') {
-                                    Navigator.of(context)
-                                        .pushNamed(
+                                    Navigator.of(context).pushNamed(
                                       '/lost_post_details',
                                       arguments: 'favoritos',
-                                    )
-                                        .then((value) {
-                                      refresh();
-                                    });
+                                    );
                                   } else {
-                                    Navigator.of(context)
-                                        .pushNamed(
+                                    Navigator.of(context).pushNamed(
                                       '/informative_post_details',
                                       arguments: 'favoritos',
-                                    )
-                                        .then((value) {
-                                      refresh();
-                                    });
+                                    );
                                   }
                                 },
                               ),

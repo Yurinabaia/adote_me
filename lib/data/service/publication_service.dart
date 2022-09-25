@@ -79,7 +79,6 @@ class PublicationService {
     String? titleSeach,
   }) async {
     try {
-      CalculateDistance calculateDistance = CalculateDistance();
       var docPublication = FirebaseFirestore.instance
           .collection(nameCollection)
           .where('idUser', isEqualTo: idUser);
@@ -105,14 +104,18 @@ class PublicationService {
           continue;
         }
         if (element.doc['typePublication'] != 'informative') {
-          double distance = calculateDistance.calculateDistance(
+          double distance = CalculateDistance.calculateDistance(
               latUser,
               longUser,
               element.doc['address']['lat'],
               element.doc['address']['long']);
-          if (distance > 0) {
-            listPublicated.add({...documents, 'id': element.doc.id});
-          }
+          // if (distance > 0) {
+          listPublicated.add({
+            ...documents,
+            'id': element.doc.id,
+            "distance": distance.toStringAsFixed(2)
+          });
+          // }
         } else {
           listPublicated.add({...documents, 'id': element.doc.id});
         }
@@ -136,15 +139,40 @@ class PublicationService {
     }
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getFavorites(
-      String collecion, List<String?> listIdPublicated) async {
+  static Future<List<Map<String, dynamic>>> getFavorites(String collecion,
+      List<String?> listIdPublicated, double latUser, double longUser) async {
     try {
       var docFirebase = await FirebaseFirestore.instance
           .collection(collecion)
           .where(FieldPath.documentId,
               whereIn: listIdPublicated.isNotEmpty ? listIdPublicated : [' '])
           .get();
-      return docFirebase;
+
+      List<Map<String, dynamic>> listPublicated = [];
+
+      for (var element in docFirebase.docChanges) {
+        var documents = element.doc.data();
+        if (documents == null) {
+          continue;
+        }
+        if (element.doc['typePublication'] != 'informative') {
+          double distance = CalculateDistance.calculateDistance(
+              latUser,
+              longUser,
+              element.doc['address']['lat'],
+              element.doc['address']['long']);
+          // if (distance > 0) {
+          listPublicated.add({
+            ...documents,
+            'id': element.doc.id,
+            "distance": distance.toStringAsFixed(2)
+          });
+          // }
+        } else {
+          listPublicated.add({...documents, 'id': element.doc.id});
+        }
+      }
+      return listPublicated;
     } catch (e) {
       rethrow;
     }
