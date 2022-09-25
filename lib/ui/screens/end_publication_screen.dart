@@ -1,7 +1,7 @@
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/publication_service.dart';
-import 'package:adoteme/ui/components/alert_dialog_component.dart';
+import 'package:adoteme/ui/components/alerts/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_to_back_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';
@@ -84,7 +84,8 @@ class _EndPublicationScreenState extends State<EndPublicationScreen> {
                         'status': 'finished',
                         'updatedAt': Timestamp.fromDate(DateTime.now()),
                       };
-                      final idPublication = context.read<IdPublicationProvider>();
+                      final idPublication =
+                          context.read<IdPublicationProvider>();
                       PublicationService.updatePublication(
                           idPublication.get(), data, 'publications_animal');
                       Navigator.pushReplacementNamed(context, '/success_case');

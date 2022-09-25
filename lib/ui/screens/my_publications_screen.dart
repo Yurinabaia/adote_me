@@ -5,6 +5,7 @@ import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
+import 'package:adoteme/ui/components/alerts/alert_complete_registration_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
 import 'package:adoteme/ui/components/drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
@@ -34,6 +35,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   final _searchQuery = TextEditingController();
   Timer? _debounce;
   String searchText = "";
+  bool _isExistTelephoneUser = false;
   @override
   void initState() {
     var auth = context.read<LoginFirebaseService>();
@@ -71,6 +73,10 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
     if (dataUser.data() != null) {
       latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
       longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
+
+      if (dataUser.data()?['mainCell'] != null) {
+        _isExistTelephoneUser = true;
+      }
     } else {
       var localizationUser = await CurrentLocation.getPosition();
       latUser = double.parse(localizationUser['lat'].toString());
@@ -101,10 +107,18 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
         child: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
-            final idPublication = context.read<IdPublicationProvider>();
-            idPublication.set(null);
-            Navigator.pushNamed(
-                context, '/create-publication/select_publication');
+            if (_isExistTelephoneUser) {
+              final idPublication = context.read<IdPublicationProvider>();
+              idPublication.set(null);
+              Navigator.pushNamed(
+                  context, '/create-publication/select_publication');
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const AlertCompleteRegistrationComponent();
+                  });
+            }
           },
           child: const Icon(
             Icons.add,

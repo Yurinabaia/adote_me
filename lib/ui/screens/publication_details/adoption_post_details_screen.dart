@@ -5,7 +5,7 @@ import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
-import 'package:adoteme/ui/components/alert_dialog_component.dart';
+import 'package:adoteme/ui/components/alerts/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/gallery_component.dart';
 import 'package:adoteme/ui/components/texts/detail_text_component.dart';

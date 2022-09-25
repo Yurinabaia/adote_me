@@ -1,5 +1,6 @@
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
+import 'package:adoteme/ui/components/alerts/alert_login_component.dart';
 import 'package:adoteme/ui/components/circle_avatar_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/label_text_component.dart';
@@ -27,26 +28,31 @@ class _DrawerComponentState extends State<DrawerComponent> {
       'name': 'Página inicial',
       'icon': Icons.home_outlined,
       'route': '/user_profile',
+      'loginRequired': false,
     },
     {
       'name': 'Favoritos',
       'icon': Icons.favorite_outline,
       'route': '/favorites',
+      'loginRequired': true,
     },
     {
       'name': 'Minhas publicações',
       'icon': Icons.newspaper,
       'route': '/my_publications',
+      'loginRequired': true,
     },
     {
       'name': 'Caso de sucesso',
       'icon': Icons.task_alt_sharp,
       'route': '/success_case',
+      'loginRequired': false,
     },
     {
       'name': 'Perfil',
       'icon': Icons.account_circle_outlined,
       'route': '/user_profile',
+      'loginRequired': true,
     },
   ];
 
@@ -115,9 +121,19 @@ class _DrawerComponentState extends State<DrawerComponent> {
                     selectedText: widget.selectIndex == index,
                   ),
                   onTap: () {
-                    selectAction(index);
-                    Navigator.pushReplacementNamed(
-                        context, itemsMenu[index]['route']);
+                    if (itemsMenu[index]['loginRequired'] &&
+                        _idUser.value == '') {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const AlertLoginComponent();
+                        },
+                      );
+                    } else {
+                      selectAction(index);
+                      Navigator.pushReplacementNamed(
+                          context, itemsMenu[index]['route']);
+                    }
                   },
                   selectedTileColor: Theme.of(context).primaryColor,
                   selected: widget.selectIndex == index,

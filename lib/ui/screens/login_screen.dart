@@ -65,7 +65,8 @@ class _LoginScrenState extends State<LoginScreen> {
                         final auth = context.read<LoginFirebaseService>();
                         await auth.signOut();
                         // ignore: use_build_context_synchronously
-                        Navigator.pushReplacementNamed(context, '/favorites');
+                        Navigator.pushReplacementNamed(
+                            context, '/success_case');
                       },
                       islogin: true,
                     ),
@@ -78,7 +79,7 @@ class _LoginScrenState extends State<LoginScreen> {
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(
-                                context, '/favorites');
+                                context, '/success_case');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

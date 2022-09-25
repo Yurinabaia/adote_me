@@ -38,9 +38,10 @@ class OutlineButtonComponent extends StatelessWidget {
               height: 24,
               width: 24,
             ),
-            const SizedBox(
-              width: 20,
-            ),
+            if (text.isNotEmpty)
+              const SizedBox(
+                width: 20,
+              ),
           ],
           Text(
             text,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class DetailTextComponent extends StatelessWidget {
   final String text;
-  const DetailTextComponent({Key? key, required this.text}) : super(key: key);
+  final bool center;
+  const DetailTextComponent({Key? key, required this.text, this.center = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,7 @@ class DetailTextComponent extends StatelessWidget {
         fontSize: 16,
         color: Color(0xff64748b),
       ),
-      textAlign: TextAlign.justify,
+      textAlign: center ? TextAlign.center : TextAlign.justify,
     );
   }
 }
