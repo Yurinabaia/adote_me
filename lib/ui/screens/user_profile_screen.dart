@@ -199,7 +199,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           textMask: TextMask('CELL'),
                           controller: _mainCellController,
                           keyboardType: TextInputType.phone,
-                          labelTextValue: 'Whatsapp',
+                          labelTextValue: 'WhatsApp',
                           validator: (value) {
                             String? msg = ValidatorInputs.validatorText(value);
                             return msg ??=
@@ -231,7 +231,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         const Center(
                           child: TitleThreeComponent(text: 'Endereço'),
                         ),
-                        SeachComponent(
+                        SearchComponent(
                           textMask: TextMask('CEP'),
                           keyboardType: TextInputType.number,
                           onChanged: (value) => searchCEP(value),

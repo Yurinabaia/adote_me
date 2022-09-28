@@ -49,7 +49,7 @@ class _SuccessCaseScreenState extends State<SuccessCaseScreen> {
             const SizedBox(
               height: 24,
             ),
-            SeachComponent(
+            SearchComponent(
               labelTextValue: 'Pesquisa rápida',
               keyboardType: TextInputType.text,
               onChanged: (value) {

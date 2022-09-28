@@ -12,10 +12,10 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScrenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScrenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([

@@ -183,7 +183,7 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
 
   Future<void> uploadsImages(animalModel) async {
     var uuid = const Uuid();
-    List<String> vaccineseAnimal = [];
+    List<String> vaccinesAnimal = [];
     List<String> photosAnimal = [];
 
     if (animalModel.animalPhotos != null) {
@@ -213,16 +213,16 @@ class _PicturesVaccineCardScreen extends State<PicturesVaccineCardScreen> {
         if (resultImg) {
           var result = await UploadFileFirebaseService.getImage(
               '${_idUser.value}/vaccine_photos/$uid');
-          vaccineseAnimal.add(result);
+          vaccinesAnimal.add(result);
         }
       }
     }
     for (var photo in imagesFirebase) {
       if (photo != null) {
-        vaccineseAnimal.add(photo);
+        vaccinesAnimal.add(photo);
       }
     }
-    animalModel.setPicturesVaccineCard(vaccineseAnimal);
+    animalModel.setPicturesVaccineCard(vaccinesAnimal);
   }
 
   void _showPopupMenu(Offset offset, int index) async {

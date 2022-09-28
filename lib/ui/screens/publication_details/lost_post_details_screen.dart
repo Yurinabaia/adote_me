@@ -100,9 +100,9 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
     });
   }
 
-  getAdvertiser(String idAdverties) async {
+  getAdvertiser(String idAdvertise) async {
     DocumentSnapshot<Map<String, dynamic>> address =
-        await userService.getUserProfile(idAdverties);
+        await userService.getUserProfile(idAdvertise);
     setState(() {
       userName = address.data()?["name"];
       userPhoto = address.data()?["image"];
@@ -298,7 +298,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                   ),
                   DetailTextComponent(
                     text:
-                        "$street, $number, $city - $state \n${_distance == 0 ? '' : '${_distance.toStringAsFixed(2)} km'}",
+                        "$street, $number, $city - $state \n${_distance == 0 ? '' : 'Raio ${_distance.toStringAsFixed(2)} km'}",
                   ),
                   TextButton.icon(
                     onPressed: () => contactOpen.openGoogleMaps(

@@ -116,7 +116,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           text:
                               'Informe o endereço onde o animal está disponível ou último local que foi visto.',
                         ),
-                        SeachComponent(
+                        SearchComponent(
                             textMask: TextMask('CEP'),
                             keyboardType: TextInputType.number,
                             onChanged: (value) => searchCEP(value),

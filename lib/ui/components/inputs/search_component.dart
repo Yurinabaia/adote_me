@@ -1,7 +1,7 @@
 import 'package:adoteme/utils/text_mask.dart';
 import 'package:flutter/material.dart';
 
-class SeachComponent extends StatelessWidget {
+class SearchComponent extends StatelessWidget {
   final TextInputType keyboardType;
   final String? initTextValue;
   final String labelTextValue;
@@ -9,7 +9,7 @@ class SeachComponent extends StatelessWidget {
   final TextMask? textMask;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
-  const SeachComponent(
+  const SearchComponent(
       {Key? key,
       this.initTextValue,
       this.onChanged,

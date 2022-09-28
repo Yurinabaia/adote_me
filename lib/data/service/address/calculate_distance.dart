@@ -12,6 +12,9 @@ class CalculateDistance {
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
   static double calculateDistance(lat1, lon1, lat2, lon2) {
+    if (lat1 == 0 || lon1 == 0 || lat2 == 0 || lon2 == 0) {
+      return 0;
+    }
     var p = 0.017453292519943295;
     var a = 0.5 -
         cos((lat2 - lat1) * p) / 2 +

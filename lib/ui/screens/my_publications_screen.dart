@@ -40,11 +40,11 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    getMyPublicated();
+    getMyPublicantes();
     super.initState();
   }
 
-  getMyPublicated() async {
+  getMyPublicantes() async {
     var latLongUser = await getDataUser();
     _publicationAnimalBloc.getPublicationsAll('publications_animal',
         _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
@@ -52,7 +52,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
         _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
   }
 
-  getMyPublicatedSearch(String value) async {
+  getMyPublicantesSearch(String value) async {
     var latLongUser = await getDataUser();
     _publicationAnimalBloc.getPublicationsAnimalSearch('publications_animal',
         _idUserNotifier.value, latLongUser['lat'], latLongUser['long'], value);
@@ -133,7 +133,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
             const SizedBox(
               height: 24,
             ),
-            SeachComponent(
+            SearchComponent(
               labelTextValue: 'Pesquisa rápida',
               keyboardType: TextInputType.text,
               controller: _searchQuery,
@@ -141,7 +141,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                 if (value != '') {
                   _searchQuery.addListener(_onSearchChanged);
                 } else {
-                  await getMyPublicated();
+                  await getMyPublicantes();
                 }
                 setState(() {});
               },
@@ -242,7 +242,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
       if (searchText != _searchQuery.text) {
         setState(() {
           searchText = _searchQuery.text;
-          getMyPublicatedSearch(searchText);
+          getMyPublicantesSearch(searchText);
         });
       }
     });

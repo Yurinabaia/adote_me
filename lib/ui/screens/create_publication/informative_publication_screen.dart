@@ -90,7 +90,7 @@ class _InformativePublicationScreenState
     formKeyProvider.set(_formKey);
     return Scaffold(
       appBar: const AppBarToBackComponent(
-        title: 'Criar publicacão informativa',
+        title: 'Criar publicação informativa',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
