@@ -421,7 +421,6 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                         children: <Widget>[
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            // minVerticalPadding: -4,
                             tileColor: Colors.black,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),

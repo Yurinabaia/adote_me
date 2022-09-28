@@ -1,5 +1,6 @@
 import 'package:adoteme/data/service/address/calculate_distance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
 class UserProfileFirebaseService extends ChangeNotifier {
@@ -52,9 +53,20 @@ class UserProfileFirebaseService extends ChangeNotifier {
     return true;
   }
 
-  void deleteUserProfile(String userId) {
-    final docUser = FirebaseFirestore.instance.collection('users').doc(userId);
-    docUser.delete();
+  Future<void> deleteUserProfile(String userId) async {
+    try {
+      final docUser = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      var image = docUser.data()?['image'];
+      if (image != null) {
+        await FirebaseStorage.instance.refFromURL(image).delete();
+      }
+      await docUser.reference.delete();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserProfile(

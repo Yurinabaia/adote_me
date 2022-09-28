@@ -46,7 +46,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
         _idPublication.value!, 'publications_animal');
     if (dataPublication?.data() != null) {
       if (nameCollection == 'animal_adoption') {
-        _ageController.text = dataPublication!.data()!['age'].toString();
+        _ageController.text = dataPublication!.data()?['age'] ?? "0";
         _temperamentController.text =
             dataPublication.data()?['temperament'] ?? '';
         _castratedController.text = dataPublication.data()?['castrated'] ?? '';

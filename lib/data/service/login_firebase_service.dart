@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -64,17 +66,61 @@ class LoginFirebaseService extends ChangeNotifier {
     }
   }
 
-  Future<void> excluirConta() async {
+  clearAuth() {
     try {
-      await _auth.currentUser!.delete();
+      _auth.signOut();
     } catch (e) {
       rethrow;
     }
   }
 
-  clearAuth() {
+  Future<void> deleteAccount(String idUser) async {
     try {
-      _auth.signOut();
+      await deletePublication("informative_publication", idUser);
+      await deletePublication("publications_animal", idUser);
+      _auth.currentUser?.delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<void> deletePublication(
+      String collection, String idUser) async {
+    try {
+      final docPublication = await FirebaseFirestore.instance
+          .collection(collection)
+          .where('idUser', isEqualTo: idUser)
+          .get();
+      if (collection != "informative_publication" &&
+          docPublication.docs.isNotEmpty) {
+        for (var element in docPublication.docChanges) {
+          if (element.doc.data()?['animalPhotos'] != null) {
+            for (var photo in element.doc.data()?['animalPhotos']) {
+              await FirebaseStorage.instance.refFromURL(photo).delete();
+            }
+          }
+          if (element.doc.data()?['picturesVaccineCard'] != null) {
+            for (var photo in element.doc.data()?['picturesVaccineCard']) {
+              await FirebaseStorage.instance.refFromURL(photo).delete();
+            }
+          }
+          element.doc.reference.delete();
+        }
+      } else if (docPublication.docs.isNotEmpty) {
+        for (var element in docPublication.docChanges) {
+          if (element.doc.data()?['imageCover'] != null) {
+            await FirebaseStorage.instance
+                .refFromURL(element.doc.data()?['imageCover'])
+                .delete();
+          }
+          if (element.doc.data()?['listImages'] != null) {
+            for (var photo in element.doc.data()?['listImages']) {
+              await FirebaseStorage.instance.refFromURL(photo).delete();
+            }
+          }
+          element.doc.reference.delete();
+        }
+      }
     } catch (e) {
       rethrow;
     }

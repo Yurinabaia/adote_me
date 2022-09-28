@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
+import 'package:adoteme/ui/components/alerts/alert_dialog_component.dart';
 import 'package:adoteme/ui/components/alerts/alert_login_component.dart';
 import 'package:adoteme/ui/components/circle_avatar_component.dart';
+import 'package:adoteme/ui/components/loading_modal_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
 import 'package:adoteme/ui/components/texts/label_text_component.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
@@ -152,6 +156,41 @@ class _DrawerComponentState extends State<DrawerComponent> {
               onTap: () {
                 auth.signOut();
                 Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+              },
+              selectedTileColor: Theme.of(context).primaryColor,
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.delete_outlined,
+                color: Color(0xffA82525),
+                size: 28,
+              ),
+              title: const BodyTextComponent(
+                text: 'Apagar Conta',
+              ),
+              onTap: () async {
+                await showDialog(
+                  context: context,
+                  builder: (context) => const AlertDialogComponent(
+                    statusType: 'error',
+                    title: 'Excluir Conta',
+                    message:
+                        'A conta será apagada e todos os dados serão perdidos. Deseja continuar?',
+                  ),
+                ).then((value) async {
+                  if (value) {
+                    LoadingModalComponent loadingModalComponent =
+                        LoadingModalComponent();
+                    loadingModalComponent.showModal(context);
+                    await userProfileFirebaseService
+                        .deleteUserProfile(_idUser.value);
+                    await auth.deleteAccount(_idUser.value);
+                    auth.signOut();
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.pushReplacementNamed(
+                        context, LoginScreen.routeName);
+                  }
+                });
               },
               selectedTileColor: Theme.of(context).primaryColor,
             ),

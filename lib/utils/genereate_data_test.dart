@@ -36,7 +36,7 @@ class GenereateDataTest {
     publicationModel.setCreateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setUpdateDate(Timestamp.fromDate(DateTime.now()));
     publicationModel.setStatus('in_progress');
-    publicationModel.setIdUser('Ibloa0HqbfNGLJtOoCPVIjwJo7h1');
+    publicationModel.setIdUser(idUser);
 
     Map<String, dynamic> dataInformative = {
       'idUser': idUser,
