@@ -301,8 +301,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   const SizedBox(height: 16),
                   OutlineButtonComponent(
                     text: 'Cancelar',
-                    //TODO: Implementar ação de voltar para a Página Inicial
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/home');
+                    },
                   ),
                 ],
               ),

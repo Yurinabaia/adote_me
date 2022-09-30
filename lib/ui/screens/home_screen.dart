@@ -15,6 +15,7 @@ import 'package:adoteme/ui/components/animal_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:provider/provider.dart';
 
@@ -110,6 +111,10 @@ class _HomeScreen extends State<HomeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
+            SvgPicture.asset(
+              'assets/images/banner.svg',
+              width: MediaQuery.of(context).size.width,
+            ),
             const SizedBox(
               height: 24,
             ),
