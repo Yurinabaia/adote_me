@@ -65,8 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         final auth = context.read<LoginFirebaseService>();
                         await auth.signOut();
                         // ignore: use_build_context_synchronously
-                        Navigator.pushReplacementNamed(
-                            context, '/success_case');
+                        Navigator.pushReplacementNamed(context, '/home');
                       },
                       islogin: true,
                     ),
@@ -78,8 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           await auth.signInWithGoogle();
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
-                            Navigator.pushReplacementNamed(
-                                context, '/success_case');
+                            Navigator.pushReplacementNamed(context, '/home');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}
@@ -96,8 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           await auth.signInWithFacebook();
                           if (auth.idFirebase().isNotEmpty) {
                             // ignore: use_build_context_synchronously
-                            Navigator.pushReplacementNamed(
-                                context, '/user_profile');
+                            Navigator.pushReplacementNamed(context, '/home');
                           }
                         } catch (e) {
                           if (e is FirebaseAuthException) {}

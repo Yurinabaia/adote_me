@@ -70,57 +70,77 @@ class PublicationService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getMyPublications({
-    required String nameCollection,
-    required String idUser,
-    required double latUser,
-    required double longUser,
-    String? nameSeach,
-    String? titleSeach,
-  }) async {
+  static Future<List<Map<String, dynamic>>> getPublicationAll(
+      {required String nameCollection,
+      required double latUser,
+      required double longUser}) async {
     try {
-      var docPublication = FirebaseFirestore.instance
-          .collection(nameCollection)
-          .where('idUser', isEqualTo: idUser);
-      if (nameSeach != null) {
-        docPublication = docPublication
-            .where('name', isGreaterThanOrEqualTo: nameSeach.capitalize())
-            .where('name', isLessThan: "${nameSeach.capitalize()}z");
-      }
-      if (titleSeach != null) {
-        docPublication = docPublication
-            .where('title', isGreaterThanOrEqualTo: titleSeach.capitalize())
-            .where('title', isLessThan: "${titleSeach.capitalize()}z");
-      }
-      if (nameSeach == null && titleSeach == null) {
-        docPublication = docPublication.orderBy('updatedAt', descending: true);
-      }
-      final listDocument = await docPublication.get();
-      List<Map<String, dynamic>> listPublicated = [];
-
-      for (var element in listDocument.docChanges) {
-        var documents = element.doc.data();
-        if (documents == null) {
-          continue;
-        }
-        if (element.doc['typePublication'] != 'informative') {
+      if (nameCollection != 'informative_publication') {
+        var docPublication = await FirebaseFirestore.instance
+            .collection(nameCollection)
+            .where('status', isEqualTo: 'in_progress')
+            .orderBy('updatedAt', descending: true)
+            .get();
+        List<Map<String, dynamic>> listPublications = [];
+        for (var element in docPublication.docChanges) {
+          var documents = element.doc.data();
+          if (documents == null) {
+            continue;
+          }
           double distance = CalculateDistance.calculateDistance(
               latUser,
               longUser,
               element.doc['address']['lat'],
               element.doc['address']['long']);
           // if (distance > 0) {
-          listPublicated.add({
+          listPublications.add({
             ...documents,
             'id': element.doc.id,
             "distance": distance.toStringAsFixed(2)
           });
           // }
-        } else {
-          listPublicated.add({...documents, 'id': element.doc.id});
         }
+        return listPublications;
       }
-      return listPublicated;
+      var docPublication = await FirebaseFirestore.instance
+          .collection(nameCollection)
+          .orderBy('updatedAt', descending: true)
+          .get();
+      List<Map<String, dynamic>> listPublications = [];
+      for (var element in docPublication.docChanges) {
+        var documents = element.doc.data();
+        if (documents == null) {
+          continue;
+        }
+        listPublications.add({...documents, 'id': element.doc.id});
+      }
+      return listPublications;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getMyPublications(
+      {required String nameCollection,
+      required String idUser,
+      required double latUser,
+      required double longUser}) async {
+    try {
+      var docPublication = await FirebaseFirestore.instance
+          .collection(nameCollection)
+          .where('idUser', isEqualTo: idUser)
+          .orderBy('updatedAt', descending: true)
+          .get();
+      List<Map<String, dynamic>> listPublications = [];
+
+      for (var element in docPublication.docChanges) {
+        var documents = element.doc.data();
+        if (documents == null) {
+          continue;
+        }
+        listPublications.add({...documents, 'id': element.doc.id});
+      }
+      return listPublications;
     } catch (e) {
       rethrow;
     }
@@ -139,16 +159,17 @@ class PublicationService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> getFavorites(String collecion,
-      List<String?> listIdPublicated, double latUser, double longUser) async {
+  static Future<List<Map<String, dynamic>>> getFavorites(String collections,
+      List<String?> listIdPublications, double latUser, double longUser) async {
     try {
       var docFirebase = await FirebaseFirestore.instance
-          .collection(collecion)
+          .collection(collections)
           .where(FieldPath.documentId,
-              whereIn: listIdPublicated.isNotEmpty ? listIdPublicated : [' '])
+              whereIn:
+                  listIdPublications.isNotEmpty ? listIdPublications : [' '])
           .get();
 
-      List<Map<String, dynamic>> listPublicated = [];
+      List<Map<String, dynamic>> listPublications = [];
 
       for (var element in docFirebase.docChanges) {
         var documents = element.doc.data();
@@ -162,17 +183,17 @@ class PublicationService {
               element.doc['address']['lat'],
               element.doc['address']['long']);
           // if (distance > 0) {
-          listPublicated.add({
+          listPublications.add({
             ...documents,
             'id': element.doc.id,
             "distance": distance.toStringAsFixed(2)
           });
           // }
         } else {
-          listPublicated.add({...documents, 'id': element.doc.id});
+          listPublications.add({...documents, 'id': element.doc.id});
         }
       }
-      return listPublicated;
+      return listPublications;
     } catch (e) {
       rethrow;
     }

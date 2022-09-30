@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -38,12 +40,10 @@ class LoginFirebaseService extends ChangeNotifier {
       final graphResponse = await http.get(Uri.parse(
           'https://graph.facebook.com/'
           'v2.12/me?fields=name,first_name,last_name,email&access_token=$token'));
-      // ignore: unused_local_variable
       final profile = jsonDecode(graphResponse.body);
       try {
         final AuthCredential facebookCredential =
             FacebookAuthProvider.credential(result.accessToken!.token);
-        // ignore: unused_local_variable
         final userCredential = await FirebaseAuth.instance
             .signInWithCredential(facebookCredential);
       } catch (e) {
@@ -78,7 +78,7 @@ class LoginFirebaseService extends ChangeNotifier {
     try {
       await deletePublication("informative_publication", idUser);
       await deletePublication("publications_animal", idUser);
-      _auth.currentUser?.delete();
+      await _auth.currentUser?.delete();
     } catch (e) {
       rethrow;
     }

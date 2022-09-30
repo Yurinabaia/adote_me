@@ -80,8 +80,10 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
     DocumentSnapshot<Map<String, dynamic>> dataUser =
         await userService.getUserProfile(_idUser.value!);
     if (dataUser.data() != null) {
-      _listFavoritesFirebase =
-          List<String>.from(dataUser.data()?['listFavoritesAnimal']);
+      if (dataUser.data()?['listFavoritesAnimal'] != null) {
+        _listFavoritesFirebase =
+            List<String>.from(dataUser.data()?['listFavoritesAnimal']);
+      }
       _isSelected = _listFavoritesFirebase.contains(_idPublication.value);
       latUser = dataUser.data()?['lat'] ?? 0.0;
       longUser = dataUser.data()?['long'] ?? 0.0;
@@ -170,7 +172,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
   Widget build(BuildContext context) {
     final animalModel = context.read<PublicationModel>();
     return Scaffold(
-      floatingActionButton: status != 'finished'
+      floatingActionButton: status != 'finished' && _isMyPublication
           ? SizedBox(
               height: 70,
               width: 70,
@@ -374,37 +376,39 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                           ),
                       ],
                     ),
-                    const SizedBox(height: 64),
-                    ButtonComponent(
-                      text: 'Finalizar publicação',
-                      color: const Color(0xff21725E),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/end_publication');
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    ButtonComponent(
-                      text: 'Excluir publicação',
-                      color: const Color(0xffA82525),
-                      onPressed: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => const AlertDialogComponent(
-                            statusType: 'error',
-                            title: 'Excluir publicação',
-                            message:
-                                'A publicação será excluída permanentemente. Deseja prosseguir ?',
-                          ),
-                        ).then((value) {
-                          if (value) {
-                            PublicationService.deletePublication(
-                                _idPublication.value!, "publications_animal");
-                            Navigator.pushReplacementNamed(
-                                context, '/my_publications');
-                          }
-                        });
-                      },
-                    ),
+                    if (_isMyPublication) ...[
+                      const SizedBox(height: 64),
+                      ButtonComponent(
+                        text: 'Finalizar publicação',
+                        color: const Color(0xff21725E),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/end_publication');
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      ButtonComponent(
+                        text: 'Excluir publicação',
+                        color: const Color(0xffA82525),
+                        onPressed: () async {
+                          await showDialog(
+                            context: context,
+                            builder: (context) => const AlertDialogComponent(
+                              statusType: 'error',
+                              title: 'Excluir publicação',
+                              message:
+                                  'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                            ),
+                          ).then((value) {
+                            if (value) {
+                              PublicationService.deletePublication(
+                                  _idPublication.value!, "publications_animal");
+                              Navigator.pushReplacementNamed(
+                                  context, '/my_publications');
+                            }
+                          });
+                        },
+                      ),
+                    ],
                   ] else
                     Container(
                       padding: const EdgeInsets.all(16),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adoteme/data/bloc/home_bloc.dart';
 import 'package:adoteme/data/bloc/my_publications_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/address/current_location.dart';
@@ -17,18 +18,18 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:provider/provider.dart';
 
-class MyPublicationsScreen extends StatefulWidget {
-  const MyPublicationsScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
-  static const routeName = "/my_publications";
+  static const routeName = "/home";
 
   @override
-  State<MyPublicationsScreen> createState() => _MyPublicationsScreenState();
+  State<HomeScreen> createState() => _HomeScreen();
 }
 
-class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
-  final MyPublicationsBloc _publicationAnimalBloc = MyPublicationsBloc();
-  final MyPublicationsBloc _publicationInformativeBloc = MyPublicationsBloc();
+class _HomeScreen extends State<HomeScreen> {
+  final HomeBloc _publicationAnimalBloc = HomeBloc();
+  final HomeBloc _publicationInformativeBloc = HomeBloc();
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
 
   final UserProfileFirebaseService userService = UserProfileFirebaseService();
@@ -40,26 +41,26 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    getMyPublications();
+    getPublications();
+
     super.initState();
   }
 
-  getMyPublications() async {
+  getPublications() async {
     var latLongUser = await getDataUser();
-    _publicationAnimalBloc.getPublicationsAll('publications_animal',
-        _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
-    _publicationInformativeBloc.getPublicationsAll('informative_publication',
-        _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
+    _publicationAnimalBloc.getPublicationsAll(
+        'publications_animal', latLongUser['lat'], latLongUser['long']);
+    _publicationInformativeBloc.getPublicationsAll(
+        'informative_publication', latLongUser['lat'], latLongUser['long']);
   }
 
-  getMyPublicationsSearch(String value) async {
+  getPublicationsSearch(String value) async {
     var latLongUser = await getDataUser();
-    _publicationAnimalBloc.getPublicationsAnimalSearch('publications_animal',
-        _idUserNotifier.value, latLongUser['lat'], latLongUser['long'], value);
+    _publicationAnimalBloc.getPublicationsAnimalSearch(
+        'publications_animal', latLongUser['lat'], latLongUser['long'], value);
 
     _publicationInformativeBloc.getPublicationsInformativeSearch(
         'informative_publication',
-        _idUserNotifier.value,
         latLongUser['lat'],
         latLongUser['long'],
         value);
@@ -68,16 +69,20 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   Future<Map<dynamic, dynamic>> getDataUser() async {
     double latUser = 0;
     double longUser = 0;
-    DocumentSnapshot<Map<String, dynamic>> dataUser =
-        await userService.getUserProfile(_idUserNotifier.value);
-    if (dataUser.data() != null) {
-      latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
-      longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
-
-      if (dataUser.data()?['mainCell'] != null) {
-        _isExistTelephoneUser = true;
+    bool existDataUser = false;
+    if (_idUserNotifier.value.isNotEmpty) {
+      DocumentSnapshot<Map<String, dynamic>> dataUser =
+          await userService.getUserProfile(_idUserNotifier.value);
+      if (dataUser.data() != null) {
+        latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
+        longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
+        existDataUser = true;
+        if (dataUser.data()?['mainCell'] != null) {
+          _isExistTelephoneUser = true;
+        }
       }
-    } else {
+    }
+    if (!existDataUser) {
       var localizationUser = await CurrentLocation.getPosition();
       latUser = double.parse(localizationUser['lat'].toString());
       longUser = double.parse(localizationUser['long'].toString());
@@ -96,35 +101,10 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarComponent(
-        titulo: 'Minhas publicações',
+        titulo: 'Home',
       ),
       drawer: DrawerComponent(
-        selectIndex: 2,
-      ),
-      floatingActionButton: SizedBox(
-        height: 70,
-        width: 70,
-        child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () {
-            if (_isExistTelephoneUser) {
-              final idPublication = context.read<IdPublicationProvider>();
-              idPublication.set(null);
-              Navigator.pushNamed(
-                  context, '/create-publication/select_publication');
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertCompleteRegistrationComponent();
-                  });
-            }
-          },
-          child: const Icon(
-            Icons.add,
-            size: 40,
-          ),
-        ),
+        selectIndex: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -141,7 +121,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                 if (value != '') {
                   _searchQuery.addListener(_onSearchChanged);
                 } else {
-                  await getMyPublications();
+                  await getPublications();
                 }
                 setState(() {});
               },
@@ -187,6 +167,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                                         district: element['address']
                                             ['district'],
                                         status: element['status'],
+                                        distance: element['distance'],
                                       )
                                     : InformativeCard(
                                         image: element['imageCover'],
@@ -242,7 +223,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
       if (searchText != _searchQuery.text) {
         setState(() {
           searchText = _searchQuery.text;
-          getMyPublicationsSearch(searchText);
+          getPublicationsSearch(searchText);
         });
       }
     });

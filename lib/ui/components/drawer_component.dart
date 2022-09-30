@@ -31,7 +31,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
     {
       'name': 'Página inicial',
       'icon': Icons.home_outlined,
-      'route': '/user_profile',
+      'route': '/home',
       'loginRequired': false,
     },
     {

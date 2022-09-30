@@ -9,6 +9,7 @@ import 'package:adoteme/ui/screens/end_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/informative_publication_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/select_publication_screen.dart';
 import 'package:adoteme/ui/screens/favorites_screen.dart';
+import 'package:adoteme/ui/screens/home_screen.dart';
 import 'package:adoteme/ui/screens/login_screen.dart';
 import 'package:adoteme/ui/screens/my_publications_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/adoption_post_details_screen.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
             const EndPublicationScreen(),
         InformativePostDetailsScreen.routeName: (context) =>
             const InformativePostDetailsScreen(),
+        HomeScreen.routeName: (context) => const HomeScreen(),
         LostDetailsScreen.routeName: (context) => const LostDetailsScreen(),
         SuccessCaseScreen.routeName: (context) => const SuccessCaseScreen(),
         FavoritesScreen.routeName: (context) => const FavoritesScreen(),

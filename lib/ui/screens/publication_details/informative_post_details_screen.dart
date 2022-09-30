@@ -58,7 +58,8 @@ class _InformativePostDetailsScreenState
   getFavoriteUser() async {
     DocumentSnapshot<Map<String, dynamic>> dataUser =
         await userService.getUserProfile(_idUserNotifier.value!);
-    if (dataUser.data() != null) {
+    if (dataUser.data() != null &&
+        dataUser.data()?['listFavoritesInformative'] != null) {
       setState(() {
         _listFavoritesFirebase =
             List<String>.from(dataUser.data()?['listFavoritesInformative']);
@@ -99,21 +100,23 @@ class _InformativePostDetailsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: SizedBox(
-        height: 70,
-        width: 70,
-        child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () => {
-            Navigator.pushNamed(
-                context, '/create-publication/informative_publication')
-          },
-          child: const Icon(
-            Icons.edit,
-            size: 40,
-          ),
-        ),
-      ),
+      floatingActionButton: _isMyPublication
+          ? SizedBox(
+              height: 70,
+              width: 70,
+              child: FloatingActionButton(
+                backgroundColor: Theme.of(context).primaryColor,
+                onPressed: () => {
+                  Navigator.pushNamed(
+                      context, '/create-publication/informative_publication')
+                },
+                child: const Icon(
+                  Icons.edit,
+                  size: 40,
+                ),
+              ),
+            )
+          : Container(),
       body: NestedScrollView(
         scrollBehavior: const ScrollBehavior(),
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -264,30 +267,32 @@ class _InformativePostDetailsScreenState
                             );
                           },
                         ),
-                      const SizedBox(height: 64),
-                      ButtonComponent(
-                        text: 'Excluir publicação',
-                        color: const Color(0xffA82525),
-                        onPressed: () async {
-                          await showDialog(
-                            context: context,
-                            builder: (context) => const AlertDialogComponent(
-                              statusType: 'error',
-                              title: 'Excluir publicação',
-                              message:
-                                  'A publicação será excluída permanentemente. Deseja prosseguir ?',
-                            ),
-                          ).then((value) {
-                            if (value) {
-                              PublicationService.deletePublication(
-                                  _idPublicationNotifier.value!,
-                                  'informative_publication');
-                              Navigator.pushReplacementNamed(
-                                  context, '/my_publications');
-                            }
-                          });
-                        },
-                      ),
+                      if (_isMyPublication) ...[
+                        const SizedBox(height: 64),
+                        ButtonComponent(
+                          text: 'Excluir publicação',
+                          color: const Color(0xffA82525),
+                          onPressed: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) => const AlertDialogComponent(
+                                statusType: 'error',
+                                title: 'Excluir publicação',
+                                message:
+                                    'A publicação será excluída permanentemente. Deseja prosseguir ?',
+                              ),
+                            ).then((value) {
+                              if (value) {
+                                PublicationService.deletePublication(
+                                    _idPublicationNotifier.value!,
+                                    'informative_publication');
+                                Navigator.pushReplacementNamed(
+                                    context, '/my_publications');
+                              }
+                            });
+                          },
+                        ),
+                      ]
                     ],
                   ),
                 ],

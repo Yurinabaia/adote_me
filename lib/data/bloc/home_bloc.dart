@@ -2,28 +2,23 @@ import 'package:adoteme/data/bloc/generic_bloc.dart';
 import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/search_publication_service.dart';
 
-class MyPublicationsBloc extends GenericBloc<List<Map<String, dynamic>>> {
-  getPublicationsAll(
-      String nomeCollection, String idUser, double lat, double long) async {
+class HomeBloc extends GenericBloc<List<Map<String, dynamic>>> {
+  getPublicationsAll(String nomeCollection, double lat, double long) async {
     try {
-      var publicationsOne = await PublicationService.getMyPublications(
-          nameCollection: nomeCollection,
-          idUser: idUser,
-          latUser: lat,
-          longUser: long);
+      var publicationsOne = await PublicationService.getPublicationAll(
+          nameCollection: nomeCollection, latUser: lat, longUser: long);
       add(publicationsOne);
     } catch (e) {
       return e;
     }
   }
 
-  getPublicationsAnimalSearch(String nomeCollection, String idUser, double lat,
-      double long, String search) async {
+  getPublicationsAnimalSearch(
+      String nomeCollection, double lat, double long, String search) async {
     try {
       var publications =
           await SearchPublicationService.getAnimalPublicationsAll(
               nameCollection: nomeCollection,
-              idUser: idUser,
               latUser: lat,
               longUser: long,
               nameSeach: search);
@@ -33,13 +28,12 @@ class MyPublicationsBloc extends GenericBloc<List<Map<String, dynamic>>> {
     }
   }
 
-  getPublicationsInformativeSearch(String nomeCollection, String idUser,
-      double lat, double long, String search) async {
+  getPublicationsInformativeSearch(
+      String nomeCollection, double lat, double long, String search) async {
     try {
       var publications =
           await SearchPublicationService.getInformativePublicationsAll(
               nameCollection: nomeCollection,
-              idUser: idUser,
               latUser: lat,
               longUser: long,
               titleSeach: search);
