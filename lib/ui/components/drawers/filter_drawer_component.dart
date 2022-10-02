@@ -4,6 +4,7 @@ import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/inputs/dropdown_component.dart';
 import 'package:adoteme/ui/components/texts/body_text_component.dart';
+import 'package:adoteme/utils/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,8 @@ import 'package:provider/provider.dart';
 class FilterDrawerComponent extends StatefulWidget {
   final String routeName;
 
-  const FilterDrawerComponent({Key? key, required this.routeName}) : super(key: key);
+  const FilterDrawerComponent({Key? key, required this.routeName})
+      : super(key: key);
 
   @override
   State<FilterDrawerComponent> createState() => _FilterDrawerComponentState();
@@ -19,10 +21,12 @@ class FilterDrawerComponent extends StatefulWidget {
 
 class _FilterDrawerComponentState extends State<FilterDrawerComponent> {
   final TextEditingController _typeAnimalController = TextEditingController();
-  final TextEditingController _typePublicationController = TextEditingController();
+  final TextEditingController _typePublicationController =
+      TextEditingController();
   final TextEditingController _sexController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final ValueNotifier<FilterProvider> _filterProvider = ValueNotifier<FilterProvider>(FilterProvider());
+  final ValueNotifier<FilterProvider> _filterProvider =
+      ValueNotifier<FilterProvider>(FilterProvider());
 
   double _distance = 40;
   DateTime _initialDate = DateTime.now();
@@ -107,7 +111,14 @@ class _FilterDrawerComponentState extends State<FilterDrawerComponent> {
                     children: [
                       DropDownComponent(
                         labelText: 'Tipo de animal',
-                        items: const ['Todos', 'Cachorro', 'Gato', 'Ave', 'Réptil', 'Outros'],
+                        items: const [
+                          'Todos',
+                          'Cachorro',
+                          'Gato',
+                          'Ave',
+                          'Réptil',
+                          'Outros'
+                        ],
                         controller: _typeAnimalController,
                       ),
                       const SizedBox(
@@ -181,7 +192,9 @@ class _FilterDrawerComponentState extends State<FilterDrawerComponent> {
                               color: Color(0xff334155),
                             ),
                             label: Text(
-                              DateFormat("dd/MM/yyyy").format(_initialDate).toString(),
+                              DateFormat("dd/MM/yyyy")
+                                  .format(_initialDate)
+                                  .toString(),
                               style: const TextStyle(
                                 color: Color(0xff334155),
                               ),
@@ -205,12 +218,17 @@ class _FilterDrawerComponentState extends State<FilterDrawerComponent> {
                               DateTime? finalDate = await showDatePicker(
                                 context: context,
                                 initialDate: _finalDate,
-                                firstDate: DateTime(2022, _initialDate.month, _initialDate.day),
+                                firstDate: DateTime(
+                                    2022, _initialDate.month, _initialDate.day),
                                 lastDate: DateTime.now(),
                               );
                               if (finalDate != null) {
                                 setState(() {
-                                  _finalDate = finalDate;
+                                  if (finalDate.isSameDate(DateTime.now())) {
+                                    _finalDate = DateTime.now();
+                                  } else {
+                                    _finalDate = finalDate;
+                                  }
                                 });
                               }
                             },
@@ -219,7 +237,9 @@ class _FilterDrawerComponentState extends State<FilterDrawerComponent> {
                               color: Color(0xff334155),
                             ),
                             label: Text(
-                              DateFormat("dd/MM/yyyy").format(_finalDate).toString(),
+                              DateFormat("dd/MM/yyyy")
+                                  .format(_finalDate)
+                                  .toString(),
                               style: const TextStyle(
                                 color: Color(0xff334155),
                               ),
@@ -246,7 +266,8 @@ class _FilterDrawerComponentState extends State<FilterDrawerComponent> {
                           filter.typeAnimal = _typeAnimalController.text;
                           filter.sex = _sexController.text;
                           filter.distance = _distance;
-                          filter.typePublication = _typePublicationController.text;
+                          filter.typePublication =
+                              _typePublicationController.text;
                           filter.initialDate = _initialDate;
                           filter.finalDate = _finalDate;
 

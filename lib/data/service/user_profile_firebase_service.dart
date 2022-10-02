@@ -12,7 +12,7 @@ class UserProfileFirebaseService extends ChangeNotifier {
       String addressUser =
           "${user['street']} ${user['number']}, ${user['city']}";
       Map<dynamic, dynamic> latLongUser =
-          await CalculateDistance.addressCordenate(addressUser);
+          await CalculateDistance.addressCoordinate(addressUser);
       user.addAll({
         'lat': latLongUser['lat'],
         'long': latLongUser['long'],
@@ -36,7 +36,7 @@ class UserProfileFirebaseService extends ChangeNotifier {
       String addressUser =
           "${dataUser['street']} ${dataUser['number']}, ${dataUser['city']}";
       Map<dynamic, dynamic> latLongUser =
-          await CalculateDistance.addressCordenate(addressUser);
+          await CalculateDistance.addressCoordinate(addressUser);
       dataUser.addAll({
         'lat': latLongUser['lat'],
         'long': latLongUser['long'],

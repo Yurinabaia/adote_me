@@ -12,7 +12,7 @@ class InputComponent extends StatefulWidget {
   final TextMask? textMask;
   final bool isRequired;
   final String? Function(String?)? validator;
-  bool iconErro;
+  bool iconError;
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
   InputComponent({
@@ -21,7 +21,7 @@ class InputComponent extends StatefulWidget {
     required this.keyboardType,
     this.textMask,
     this.isRequired = true,
-    this.iconErro = false,
+    this.iconError = false,
     this.validator,
     required this.labelTextValue,
     this.isActive = true,
@@ -64,7 +64,7 @@ class _InputComponentState extends State<InputComponent> {
           ),
           borderRadius: BorderRadius.circular(10.0),
         ),
-        suffixIcon: widget.iconErro
+        suffixIcon: widget.iconError
             ? const Icon(
                 Icons.error,
                 color: Colors.red,
@@ -82,11 +82,11 @@ class _InputComponentState extends State<InputComponent> {
         widget.formKey.value.currentState!.validate();
         if (value.isEmpty && widget.isRequired) {
           setState(() {
-            widget.iconErro = true;
+            widget.iconError = true;
           });
         } else {
           setState(() {
-            widget.iconErro = false;
+            widget.iconError = false;
           });
         }
       },

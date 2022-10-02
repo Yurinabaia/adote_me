@@ -1,4 +1,5 @@
 import 'package:adoteme/data/bloc/favorites_bloc.dart';
+import 'package:adoteme/data/providers/filter_provider.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
@@ -13,6 +14,8 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:multiple_stream_builder/multiple_stream_builder.dart';
 import 'package:provider/provider.dart';
 
+import '../components/drawers/filter_drawer_component.dart';
+
 class FavoritesScreen extends StatefulWidget {
   static const routeName = "/favorites";
   const FavoritesScreen({super.key});
@@ -26,7 +29,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final ValueNotifier<String> _idUserNotifier = ValueNotifier<String>('');
   final UserProfileFirebaseService userService = UserProfileFirebaseService();
 
-  getListFavorites() async {
+  getListFavorites(Map<String, dynamic> objFilter) async {
     UserProfileFirebaseService userService = UserProfileFirebaseService();
     DocumentSnapshot<Map<String, dynamic>> user =
         await userService.getUserProfile(_idUserNotifier.value);
@@ -37,17 +40,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     var latLongUser = await getDataUser();
     _publicationAnimalBloc.getPublicationsAll(
-      'publications_animal',
-      listFavoritesAnimal,
-      latLongUser['lat'],
-      latLongUser['long'],
-    );
+        'publications_animal',
+        listFavoritesAnimal,
+        latLongUser['lat'],
+        latLongUser['long'],
+        objFilter);
     _publicationInformativeBloc.getPublicationsAll(
-      'informative_publication',
-      listFavoritesInformative,
-      latLongUser['lat'],
-      latLongUser['long'],
-    );
+        'informative_publication',
+        listFavoritesInformative,
+        latLongUser['lat'],
+        latLongUser['long'],
+        objFilter);
   }
 
   Future<Map<dynamic, dynamic>> getDataUser() async {
@@ -70,7 +73,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    getListFavorites();
+    var filter = context.read<FilterProvider>();
+    getListFavorites(filter.objFilter());
     super.initState();
   }
 
@@ -90,6 +94,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       drawer: MenuDrawerComponent(
         selectIndex: 1,
       ),
+      endDrawer:
+          const FilterDrawerComponent(routeName: FavoritesScreen.routeName),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

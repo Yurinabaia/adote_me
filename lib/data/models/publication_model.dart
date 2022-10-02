@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:adoteme/utils/string_extension.dart';
+import 'package:adoteme/utils/extension.dart';
 
 class PublicationModel extends ChangeNotifier {
   String? name;

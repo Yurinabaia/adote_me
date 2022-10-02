@@ -1,6 +1,6 @@
 import 'package:adoteme/data/service/address/calculate_distance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:adoteme/utils/string_extension.dart';
+import 'package:adoteme/utils/extension.dart';
 
 class SearchPublicationService {
   static Future<QuerySnapshot<Map<String, dynamic>>>

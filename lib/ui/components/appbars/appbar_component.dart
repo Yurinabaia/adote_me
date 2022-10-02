@@ -34,7 +34,6 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         actions: <Widget>[
-          //TODO INCLUIR NAVEGACAO DO FILTRO
           IconButton(
             onPressed: () => Scaffold.of(context).openEndDrawer(),
             icon: const Icon(Icons.filter_alt_outlined,

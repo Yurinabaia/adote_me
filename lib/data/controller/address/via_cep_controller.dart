@@ -9,7 +9,7 @@ class ViaCepController {
     try {
       isLoading(true);
       viaCep = ViaCepModel().obs;
-      var adress = await ViaCepService.getEndereco(cep);
+      var adress = await ViaCepService.getAddress(cep);
       if (adress != null) {
         return viaCep.value = adress;
       }

@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_function_literals_in_foreach_calls
-
 import 'dart:math';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
@@ -8,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class CalculateDistance {
   PolylinePoints polylinePoints = PolylinePoints();
   String googleAPiKey = "AIzaSyBlbUEqpPXp1U5EvlF1albkPPCjGsqn5vc";
-  Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
+  Map<PolylineId, Polyline> polylines = {};
 
   static double calculateDistance(lat1, lon1, lat2, lon2) {
     if (lat1 == 0 || lon1 == 0 || lat2 == 0 || lon2 == 0) {
@@ -34,12 +32,11 @@ class CalculateDistance {
     );
 
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
+      }
     }
 
-    //polulineCoordinates is the List of longitute and latidtude.
     double totalDistance = 0;
     for (var i = 0; i < polylineCoordinates.length - 1; i++) {
       totalDistance += calculateDistance(
@@ -48,11 +45,10 @@ class CalculateDistance {
           polylineCoordinates[i + 1].latitude,
           polylineCoordinates[i + 1].longitude);
     }
-    // print("totalll:: $totalDistance");
     return totalDistance;
   }
 
-  static Future<Map> addressCordenate(String address) async {
+  static Future<Map> addressCoordinate(String address) async {
     List<Location> placemark = await locationFromAddress(address);
     return {"lat": placemark[0].latitude, "long": placemark[0].longitude};
   }

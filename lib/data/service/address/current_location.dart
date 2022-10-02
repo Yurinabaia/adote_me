@@ -46,7 +46,6 @@ class CurrentLocation {
           heading: 0.0,
           speedAccuracy: 0.0);
     }
-    //permissionFail = false;
     return await Geolocator.getCurrentPosition();
   }
 }

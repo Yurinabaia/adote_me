@@ -126,7 +126,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   _isNotAddress, value ?? '');
                             }),
                         InputComponent(
-                          iconErro: _isNotAddress,
+                          iconError: _isNotAddress,
                           controller: _streetController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
@@ -147,28 +147,28 @@ class _AddressScreenState extends State<AddressScreen> {
                           labelTextValue: 'Complemento',
                         ),
                         InputComponent(
-                          iconErro: _isNotAddress,
+                          iconError: _isNotAddress,
                           controller: _districtController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
                           isActive: false,
                         ),
                         InputComponent(
-                          iconErro: _isNotAddress,
+                          iconError: _isNotAddress,
                           controller: _cityController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
                           isActive: false,
                         ),
                         InputComponent(
-                          iconErro: _isNotAddress,
+                          iconError: _isNotAddress,
                           controller: _stateController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
                           isActive: false,
                         ),
                         InputComponent(
-                          iconErro: _isNotAddress,
+                          iconError: _isNotAddress,
                           controller: _zipCodeController,
                           keyboardType: TextInputType.number,
                           labelTextValue: 'CEP',

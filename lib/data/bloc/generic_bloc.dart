@@ -1,11 +1,10 @@
 import 'dart:async';
 
-class GenericBloc<T> //sIGNIFICAR RECEBER QUALQER OBJETO CLASSE GENERICA
-{
+class GenericBloc<T> {
   final StreamController _controller = StreamController<T>.broadcast();
 
   void dispose() {
-    _controller.close(); //fechar o controller
+    _controller.close();
   }
 
   void add(Object T) {
