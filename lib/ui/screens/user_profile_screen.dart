@@ -60,6 +60,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   final ViaCepController _viaCepController = Get.put(ViaCepController());
   bool _isNotAddress = false;
+  bool _enableAddress = false;
   Future selectFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
@@ -92,12 +93,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _cityController.text = dataUser.data()!['city'];
       _stateController.text = dataUser.data()!['state'];
       _complementController.text = dataUser.data()?['complement'] ?? '';
-      if (dataUser.data()?['image'] != null) {
-        setState(() {
+      setState(() {
+        if (dataUser.data()?['image'] != null) {
           _imgFirebase = dataUser.data()!['image'];
-          _isNotAddress = false;
-        });
-      }
+        }
+        _isNotAddress = false;
+        _enableAddress = true;
+      });
     }
   }
 
@@ -245,7 +247,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           controller: _streetController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           controller: _numberController,
@@ -266,21 +268,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           controller: _districtController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
                           controller: _cityController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
                           controller: _stateController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
@@ -319,10 +321,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       if (dataCep.cep == null) {
         setState(() {
           _isNotAddress = true;
+          _enableAddress = false;
         });
       } else {
         setState(() {
           _isNotAddress = false;
+          _enableAddress = true;
         });
       }
       final formKeyProvider = context.read<FormKeyProvider>();

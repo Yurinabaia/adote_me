@@ -129,7 +129,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       controller: _ageController,
                       textMask: TextMask('IDADE_ANIMAL'),
                       isRequired: false,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       labelTextValue: 'Idade (meses)',
                     ),
                   ],
@@ -199,9 +199,7 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                 if (_formKey.currentState!.validate()) {
                   animalModel.setName(_nameController.text);
                   animalModel.setAnimal(_animalController.text);
-                  animalModel.setAge(_ageController.text != ''
-                      ? int.parse(_ageController.text)
-                      : null);
+                  animalModel.setAge(_ageController.text);
                   animalModel.setSize(_sizeController.text);
                   animalModel.setSex(_sexController.text);
                   animalModel.setTemperament(_temperamentController.text != ''

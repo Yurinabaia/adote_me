@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:adoteme/utils/extension.dart';
 
 Map<String, String> enumTypePublication = {
   'Adoção': 'animal_adoption',
@@ -13,7 +14,8 @@ class FilterProvider extends ChangeNotifier {
   String _sex = 'Todos';
   double _distance = 40;
   DateTime _initialDate = DateTime(2022, 9);
-  DateTime _finalDate = DateTime.now();
+  DateTime _finalDate = DateTime(DateTime.now().year, DateTime.now().month,
+      DateTime.now().day, 23, 59, 59);
 
   get typeAnimal => _typeAnimal;
 
@@ -45,19 +47,26 @@ class FilterProvider extends ChangeNotifier {
     _sex = 'Todos';
     _distance = 40;
     _initialDate = DateTime(2022, 9);
-    _finalDate = DateTime.now();
+    _finalDate = DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 23, 59, 59);
   }
 
   Map<String, dynamic> objFilter() {
+    DateTime dateFinal = _finalDate.isSameDate(DateTime.now())
+        ? DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 23, 59, 59)
+        : _finalDate;
     return {
-      'typeAnimal': typeAnimal == 'Todos' ? ['Cachorro', 'Gato', 'Ave', 'Réptil', 'Outros'] : [typeAnimal],
+      'typeAnimal': typeAnimal == 'Todos'
+          ? ['Cachorro', 'Gato', 'Ave', 'Réptil', 'Outros']
+          : [typeAnimal],
       'typePublication': typePublication == 'Todos'
           ? ['animal_adoption', 'animal_lost', 'informative']
           : [enumTypePublication[typePublication]],
       'sex': sex == 'Todos' ? ['Macho', 'Fêmea'] : [sex],
       'distance': distance,
-      'initialDate': Timestamp.fromDate(initialDate),
-      'finalDate': Timestamp.fromDate(finalDate)
+      'initialDate': Timestamp.fromDate(_initialDate),
+      'finalDate': Timestamp.fromDate(dateFinal),
     };
   }
 }

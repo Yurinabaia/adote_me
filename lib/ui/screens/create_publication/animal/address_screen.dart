@@ -29,6 +29,7 @@ class _AddressScreenState extends State<AddressScreen> {
   String nameCollection = '';
   String nameAppBar = ' ';
   bool _isNotAddress = true;
+  bool _enableAddress = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -59,6 +60,7 @@ class _AddressScreenState extends State<AddressScreen> {
       _complementController.text =
           dataPublication?.data()?['address']['complement'] ?? '';
       setState(() {
+        _enableAddress = true;
         _isNotAddress = false;
       });
     }
@@ -130,7 +132,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           controller: _streetController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           controller: _numberController,
@@ -151,21 +153,21 @@ class _AddressScreenState extends State<AddressScreen> {
                           controller: _districtController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
                           controller: _cityController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
                           controller: _stateController,
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
-                          isActive: false,
+                          isActive: _enableAddress,
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
@@ -207,10 +209,12 @@ class _AddressScreenState extends State<AddressScreen> {
         setState(() {
           _formKey.currentState!.validate();
           _isNotAddress = true;
+          _enableAddress = false;
         });
       } else {
         setState(() {
           _isNotAddress = false;
+          _enableAddress = true;
         });
       }
       // ignore: use_build_context_synchronously

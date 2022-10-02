@@ -85,133 +85,160 @@ class _MenuDrawerComponentState extends State<MenuDrawerComponent> {
   Widget build(BuildContext context) {
     final auth = context.read<LoginFirebaseService>();
     return Drawer(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            DrawerHeader(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 75,
-                    width: 75,
-                    child: CircleAvatarComponent.findCircleAvatar(
-                        imgFirebase: _imgFirebase),
-                  ),
-                  const SizedBox(height: 16),
-                  LabelTextComponent(
-                      text: _emailUser.value != ''
-                          ? _emailUser.value
-                          : 'Usuário não logado'),
-                ],
-              ),
+      child: ListView(
+        children: <Widget>[
+          DrawerHeader(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 75,
+                  width: 75,
+                  child: CircleAvatarComponent.findCircleAvatar(
+                      imgFirebase: _imgFirebase),
+                ),
+                const SizedBox(height: 16),
+                LabelTextComponent(
+                    text: _emailUser.value != ''
+                        ? _emailUser.value
+                        : 'Usuário não logado'),
+              ],
             ),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: itemsMenu.length,
-              itemBuilder: (_, index) {
-                return ListTile(
-                  leading: Icon(
-                    itemsMenu[index]['icon'],
-                    color: widget.selectIndex == index
-                        ? Colors.white
-                        : const Color(0xff334155),
-                    size: 28,
-                  ),
-                  title: BodyTextComponent(
-                    text: itemsMenu[index]['name'],
-                    selectedText: widget.selectIndex == index,
-                  ),
-                  onTap: () {
-                    if (itemsMenu[index]['loginRequired'] &&
-                        _idUser.value == '') {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const AlertLoginComponent();
-                        },
-                      );
-                    } else {
-                      selectAction(index);
-                      Navigator.pushReplacementNamed(
-                          context, itemsMenu[index]['route']);
-                    }
-                  },
-                  selectedTileColor: Theme.of(context).primaryColor,
-                  selected: widget.selectIndex == index,
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.logout,
-                color: Color(0xff334155),
-                size: 28,
-              ),
-              title: const BodyTextComponent(
-                text: 'Desconectar-se',
-              ),
-              onTap: () {
-                auth.signOut();
-                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-              },
-              selectedTileColor: Theme.of(context).primaryColor,
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.delete_outlined,
-                color: Color(0xffA82525),
-                size: 28,
-              ),
-              title: const BodyTextComponent(
-                text: 'Apagar Conta',
-              ),
-              onTap: () async {
-                await showDialog(
-                  context: context,
-                  builder: (context) => const AlertDialogComponent(
-                    statusType: 'error',
-                    title: 'Excluir Conta',
-                    message:
-                        'A conta será apagada e todos os dados serão perdidos. Deseja continuar?',
-                  ),
-                ).then((value) async {
-                  if (value) {
-                    LoadingModalComponent loadingModalComponent =
-                        LoadingModalComponent();
-                    loadingModalComponent.showModal(context);
-                    await userProfileFirebaseService
-                        .deleteUserProfile(_idUser.value);
-                    await auth.deleteAccount(_idUser.value);
-                    auth.signOut();
-                    Navigator.of(context, rootNavigator: true).pop();
+          ),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: itemsMenu.length,
+            itemBuilder: (_, index) {
+              return ListTile(
+                leading: Icon(
+                  itemsMenu[index]['icon'],
+                  color: widget.selectIndex == index
+                      ? Colors.white
+                      : const Color(0xff334155),
+                  size: 28,
+                ),
+                title: BodyTextComponent(
+                  text: itemsMenu[index]['name'],
+                  selectedText: widget.selectIndex == index,
+                ),
+                onTap: () {
+                  if (itemsMenu[index]['loginRequired'] &&
+                      _idUser.value == '') {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AlertLoginComponent();
+                      },
+                    );
+                  } else {
+                    selectAction(index);
                     Navigator.pushReplacementNamed(
-                        context, LoginScreen.routeName);
+                        context, itemsMenu[index]['route']);
                   }
-                });
-              },
-              selectedTileColor: Theme.of(context).primaryColor,
+                },
+                selectedTileColor: Theme.of(context).primaryColor,
+                selected: widget.selectIndex == index,
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.logout,
+              color: Color(0xff334155),
+              size: 28,
             ),
-            // TODO : implementar o sobre-nós
-            // const AboutListTile(
-            //   icon: Icon(
-            //     Icons.info,
-            //   ),
-            //   child: Text('About app'),
-            //   applicationIcon: Icon(
-            //     Icons.local_play,
-            //   ),
-            //   applicationName: 'My Cool App',
-            //   applicationVersion: '1.0.25',
-            //   applicationLegalese: '© 2019 Company',
-            //   aboutBoxChildren: [
-            //     ///Content goes here...
-            //   ],
-            // ),
-          ],
-        ),
+            title: const BodyTextComponent(
+              text: 'Desconectar-se',
+            ),
+            onTap: () async {
+              await showDialog(
+                context: context,
+                builder: (context) => const AlertDialogComponent(
+                  statusType: 'error',
+                  title: 'Deseja sair?',
+                  message:
+                      'Desconectar conta do usuário atual e voltar para a tela de login.',
+                ),
+              ).then((value) async {
+                if (value) {
+                  auth.signOut();
+                  Navigator.pushReplacementNamed(
+                      context, LoginScreen.routeName);
+                }
+              });
+            },
+            selectedTileColor: Theme.of(context).primaryColor,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.25,
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.delete_outlined,
+              color: Color(0xff334155),
+              size: 28,
+            ),
+            title: const BodyTextComponent(
+              text: 'Apagar Conta',
+            ),
+            onTap: () async {
+              await showDialog(
+                context: context,
+                builder: (context) => const AlertDialogComponent(
+                  statusType: 'error',
+                  title: 'Excluir Conta',
+                  message:
+                      'A conta será apagada e todos os dados serão perdidos. Deseja continuar?',
+                ),
+              ).then((value) async {
+                if (value) {
+                  LoadingModalComponent loadingModalComponent =
+                      LoadingModalComponent();
+                  loadingModalComponent.showModal(context);
+                  await userProfileFirebaseService
+                      .deleteUserProfile(_idUser.value);
+                  await auth.deleteAccount(_idUser.value);
+                  auth.signOut();
+                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.pushReplacementNamed(
+                      context, LoginScreen.routeName);
+                }
+              });
+            },
+            selectedTileColor: Theme.of(context).primaryColor,
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.info_outline,
+              color: Color(0xff334155),
+              size: 28,
+            ),
+            title: const BodyTextComponent(
+              text: 'Sobre',
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, '/about');
+            },
+            selectedTileColor: Theme.of(context).primaryColor,
+          ),
+          // TODO : implementar o sobre-nós
+          // const AboutListTile(
+          //   icon: Icon(
+          //     Icons.info,
+          //   ),
+          //   child: Text('About app'),
+          //   applicationIcon: Icon(
+          //     Icons.local_play,
+          //   ),
+          //   applicationName: 'My Cool App',
+          //   applicationVersion: '1.0.25',
+          //   applicationLegalese: '© 2019 Company',
+          //   aboutBoxChildren: [
+          //     ///Content goes here...
+          //   ],
+          // ),
+        ],
       ),
     );
   }

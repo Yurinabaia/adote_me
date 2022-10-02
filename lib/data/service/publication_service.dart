@@ -142,6 +142,8 @@ class PublicationService {
       required String idUser,
       required objFilter}) async {
     try {
+      print("objFilter: ${objFilter['initialDate'].toDate()}");
+      print("objFilter: ${objFilter['finalDate'].toDate()}");
       var docPublication = await FirebaseFirestore.instance
           .collection(nameCollection)
           .where('idUser', isEqualTo: idUser)

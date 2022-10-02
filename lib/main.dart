@@ -15,6 +15,7 @@ import 'package:adoteme/ui/screens/my_publications_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/adoption_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/informative_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/lost_post_details_screen.dart';
+import 'package:adoteme/ui/screens/splash_screen.dart';
 import 'package:adoteme/ui/screens/success_case_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
 import 'package:adoteme/utils/theme_data.dart';
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('pt', 'BR'),
       ],
-      home: const LoginScreen(),
+      home: const SplashScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),
         LoginScreen.routeName: (context) => const LoginScreen(),

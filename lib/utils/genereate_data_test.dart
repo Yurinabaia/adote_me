@@ -21,7 +21,7 @@ class GenereateDataTest {
       'long': -43.9505989,
     };
     publicationModel.setAddress(address);
-    publicationModel.setAge(10);
+    publicationModel.setAge("10");
     publicationModel.setAnimal('Cão');
     publicationModel.setCastrated('Sim');
     publicationModel.setBreed('Vira-lata');

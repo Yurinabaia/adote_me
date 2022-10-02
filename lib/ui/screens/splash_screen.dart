@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:is_first_run/is_first_run.dart';
 
 class SplashScreen extends StatelessWidget {
   static const routeName = "/loading";
@@ -12,8 +13,11 @@ class SplashScreen extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    Timer(const Duration(seconds: 5),
-        () => Navigator.pushReplacementNamed(context, '/first_access'));
+    Timer(const Duration(seconds: 5), () async {
+      bool firstAccess = await IsFirstRun.isFirstRun();
+      Navigator.pushReplacementNamed(
+          context, firstAccess ? '/first_access' : '/login');
+    });
     return Scaffold(
       body: SafeArea(
         child: Center(

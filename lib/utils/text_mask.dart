@@ -12,8 +12,8 @@ class TextMask {
       type: MaskAutoCompletionType.lazy);
 
   final maskIdadeAnimal = MaskTextInputFormatter(
-      mask: '###',
-      filter: {"#": RegExp(r'[0-9]')},
+      mask: '#################',
+      filter: {"#": RegExp(r'[A-Za-z0-9 ]')},
       type: MaskAutoCompletionType.lazy);
 
   final maskCell = MaskTextInputFormatter(

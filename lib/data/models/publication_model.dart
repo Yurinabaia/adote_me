@@ -15,8 +15,8 @@ class PublicationModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? age;
-  setAge(int? age) {
+  String? age;
+  setAge(String? age) {
     this.age = age;
     notifyListeners();
   }
