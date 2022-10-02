@@ -7,12 +7,14 @@ class ContactComponent extends StatelessWidget {
   final String? userPhone;
   final String? userPhoto;
   final String typePhone;
+  final String nameAnimal;
   ContactComponent({
     Key? key,
     required this.userName,
     required this.userPhone,
     required this.userPhoto,
     required this.typePhone,
+    this.nameAnimal = "Animal",
   }) : super(key: key);
   final ContactOpen contactOpen = ContactOpen();
   @override
@@ -56,7 +58,7 @@ class ContactComponent extends StatelessWidget {
         onTap: () {
           String phone = userPhone!.replaceAll(RegExp(r'[^0-9]'), '');
           if (typePhone == "WhatsApp") {
-            contactOpen.openWhatsApp(phone);
+            contactOpen.openWhatsApp(phone, nameAnimal);
           } else if (typePhone == "Telefone") {
             contactOpen.openCall(phone);
           }

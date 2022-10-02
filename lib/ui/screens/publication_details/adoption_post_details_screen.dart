@@ -415,6 +415,7 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen>
                                   userPhoto: userPhoto,
                                   userPhone: userPhone1,
                                   typePhone: 'WhatsApp',
+                                  nameAnimal: name ?? '',
                                 ),
                                 if (userPhone2 != null)
                                   ContactComponent(

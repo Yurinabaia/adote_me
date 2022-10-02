@@ -359,6 +359,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
                           userPhoto: userPhoto,
                           userPhone: userPhone1,
                           typePhone: 'WhatsApp',
+                          nameAnimal: animal ?? "",
                         ),
                         if (userPhone2 != null)
                           ContactComponent(

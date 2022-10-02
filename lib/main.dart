@@ -1,4 +1,5 @@
 import 'package:adoteme/providers.dart';
+import 'package:adoteme/ui/screens/about_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/address_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/animal_photos_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/basic_animal_data_screen.dart';
@@ -45,7 +46,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Adote-me',
+      debugShowCheckedModeBanner: false,
+      title: 'Adote Animal',
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
@@ -87,6 +89,7 @@ class MyApp extends StatelessWidget {
         LostDetailsScreen.routeName: (context) => const LostDetailsScreen(),
         SuccessCaseScreen.routeName: (context) => const SuccessCaseScreen(),
         FavoritesScreen.routeName: (context) => const FavoritesScreen(),
+        AboutScreen.routeName: (context) => AboutScreen(),
       },
     );
   }

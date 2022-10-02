@@ -1,8 +1,19 @@
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactOpen {
-  openWhatsApp(String phone) async {
-    var messengerUrl = Uri.parse('whatsapp://send?phone=+55$phone&text=Olá ?');
+  openWhatsApp(String phone, String? nameAnimal) async {
+    var messengerUrl = Uri.parse(
+        'whatsapp://send?phone=+55$phone&text=Olá encontrei o anuncio do $nameAnimal no aplicaitvo Adote Animal!');
+    if (await canLaunchUrl(messengerUrl)) {
+      await launchUrl(messengerUrl);
+    } else {
+      throw 'Could not launch $messengerUrl';
+    }
+  }
+
+  openWhatsAppDevelop(String phone) async {
+    var messengerUrl = Uri.parse(
+        'whatsapp://send?phone=+55$phone&text=Olá encontrei o seu contato no aplicaitvo Adote Animal!');
     if (await canLaunchUrl(messengerUrl)) {
       await launchUrl(messengerUrl);
     } else {
@@ -20,8 +31,8 @@ class ContactOpen {
   }
 
   openBrowser(String url) async {
-    if (await canLaunchUrl(Uri(path: url))) {
-      await launchUrl(Uri(path: url));
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }

@@ -222,22 +222,6 @@ class _MenuDrawerComponentState extends State<MenuDrawerComponent> {
             },
             selectedTileColor: Theme.of(context).primaryColor,
           ),
-          // TODO : implementar o sobre-nós
-          // const AboutListTile(
-          //   icon: Icon(
-          //     Icons.info,
-          //   ),
-          //   child: Text('About app'),
-          //   applicationIcon: Icon(
-          //     Icons.local_play,
-          //   ),
-          //   applicationName: 'My Cool App',
-          //   applicationVersion: '1.0.25',
-          //   applicationLegalese: '© 2019 Company',
-          //   aboutBoxChildren: [
-          //     ///Content goes here...
-          //   ],
-          // ),
         ],
       ),
     );
