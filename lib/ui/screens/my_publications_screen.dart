@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:adoteme/data/bloc/my_publications_bloc.dart';
+import 'package:adoteme/data/providers/filter_provider.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alerts/alert_complete_registration_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
+import 'package:adoteme/ui/components/drawers/filter_drawer_component.dart';
 import 'package:adoteme/ui/components/drawers/menu_drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
@@ -40,49 +42,33 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    getMyPublications();
+    var filter = context.read<FilterProvider>();
+    getMyPublications(filter.objFilter());
     super.initState();
   }
 
-  getMyPublications() async {
-    var latLongUser = await getDataUser();
-    _publicationAnimalBloc.getPublicationsAll('publications_animal',
-        _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
-    _publicationInformativeBloc.getPublicationsAll('informative_publication',
-        _idUserNotifier.value, latLongUser['lat'], latLongUser['long']);
+  getMyPublications(Map<String, dynamic> objFilter) async {
+    await getDataUser();
+    _publicationAnimalBloc.getPublicationsAll(
+        'publications_animal', _idUserNotifier.value, objFilter);
+    _publicationInformativeBloc.getPublicationsAll(
+        'informative_publication', _idUserNotifier.value, objFilter);
   }
 
-  getMyPublicationsSearch(String value) async {
-    var latLongUser = await getDataUser();
-    _publicationAnimalBloc.getPublicationsAnimalSearch('publications_animal',
-        _idUserNotifier.value, latLongUser['lat'], latLongUser['long'], value);
+  getMyPublicationsSearch(String value, Map<String, dynamic> objFilter) async {
+    _publicationAnimalBloc.getPublicationsAnimalSearch(
+        _idUserNotifier.value, value, objFilter);
 
     _publicationInformativeBloc.getPublicationsInformativeSearch(
-        'informative_publication',
-        _idUserNotifier.value,
-        latLongUser['lat'],
-        latLongUser['long'],
-        value);
+        _idUserNotifier.value, value, objFilter);
   }
 
-  Future<Map<dynamic, dynamic>> getDataUser() async {
-    double latUser = 0;
-    double longUser = 0;
+  Future<void> getDataUser() async {
     DocumentSnapshot<Map<String, dynamic>> dataUser =
         await userService.getUserProfile(_idUserNotifier.value);
     if (dataUser.data() != null) {
-      latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
-      longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
-
-      if (dataUser.data()?['mainCell'] != null) {
-        _isExistTelephoneUser = true;
-      }
-    } else {
-      var localizationUser = await CurrentLocation.getPosition();
-      latUser = double.parse(localizationUser['lat'].toString());
-      longUser = double.parse(localizationUser['long'].toString());
+      _isExistTelephoneUser = true;
     }
-    return {'lat': latUser, 'long': longUser};
   }
 
   @override
@@ -126,6 +112,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
           ),
         ),
       ),
+      endDrawer: const FilterDrawerComponent(
+          routeName: MyPublicationsScreen.routeName),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -141,7 +129,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
                 if (value != '') {
                   _searchQuery.addListener(_onSearchChanged);
                 } else {
-                  await getMyPublications();
+                  await getMyPublications(
+                      context.read<FilterProvider>().objFilter());
                 }
                 setState(() {});
               },
@@ -242,7 +231,8 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
       if (searchText != _searchQuery.text) {
         setState(() {
           searchText = _searchQuery.text;
-          getMyPublicationsSearch(searchText);
+          getMyPublicationsSearch(
+              searchText, context.read<FilterProvider>().objFilter());
         });
       }
     });

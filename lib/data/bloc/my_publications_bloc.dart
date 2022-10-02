@@ -3,46 +3,35 @@ import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/search_publication_service.dart';
 
 class MyPublicationsBloc extends GenericBloc<List<Map<String, dynamic>>> {
-  getPublicationsAll(
-      String nomeCollection, String idUser, double lat, double long) async {
+  getPublicationsAll(String nomeCollection, String idUser,
+      Map<String, dynamic> objFilter) async {
     try {
       var publicationsOne = await PublicationService.getMyPublications(
-          nameCollection: nomeCollection,
-          idUser: idUser,
-          latUser: lat,
-          longUser: long);
+          nameCollection: nomeCollection, idUser: idUser, objFilter: objFilter);
       add(publicationsOne);
     } catch (e) {
       return e;
     }
   }
 
-  getPublicationsAnimalSearch(String nomeCollection, String idUser, double lat,
-      double long, String search) async {
+  getPublicationsAnimalSearch(
+      String idUser, String search, Map<String, dynamic> objFilter) async {
     try {
       var publications =
           await SearchPublicationService.getAnimalPublicationsAll(
-              nameCollection: nomeCollection,
-              idUser: idUser,
-              latUser: lat,
-              longUser: long,
-              nameSeach: search);
+              idUser: idUser, nameSeach: search, objFilter: objFilter);
       add(publications);
     } catch (e) {
       return e;
     }
   }
 
-  getPublicationsInformativeSearch(String nomeCollection, String idUser,
-      double lat, double long, String search) async {
+  getPublicationsInformativeSearch(
+      String idUser, String search, Map<String, dynamic> objFilter) async {
     try {
       var publications =
           await SearchPublicationService.getInformativePublicationsAll(
-              nameCollection: nomeCollection,
-              idUser: idUser,
-              latUser: lat,
-              longUser: long,
-              titleSeach: search);
+              idUser: idUser, titleSeach: search, objFilter: objFilter);
       add(publications);
     } catch (e) {
       return e;

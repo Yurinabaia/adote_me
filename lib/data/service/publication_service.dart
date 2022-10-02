@@ -140,12 +140,14 @@ class PublicationService {
   static Future<List<Map<String, dynamic>>> getMyPublications(
       {required String nameCollection,
       required String idUser,
-      required double latUser,
-      required double longUser}) async {
+      required objFilter}) async {
     try {
       var docPublication = await FirebaseFirestore.instance
           .collection(nameCollection)
           .where('idUser', isEqualTo: idUser)
+          .where('typePublication', whereIn: objFilter['typePublication'])
+          .where('updatedAt', isGreaterThanOrEqualTo: objFilter['initialDate'])
+          .where('updatedAt', isLessThanOrEqualTo: objFilter['finalDate'])
           .orderBy('updatedAt', descending: true)
           .get();
       List<Map<String, dynamic>> listPublications = [];
@@ -155,7 +157,14 @@ class PublicationService {
         if (documents == null) {
           continue;
         }
-        listPublications.add({...documents, 'id': element.doc.id});
+        if (nameCollection != 'informative_publication') {
+          if (objFilter['sex'].contains(element.doc['sex']) &&
+              objFilter['typeAnimal'].contains(element.doc['animal'])) {
+            listPublications.add({...documents, 'id': element.doc.id});
+          }
+        } else {
+          listPublications.add({...documents, 'id': element.doc.id});
+        }
       }
       return listPublications;
     } catch (e) {
@@ -163,14 +172,30 @@ class PublicationService {
     }
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getSuccessCaseAll() async {
+  static Future<List<Map<String, dynamic>>> getSuccessCaseAll(
+      Map<String, dynamic> objFilter) async {
     try {
       final docPublication = await FirebaseFirestore.instance
           .collection('publications_animal')
           .where('status', isEqualTo: 'finished')
+          .where('typePublication', whereIn: objFilter['typePublication'])
+          .where('updatedAt', isGreaterThanOrEqualTo: objFilter['initialDate'])
+          .where('updatedAt', isLessThanOrEqualTo: objFilter['finalDate'])
           .orderBy('updatedAt', descending: true)
           .get();
-      return docPublication;
+
+      List<Map<String, dynamic>> listPublications = [];
+      for (var element in docPublication.docChanges) {
+        var documents = element.doc.data();
+        if (documents == null) {
+          continue;
+        }
+        if (objFilter['sex'].contains(element.doc['sex']) &&
+            objFilter['typeAnimal'].contains(element.doc['animal'])) {
+          listPublications.add({...documents, 'id': element.doc.id});
+        }
+      }
+      return listPublications;
     } catch (e) {
       rethrow;
     }
