@@ -21,5 +21,8 @@ ThemeData getThemeData(context) {
     textTheme: GoogleFonts.poppinsTextTheme(
       Theme.of(context).textTheme,
     ),
+    sliderTheme: const SliderThemeData(
+      showValueIndicator: ShowValueIndicator.always,
+    ),
   );
 }

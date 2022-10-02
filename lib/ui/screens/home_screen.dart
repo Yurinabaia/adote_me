@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:adoteme/data/bloc/home_bloc.dart';
-import 'package:adoteme/data/bloc/my_publications_bloc.dart';
+import 'package:adoteme/data/providers/filter_provider.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/address/current_location.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
-import 'package:adoteme/ui/components/alerts/alert_complete_registration_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
-import 'package:adoteme/ui/components/drawer_component.dart';
+import 'package:adoteme/ui/components/drawers/filter_drawer_component.dart';
+import 'package:adoteme/ui/components/drawers/menu_drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/animal_card.dart';
@@ -37,22 +37,24 @@ class _HomeScreen extends State<HomeScreen> {
   final _searchQuery = TextEditingController();
   Timer? _debounce;
   String searchText = "";
-  bool _isExistTelephoneUser = false;
+
   @override
   void initState() {
     var auth = context.read<LoginFirebaseService>();
     _idUserNotifier.value = auth.idFirebase();
-    getPublications();
+
+    var filter = context.read<FilterProvider>();
+    getPublications(filter.objFilter());
 
     super.initState();
   }
 
-  getPublications() async {
+  getPublications(Map<String, dynamic> objFilter) async {
     var latLongUser = await getDataUser();
     _publicationAnimalBloc.getPublicationsAll(
-        'publications_animal', latLongUser['lat'], latLongUser['long']);
+        'publications_animal', latLongUser['lat'], latLongUser['long'], objFilter);
     _publicationInformativeBloc.getPublicationsAll(
-        'informative_publication', latLongUser['lat'], latLongUser['long']);
+        'informative_publication', latLongUser['lat'], latLongUser['long'], objFilter);
   }
 
   getPublicationsSearch(String value) async {
@@ -61,10 +63,7 @@ class _HomeScreen extends State<HomeScreen> {
         'publications_animal', latLongUser['lat'], latLongUser['long'], value);
 
     _publicationInformativeBloc.getPublicationsInformativeSearch(
-        'informative_publication',
-        latLongUser['lat'],
-        latLongUser['long'],
-        value);
+        'informative_publication', latLongUser['lat'], latLongUser['long'], value);
   }
 
   Future<Map<dynamic, dynamic>> getDataUser() async {
@@ -72,15 +71,12 @@ class _HomeScreen extends State<HomeScreen> {
     double longUser = 0;
     bool existDataUser = false;
     if (_idUserNotifier.value.isNotEmpty) {
-      DocumentSnapshot<Map<String, dynamic>> dataUser =
-          await userService.getUserProfile(_idUserNotifier.value);
+      DocumentSnapshot<Map<String, dynamic>> dataUser = await userService.getUserProfile(_idUserNotifier.value);
       if (dataUser.data() != null) {
         latUser = double.parse(dataUser.data()?['lat'].toString() ?? '0');
         longUser = double.parse(dataUser.data()?['long'].toString() ?? '0');
         existDataUser = true;
-        if (dataUser.data()?['mainCell'] != null) {
-          _isExistTelephoneUser = true;
-        }
+        if (dataUser.data()?['mainCell'] != null) {}
       }
     }
     if (!existDataUser) {
@@ -104,9 +100,10 @@ class _HomeScreen extends State<HomeScreen> {
       appBar: const AppBarComponent(
         titulo: 'Home',
       ),
-      drawer: DrawerComponent(
+      drawer: MenuDrawerComponent(
         selectIndex: 0,
       ),
+      endDrawer: const FilterDrawerComponent(routeName: HomeScreen.routeName),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -126,7 +123,7 @@ class _HomeScreen extends State<HomeScreen> {
                 if (value != '') {
                   _searchQuery.addListener(_onSearchChanged);
                 } else {
-                  await getPublications();
+                  await getPublications(context.read<FilterProvider>().objFilter());
                 }
                 setState(() {});
               },
@@ -134,43 +131,33 @@ class _HomeScreen extends State<HomeScreen> {
             const SizedBox(
               height: 24,
             ),
-            StreamBuilder2<List<Map<String, dynamic>>,
-                List<Map<String, dynamic>>>(
+            StreamBuilder2<List<Map<String, dynamic>>, List<Map<String, dynamic>>>(
               streams: StreamTuple2(
                 _publicationInformativeBloc.stream,
                 _publicationAnimalBloc.stream,
               ),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.snapshot1.hasData || snapshot.snapshot2.hasData) {
-                  var snap = [
-                    ...snapshot.snapshot1.data ?? [],
-                    ...snapshot.snapshot2.data ?? []
-                  ];
+                  var snap = [...snapshot.snapshot1.data ?? [], ...snapshot.snapshot2.data ?? []];
                   snap.sort((a, b) => b['updatedAt'].compareTo(a['updatedAt']));
                   if (snap.isNotEmpty) {
                     final idPublication = context.read<IdPublicationProvider>();
-                    final rowSizes =
-                        List.generate((snap.length / 2).round(), (_) => auto);
+                    final rowSizes = List.generate((snap.length / 2).round(), (_) => auto);
                     return LayoutBuilder(builder: (context, constraints) {
                       return LayoutGrid(
-                          columnSizes: List.generate(
-                              (constraints.maxWidth / 220).round(),
-                              (_) => 1.fr),
+                          columnSizes: List.generate((constraints.maxWidth / 220).round(), (_) => 1.fr),
                           rowSizes: rowSizes,
                           rowGap: 8,
                           columnGap: 8,
                           children: [
                             for (var element in snap)
                               GestureDetector(
-                                child: ['animal_lost', 'animal_adoption']
-                                        .contains(element['typePublication'])
+                                child: ['animal_lost', 'animal_adoption'].contains(element['typePublication'])
                                     ? AnimalCard(
                                         image: element['animalPhotos'][0],
-                                        typePublication:
-                                            element['typePublication'],
+                                        typePublication: element['typePublication'],
                                         name: element['name'],
-                                        district: element['address']
-                                            ['district'],
+                                        district: element['address']['district'],
                                         status: element['status'],
                                         distance: element['distance'],
                                       )
@@ -181,17 +168,12 @@ class _HomeScreen extends State<HomeScreen> {
                                       ),
                                 onTap: () {
                                   idPublication.set(element['id']);
-                                  if (element['typePublication'] ==
-                                      'animal_adoption') {
-                                    Navigator.pushNamed(
-                                        context, '/adoption_post_details');
-                                  } else if (element['typePublication'] ==
-                                      'animal_lost') {
-                                    Navigator.pushNamed(
-                                        context, '/lost_post_details');
+                                  if (element['typePublication'] == 'animal_adoption') {
+                                    Navigator.pushNamed(context, '/adoption_post_details');
+                                  } else if (element['typePublication'] == 'animal_lost') {
+                                    Navigator.pushNamed(context, '/lost_post_details');
                                   } else {
-                                    Navigator.pushNamed(
-                                        context, '/informative_post_details');
+                                    Navigator.pushNamed(context, '/informative_post_details');
                                   }
                                 },
                               ),
@@ -202,8 +184,7 @@ class _HomeScreen extends State<HomeScreen> {
                       child: Text('Nenhuma publicação encontrada'),
                     );
                   }
-                } else if (snapshot.snapshot1.hasError ||
-                    snapshot.snapshot2.hasError) {
+                } else if (snapshot.snapshot1.hasError || snapshot.snapshot2.hasError) {
                   return const Center(
                     child: Text('Erro ao carregar publicações'),
                   );

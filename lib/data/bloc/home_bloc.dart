@@ -3,10 +3,14 @@ import 'package:adoteme/data/service/publication_service.dart';
 import 'package:adoteme/data/service/search_publication_service.dart';
 
 class HomeBloc extends GenericBloc<List<Map<String, dynamic>>> {
-  getPublicationsAll(String nomeCollection, double lat, double long) async {
+  getPublicationsAll(String nomeCollection, double lat, double long, Map<String, dynamic> objFilter) async {
     try {
       var publicationsOne = await PublicationService.getPublicationAll(
-          nameCollection: nomeCollection, latUser: lat, longUser: long);
+        nameCollection: nomeCollection,
+        latUser: lat,
+        longUser: long,
+        objFilter: objFilter,
+      );
       add(publicationsOne);
     } catch (e) {
       return e;

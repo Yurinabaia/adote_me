@@ -110,10 +110,16 @@ class _BasicAnimalDataScreenState extends State<BasicAnimalDataScreen> {
                       return ValidatorInputs.validatorText(value);
                     },
                   ),
-                  InputComponent(
+                  DropDownComponent(
+                    labelText: 'Tipo animal',
+                    items: const [
+                      'Cachorro',
+                      'Gato',
+                      'Ave',
+                      'Réptil',
+                      'Outros',
+                    ],
                     controller: _animalController,
-                    keyboardType: TextInputType.text,
-                    labelTextValue: 'Tipo Animal',
                     validator: (value) {
                       return ValidatorInputs.validatorText(value);
                     },

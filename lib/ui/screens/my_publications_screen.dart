@@ -7,7 +7,7 @@ import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/alerts/alert_complete_registration_component.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
-import 'package:adoteme/ui/components/drawer_component.dart';
+import 'package:adoteme/ui/components/drawers/menu_drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:adoteme/ui/components/animal_card.dart';
@@ -98,7 +98,7 @@ class _MyPublicationsScreenState extends State<MyPublicationsScreen> {
       appBar: const AppBarComponent(
         titulo: 'Minhas publicações',
       ),
-      drawer: DrawerComponent(
+      drawer: MenuDrawerComponent(
         selectIndex: 2,
       ),
       floatingActionButton: SizedBox(

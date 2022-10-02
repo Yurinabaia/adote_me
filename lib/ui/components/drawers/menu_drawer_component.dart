@@ -13,15 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class DrawerComponent extends StatefulWidget {
+class MenuDrawerComponent extends StatefulWidget {
   int selectIndex;
-  DrawerComponent({Key? key, this.selectIndex = 0}) : super(key: key);
+  MenuDrawerComponent({Key? key, this.selectIndex = 0}) : super(key: key);
 
   @override
-  State<DrawerComponent> createState() => _DrawerComponentState();
+  State<MenuDrawerComponent> createState() => _MenuDrawerComponentState();
 }
 
-class _DrawerComponentState extends State<DrawerComponent> {
+class _MenuDrawerComponentState extends State<MenuDrawerComponent> {
   String? _imgFirebase;
   final ValueNotifier<String> _emailUser = ValueNotifier('');
   final ValueNotifier<String> _idUser = ValueNotifier('');
