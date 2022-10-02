@@ -1,4 +1,5 @@
 import 'package:adoteme/data/models/publication_model.dart';
+import 'package:adoteme/data/providers/filter_provider.dart';
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
@@ -22,5 +23,8 @@ final providers = <SingleChildWidget>[
   ),
   ChangeNotifierProvider<IdPublicationProvider>(
     create: (context) => IdPublicationProvider(null),
+  ),
+  ChangeNotifierProvider<FilterProvider>(
+    create: (context) => FilterProvider(),
   ),
 ];

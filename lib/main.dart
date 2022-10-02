@@ -23,6 +23,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,14 @@ class MyApp extends StatelessWidget {
       theme: getThemeData(context),
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.locale(context),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
       home: const LoginScreen(),
       routes: {
         FirstAccessScreen.routeName: (context) => const FirstAccessScreen(),

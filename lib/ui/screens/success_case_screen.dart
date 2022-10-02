@@ -2,7 +2,7 @@ import 'package:adoteme/data/bloc/success_case_bloc.dart';
 import 'package:adoteme/data/providers/id_publication_provider.dart';
 import 'package:adoteme/ui/components/animal_card.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
-import 'package:adoteme/ui/components/drawer_component.dart';
+import 'package:adoteme/ui/components/drawers/menu_drawer_component.dart';
 import 'package:adoteme/ui/components/inputs/search_component.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +39,7 @@ class _SuccessCaseScreenState extends State<SuccessCaseScreen> {
       appBar: const AppBarComponent(
         titulo: 'Casos de sucesso',
       ),
-      drawer: DrawerComponent(
+      drawer: MenuDrawerComponent(
         selectIndex: 3,
       ),
       body: Padding(

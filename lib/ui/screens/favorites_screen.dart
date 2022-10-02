@@ -5,7 +5,7 @@ import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/data/service/user_profile_firebase_service.dart';
 import 'package:adoteme/ui/components/animal_card.dart';
 import 'package:adoteme/ui/components/appbars/appbar_component.dart';
-import 'package:adoteme/ui/components/drawer_component.dart';
+import 'package:adoteme/ui/components/drawers/menu_drawer_component.dart';
 import 'package:adoteme/ui/components/informative_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +87,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       appBar: const AppBarComponent(
         titulo: 'Favoritos',
       ),
-      drawer: DrawerComponent(
+      drawer: MenuDrawerComponent(
         selectIndex: 1,
       ),
       body: Padding(
