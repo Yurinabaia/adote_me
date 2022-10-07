@@ -173,41 +173,42 @@ class _MenuDrawerComponentState extends State<MenuDrawerComponent> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.25,
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.delete_outlined,
-              color: Color(0xff334155),
-              size: 28,
+          if (_idUser.value.isNotEmpty)
+            ListTile(
+              leading: const Icon(
+                Icons.delete_outlined,
+                color: Color(0xff334155),
+                size: 28,
+              ),
+              title: const BodyTextComponent(
+                text: 'Apagar Conta',
+              ),
+              onTap: () async {
+                await showDialog(
+                  context: context,
+                  builder: (context) => const AlertDialogComponent(
+                    statusType: 'error',
+                    title: 'Excluir Conta',
+                    message:
+                        'A conta será apagada e todos os dados serão perdidos. Deseja continuar?',
+                  ),
+                ).then((value) async {
+                  if (value) {
+                    LoadingModalComponent loadingModalComponent =
+                        LoadingModalComponent();
+                    loadingModalComponent.showModal(context);
+                    await userProfileFirebaseService
+                        .deleteUserProfile(_idUser.value);
+                    await auth.deleteAccount(_idUser.value);
+                    auth.signOut();
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.pushReplacementNamed(
+                        context, LoginScreen.routeName);
+                  }
+                });
+              },
+              selectedTileColor: Theme.of(context).primaryColor,
             ),
-            title: const BodyTextComponent(
-              text: 'Apagar Conta',
-            ),
-            onTap: () async {
-              await showDialog(
-                context: context,
-                builder: (context) => const AlertDialogComponent(
-                  statusType: 'error',
-                  title: 'Excluir Conta',
-                  message:
-                      'A conta será apagada e todos os dados serão perdidos. Deseja continuar?',
-                ),
-              ).then((value) async {
-                if (value) {
-                  LoadingModalComponent loadingModalComponent =
-                      LoadingModalComponent();
-                  loadingModalComponent.showModal(context);
-                  await userProfileFirebaseService
-                      .deleteUserProfile(_idUser.value);
-                  await auth.deleteAccount(_idUser.value);
-                  auth.signOut();
-                  Navigator.of(context, rootNavigator: true).pop();
-                  Navigator.pushReplacementNamed(
-                      context, LoginScreen.routeName);
-                }
-              });
-            },
-            selectedTileColor: Theme.of(context).primaryColor,
-          ),
           ListTile(
             leading: const Icon(
               Icons.info_outline,
