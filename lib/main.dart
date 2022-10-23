@@ -1,5 +1,6 @@
 import 'package:adoteme/providers.dart';
 import 'package:adoteme/ui/screens/about_screen.dart';
+import 'package:adoteme/ui/screens/create_account_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/address_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/animal_photos_screen.dart';
 import 'package:adoteme/ui/screens/create_publication/animal/basic_animal_data_screen.dart';
@@ -16,6 +17,7 @@ import 'package:adoteme/ui/screens/my_publications_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/adoption_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/informative_post_details_screen.dart';
 import 'package:adoteme/ui/screens/publication_details/lost_post_details_screen.dart';
+import 'package:adoteme/ui/screens/restore_password_screen.dart';
 import 'package:adoteme/ui/screens/splash_screen.dart';
 import 'package:adoteme/ui/screens/success_case_screen.dart';
 import 'package:adoteme/ui/screens/user_profile_screen.dart';
@@ -90,6 +92,9 @@ class MyApp extends StatelessWidget {
         SuccessCaseScreen.routeName: (context) => const SuccessCaseScreen(),
         FavoritesScreen.routeName: (context) => const FavoritesScreen(),
         AboutScreen.routeName: (context) => AboutScreen(),
+        CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
+        RestorePasswordScreen.routeName: (context) =>
+            const RestorePasswordScreen(),
       },
     );
   }

@@ -12,6 +12,7 @@ class InputComponent extends StatefulWidget {
   final TextMask? textMask;
   final bool isRequired;
   final String? Function(String?)? validator;
+  final bool isPassword;
   bool iconError;
   ValueNotifier<GlobalKey<FormState>> formKey =
       ValueNotifier(GlobalKey<FormState>());
@@ -25,6 +26,7 @@ class InputComponent extends StatefulWidget {
     this.validator,
     required this.labelTextValue,
     this.isActive = true,
+    this.isPassword = false,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class _InputComponentState extends State<InputComponent> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      obscureText: widget.isPassword,
       decoration: InputDecoration(
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(

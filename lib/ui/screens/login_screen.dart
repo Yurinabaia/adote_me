@@ -1,5 +1,8 @@
+import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
 import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
+import 'package:adoteme/ui/components/inputs/input_component.dart';
+import 'package:adoteme/ui/components/mocal_component.dart';
 import 'package:adoteme/ui/components/texts/title_three_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +19,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([
@@ -29,20 +36,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final formKeyProvider = context.watch<FormKeyProvider>();
+    formKeyProvider.set(_formKey);
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SvgPicture.asset(
-                  'assets/images/logo.svg',
-                  height: 200,
-                  width: 200,
-                ),
-                Wrap(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  SvgPicture.asset(
+                    'assets/images/logo.svg',
+                    height: 200,
+                    width: 200,
+                  ),
+                  Wrap(
                     runSpacing: 16,
                     alignment: WrapAlignment.center,
                     children: const <Widget>[
@@ -55,61 +66,195 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Color(0xff334155),
                         ),
                       ),
-                    ]),
-                Wrap(
-                  runSpacing: 16,
-                  children: <Widget>[
-                    OutlineButtonComponent(
-                      text: "Continuar sem login",
-                      onPressed: () async {
-                        final auth = context.read<LoginFirebaseService>();
-                        await auth.signOut();
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacementNamed(context, '/home');
-                      },
-                      islogin: true,
-                    ),
-                    OutlineButtonComponent(
-                      text: "Entrar com gmail",
-                      onPressed: () async {
-                        try {
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Wrap(
+                    runSpacing: 16,
+                    children: [
+                      Form(
+                        key: _formKey,
+                        child: Wrap(
+                          runSpacing: 16,
+                          children: <Widget>[
+                            InputComponent(
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              labelTextValue: 'Email',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, insira um email';
+                                }
+                                return null;
+                              },
+                              isRequired: true,
+                            ),
+                            InputComponent(
+                              controller: _passwordController,
+                              keyboardType: TextInputType.visiblePassword,
+                              labelTextValue: "Senha",
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, insira uma senha';
+                                }
+                                return null;
+                              },
+                              isRequired: true,
+                              isPassword: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/restore-password');
+                        },
+                        child: const Text(
+                          'Esqueceu sua senha?',
+                          style: TextStyle(
+                            color: Color(0xff334155),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      OutlineButtonComponent(
+                        text: 'Entrar',
+                        onPressed: () async {
+                          _emailController.text = _emailController.text.trim();
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
                           final auth = context.read<LoginFirebaseService>();
-                          await auth.signInWithGoogle();
-                          if (auth.idFirebase().isNotEmpty) {
+                          try {
+                            bool isloginEP =
+                                await auth.signInWithEmailAndPassword(
+                                    _emailController.text,
+                                    _passwordController.text);
+
+                            if (!isloginEP) {
+                              snackBar('E-mail e/ou senhas incorretos.');
+                              return;
+                            }
+
+                            if (!await auth.isEmailVerified()) {
+                              ModalComponent.showModal(
+                                context: context,
+                                message:
+                                    'Verifique sua caixa de entrada e spam',
+                                action1: () => {
+                                  auth.sendEmailVerification(),
+                                  Navigator.pop(context)
+                                },
+                                text1: 'Reenviar e-mail',
+                                action2: () => {Navigator.pop(context)},
+                                text2: 'Fechar',
+                              );
+                              return;
+                            }
                             // ignore: use_build_context_synchronously
                             Navigator.pushReplacementNamed(context, '/home');
+                          } catch (e) {
+                            if (e is FirebaseAuthException) {
+                              snackBar(e.message!);
+                            }
                           }
-                        } catch (e) {
-                          if (e is FirebaseAuthException) {}
-                        }
-                      },
-                      svgIcon: "icon-google",
-                      islogin: true,
-                    ),
-                    OutlineButtonComponent(
-                      text: "Entrar com facebook",
-                      onPressed: () async {
-                        try {
+                        },
+                        islogin: true,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/register');
+                        },
+                        child: RichText(
+                          text: const TextSpan(
+                            text: 'Ainda não possui uma conta? ',
+                            style: TextStyle(
+                              color: Color(0xff334155),
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "Registre-se",
+                                style: TextStyle(
+                                  color: Color(0xff334155),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(
+                        color: Colors.black,
+                        height: 20,
+                        thickness: 1,
+                        indent: 20,
+                        endIndent: 20,
+                      ),
+                      OutlineButtonComponent(
+                        text: "Continuar sem login",
+                        onPressed: () async {
                           final auth = context.read<LoginFirebaseService>();
-                          await auth.signInWithFacebook();
-                          if (auth.idFirebase().isNotEmpty) {
-                            // ignore: use_build_context_synchronously
-                            Navigator.pushReplacementNamed(context, '/home');
+                          await auth.signOut();
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacementNamed(context, '/home');
+                        },
+                        islogin: true,
+                      ),
+                      OutlineButtonComponent(
+                        text: "Entrar com gmail",
+                        onPressed: () async {
+                          try {
+                            final auth = context.read<LoginFirebaseService>();
+                            await auth.signInWithGoogle();
+                            if (auth.idFirebase().isNotEmpty) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushReplacementNamed(context, '/home');
+                            }
+                          } catch (e) {
+                            if (e is FirebaseAuthException) {}
                           }
-                        } catch (e) {
-                          if (e is FirebaseAuthException) {}
-                        }
-                      },
-                      svgIcon: "icon-facebook",
-                      islogin: true,
-                    ),
-                  ],
-                ),
-              ],
+                        },
+                        svgIcon: "icon-google",
+                        islogin: true,
+                      ),
+                      OutlineButtonComponent(
+                        text: "Entrar com facebook",
+                        onPressed: () async {
+                          try {
+                            final auth = context.read<LoginFirebaseService>();
+                            await auth.signInWithFacebook();
+                            if (auth.idFirebase().isNotEmpty) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.pushReplacementNamed(context, '/home');
+                            }
+                          } catch (e) {
+                            if (e is FirebaseAuthException) {}
+                          }
+                        },
+                        svgIcon: "icon-facebook",
+                        islogin: true,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  snackBar(message) {
+    final snack = SnackBar(
+      behavior: SnackBarBehavior.floating,
+      content: Text(message),
+      backgroundColor: Colors.red,
+      padding: const EdgeInsets.all(16),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snack);
   }
 }

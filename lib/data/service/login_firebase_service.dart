@@ -54,6 +54,56 @@ class LoginFirebaseService extends ChangeNotifier {
     }
   }
 
+  Future<bool> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException {
+      return false;
+    }
+    return true;
+  }
+
+  Future<String?> createUserWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return 'A senha fornecida é muito fraca';
+      } else if (e.code == 'email-already-in-use') {
+        return 'Essa conta já está em uso';
+      }
+    }
+    return null;
+  }
+
+  Future<void> sendEmailVerification() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } on FirebaseAuthException {
+      rethrow;
+    }
+  }
+
+  Future<bool> isEmailVerified() async {
+    try {
+      await _auth.currentUser!.reload();
+    } on FirebaseAuthException {
+      return false;
+    }
+    return _auth.currentUser!.emailVerified;
+  }
+
+  Future<bool> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException {
+      return false;
+    }
+    return true;
+  }
+
   Future<void> signOut() async {
     try {
       if (!kIsWeb) {
