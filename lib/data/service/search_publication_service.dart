@@ -120,8 +120,11 @@ class SearchPublicationService {
                   objFilter['typePublication']
                       .contains(element.doc['typePublication']);
           if (latUser != null && longUser != null) {
-            distance = CalculateDistance.calculateDistance(latUser, longUser,
-                element.doc['address']['lat'], element.doc['address']['long']);
+            distance = await CalculateDistance.calculateDistance(
+                latUser,
+                longUser,
+                element.doc['address']['lat'],
+                element.doc['address']['long']);
           }
 
           if (dateValidator &&

@@ -95,7 +95,7 @@ class PublicationService {
           if (documents == null) {
             continue;
           }
-          double distance = CalculateDistance.calculateDistance(
+          double distance = await CalculateDistance.calculateDistance(
               latUser,
               longUser,
               element.doc['address']['lat'],
@@ -236,7 +236,7 @@ class PublicationService {
                   objFilter['typeAnimal'].contains(element.doc['animal']) &&
                   objFilter['typePublication']
                       .contains(element.doc['typePublication']);
-          double distance = CalculateDistance.calculateDistance(
+          double distance = await CalculateDistance.calculateDistance(
               latUser,
               longUser,
               element.doc['address']['lat'],

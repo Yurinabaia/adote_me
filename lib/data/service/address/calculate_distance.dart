@@ -1,17 +1,17 @@
 import 'dart:math';
+import 'package:adoteme/data/models/address/google_maps_model.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+// ignore: depend_on_referenced_packages
+import 'package:http/http.dart' as http;
 
 class CalculateDistance {
   PolylinePoints polylinePoints = PolylinePoints();
   String googleAPiKey = "AIzaSyBlbUEqpPXp1U5EvlF1albkPPCjGsqn5vc";
   Map<PolylineId, Polyline> polylines = {};
 
-  static double calculateDistance(lat1, lon1, lat2, lon2) {
-    if (lat1 == 0 || lon1 == 0 || lat2 == 0 || lon2 == 0) {
-      return 0;
-    }
+  double calculateDistanceOld(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var a = 0.5 -
         cos((lat2 - lat1) * p) / 2 +
@@ -19,33 +19,23 @@ class CalculateDistance {
     return 12742 * asin(sqrt(a));
   }
 
-  Future<double> getDirections(latInc, logInc, latFin, logFin) async {
-    LatLng startLocation = LatLng(latInc, logInc);
-    LatLng endLocation = LatLng(latFin, logFin);
-    List<LatLng> polylineCoordinates = [];
+  static Future<double> calculateDistance(
+      latInc, logInc, latFin, logFin) async {
+    var url =
+        Uri.https("maps.googleapis.com", "/maps/api/distancematrix/json", {
+      "destinations": "$latFin,$logFin",
+      "origins": "$latInc,$logInc",
+      "key": 'AIzaSyCSCViqmqeh027FArRJBOeXf-XJvYayzr0',
+    });
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonRespose = response.body;
+      var result = googleMapsFromJson(jsonRespose);
 
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleAPiKey,
-      PointLatLng(startLocation.latitude, startLocation.longitude),
-      PointLatLng(endLocation.latitude, endLocation.longitude),
-      travelMode: TravelMode.driving,
-    );
-
-    if (result.points.isNotEmpty) {
-      for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      }
+      return result.rows![0].elements[0].distance!.value!.toDouble() / 1000;
+    } else {
+      return 0.0;
     }
-
-    double totalDistance = 0;
-    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
-      totalDistance += calculateDistance(
-          polylineCoordinates[i].latitude,
-          polylineCoordinates[i].longitude,
-          polylineCoordinates[i + 1].latitude,
-          polylineCoordinates[i + 1].longitude);
-    }
-    return totalDistance;
   }
 
   static Future<Map> addressCoordinate(String address) async {

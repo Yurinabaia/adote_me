@@ -95,7 +95,7 @@ class _LostDetailsScreenState extends State<LostDetailsScreen>
       latUser = double.parse(localizationUser['lat'].toString());
       longUser = double.parse(localizationUser['long'].toString());
     }
-    _distance = CalculateDistance.calculateDistance(
+    _distance = await CalculateDistance.calculateDistance(
         latUser, longUser, latAdvertiser ?? 0.0, longAdvertiser ?? 0.0);
     setState(() {
       _distance = _distance;
