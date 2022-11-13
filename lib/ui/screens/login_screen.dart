@@ -1,5 +1,6 @@
 import 'package:adoteme/data/providers/form_key_provider.dart';
 import 'package:adoteme/data/service/login_firebase_service.dart';
+import 'package:adoteme/ui/components/buttons/button_component.dart';
 import 'package:adoteme/ui/components/buttons/outline_button_component.dart';
 import 'package:adoteme/ui/components/inputs/input_component.dart';
 import 'package:adoteme/ui/components/mocal_component.dart';
@@ -53,23 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 200,
                     width: 200,
                   ),
-                  Wrap(
-                    runSpacing: 16,
-                    alignment: WrapAlignment.center,
-                    children: const <Widget>[
-                      TitleThreeComponent(text: "Seja bem-vindo(a)"),
-                      Text(
-                        "Com nosso aplicativo você fará a vida de nossos amigos peludos mais feliz.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xff334155),
-                        ),
-                      ),
-                    ],
-                  ),
                   const SizedBox(
-                    height: 16,
+                    height: 32,
                   ),
                   Wrap(
                     runSpacing: 16,
@@ -111,6 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           Navigator.pushNamed(context, '/restore-password');
                         },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                        ),
                         child: const Text(
                           'Esqueceu sua senha?',
                           style: TextStyle(
@@ -119,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      OutlineButtonComponent(
+                      ButtonComponent(
                         text: 'Entrar',
                         onPressed: () async {
                           _emailController.text = _emailController.text.trim();
@@ -161,7 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                           }
                         },
-                        islogin: true,
                       ),
                       TextButton(
                         onPressed: () {
@@ -186,12 +174,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      const Divider(
-                        color: Colors.black,
+                      Divider(
+                        color: Theme.of(context).primaryColor,
                         height: 20,
-                        thickness: 1,
-                        indent: 20,
-                        endIndent: 20,
                       ),
                       OutlineButtonComponent(
                         text: "Continuar sem login",

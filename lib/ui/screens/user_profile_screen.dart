@@ -248,6 +248,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Logradouro',
                           isActive: _enableAddress,
+                          isRequired: true,
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
                         InputComponent(
                           controller: _numberController,
@@ -269,6 +273,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Bairro',
                           isActive: _enableAddress,
+                          isRequired: true,
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
@@ -276,6 +284,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Cidade',
                           isActive: _enableAddress,
+                          isRequired: true,
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
@@ -283,6 +295,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           keyboardType: TextInputType.text,
                           labelTextValue: 'Estado',
                           isActive: _enableAddress,
+                          isRequired: true,
+                          validator: (value) {
+                            return ValidatorInputs.validatorText(value);
+                          },
                         ),
                         InputComponent(
                           iconError: _isNotAddress,
@@ -410,7 +426,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
       bool result =
           await userProfileFirebaseService.saveUserProfile(_idUser.value, data);
-
+      Navigator.of(context, rootNavigator: true).pop();
       if (userProfileFirebaseService.isExecute && !result) {
         const snack = SnackBar(
           behavior: SnackBarBehavior.floating,
@@ -418,8 +434,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           backgroundColor: Colors.red,
         );
         ScaffoldMessenger.of(context).showSnackBar(snack);
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
       }
-      Navigator.of(context, rootNavigator: true).pop();
     }
   }
 }
